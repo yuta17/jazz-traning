@@ -172,24 +172,6 @@ input {
   gap: 14px;
 }
 
-.chord-limit,
-.chord-voicing {
-  display: inline-flex;
-  align-items: center;
-  min-height: 34px;
-  padding: 0 12px;
-  border: 1px solid #dde2ec;
-  border-radius: 8px;
-  background: white;
-  color: var(--muted);
-  font-size: 0.86rem;
-  font-weight: 900;
-}
-
-.chord-voicing {
-  color: var(--primary-dark);
-}
-
 .section-heading {
   display: flex;
   align-items: baseline;
@@ -432,7 +414,7 @@ input {
   letter-spacing: 0;
 }
 
-.quality-pill {
+.voicing-pill {
   display: inline-flex;
   align-items: center;
   min-height: 30px;
@@ -441,7 +423,7 @@ input {
   border: 1px solid #e3e7ef;
   border-radius: 8px;
   background: #f8fafc;
-  color: var(--muted);
+  color: var(--primary-dark);
   font-size: 0.86rem;
   font-weight: 900;
 }
@@ -454,47 +436,6 @@ input {
   padding-top: 12px;
   padding-bottom: 12px;
   background: white;
-}
-
-.chord-progress-list {
-  display: grid;
-  grid-template-columns: repeat(10, minmax(0, 1fr));
-  gap: 6px;
-  margin: 0;
-  padding: 0 28px 14px;
-  list-style: none;
-  background: white;
-}
-
-.chord-progress-item {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 30px;
-  border: 1px solid #dde2ec;
-  border-radius: 8px;
-  background: #f7f8fb;
-  color: var(--muted);
-  font-size: 0.82rem;
-  font-weight: 900;
-}
-
-.chord-progress-item.current {
-  border-color: rgba(81, 66, 232, 0.52);
-  background: rgba(81, 66, 232, 0.1);
-  color: var(--primary-dark);
-}
-
-.chord-progress-item.hit {
-  border-color: rgba(24, 187, 131, 0.55);
-  background: rgba(24, 187, 131, 0.12);
-  color: #087352;
-}
-
-.chord-progress-item.miss {
-  border-color: rgba(220, 85, 55, 0.55);
-  background: rgba(220, 85, 55, 0.11);
-  color: #a23821;
 }
 
 .chord-timer {
@@ -519,7 +460,8 @@ input {
 }
 
 .chord-actions {
-  gap: 14px;
+  display: grid;
+  gap: 24px;
 }
 
 .dim-note-list {
@@ -1122,12 +1064,6 @@ td {
 
   .chord-note-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .chord-progress-list {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    padding-right: 20px;
-    padding-left: 20px;
   }
 
   .question-panel {

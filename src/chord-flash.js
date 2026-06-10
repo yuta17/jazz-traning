@@ -24,6 +24,19 @@
     minor: ["C", "C♯", "D", "E♭", "E", "F", "F♯", "G", "A♭", "A", "B♭", "B"],
   };
 
+  const VOICINGS = [
+    {
+      id: "root",
+      label: "Root",
+      noteOrder: [0, 1, 2, 3],
+    },
+    {
+      id: "second",
+      label: "2nd",
+      noteOrder: [2, 3, 0, 1],
+    },
+  ];
+
   const CHORD_QUALITIES = [
     {
       id: "maj7",
@@ -73,7 +86,6 @@
     index: 0,
     revealed: false,
     completed: false,
-    results: [],
     timeLeft: LIMIT_SECONDS,
     timerId: null,
     deadline: 0,
@@ -121,34 +133,38 @@
     return SIMPLE_ACCIDENTAL_BLACKLIST.has(spelled) ? practicalName(targetPitch) : spelled;
   }
 
-  function buildChord(rootLabel, quality) {
+  function buildChord(rootLabel, quality, voicing = VOICINGS[0]) {
     const root = parseRoot(rootLabel);
-    const notes = quality.intervals.map((interval, index) => (
+    const rootPositionNotes = quality.intervals.map((interval, index) => (
       spellPitch(root, quality.degrees[index], interval)
     ));
+    const notes = voicing.noteOrder.map((noteIndex) => rootPositionNotes[noteIndex]);
 
     return {
-      id: `${root.label}-${quality.id}`,
+      id: `${root.label}-${quality.id}-${voicing.id}`,
       label: `${root.label}${quality.suffix}`,
       notes,
       root: root.label,
       qualityId: quality.id,
       qualityLabel: quality.label,
+      voicingId: voicing.id,
+      voicingLabel: voicing.label,
     };
   }
 
   function createFullDeck() {
     return CHORD_QUALITIES.flatMap((quality) => (
-      quality.roots.map((root) => buildChord(root, quality))
+      quality.roots.flatMap((root) => (
+        VOICINGS.map((voicing) => buildChord(root, quality, voicing))
+      ))
     ));
   }
 
   function createDeck() {
-    const perQuality = ROUND_SIZE / CHORD_QUALITIES.length;
     const chords = CHORD_QUALITIES.flatMap((quality) => (
       shuffle(quality.roots)
-        .slice(0, perQuality)
-        .map((root) => buildChord(root, quality))
+        .slice(0, VOICINGS.length)
+        .map((root, index) => buildChord(root, quality, VOICINGS[index]))
     ));
 
     return shuffle(chords);
@@ -191,7 +207,6 @@
     return {
       startButton: document.querySelector("#chord-start-button"),
       progressCount: document.querySelector("#chord-progress-count"),
-      progressList: document.querySelector("#chord-progress-list"),
       questionPanel: document.querySelector("#chord-question-panel"),
       revealButton: document.querySelector("#chord-reveal-button"),
       hitButton: document.querySelector("#chord-hit-button"),
@@ -231,7 +246,7 @@
         <div class="question-state">
           <p>Chord</p>
           <strong class="question-key chord-symbol">${task.label}</strong>
-          <span class="quality-pill">${task.qualityLabel}</span>
+          <span class="voicing-pill">${task.voicingLabel}</span>
         </div>
       `;
       return;
@@ -254,23 +269,6 @@
     const total = state.deck.length || ROUND_SIZE;
     const current = state.completed ? total : state.deck.length ? state.index + 1 : 0;
     dom.progressCount.textContent = `${current} / ${total}`;
-  }
-
-  function renderProgressList() {
-    const dom = elements();
-    dom.progressList.innerHTML = Array.from({ length: ROUND_SIZE }, (_, index) => {
-      const result = state.results[index];
-      const current = state.deck.length && !state.completed && index === state.index;
-      const classNames = [
-        "chord-progress-item",
-        current ? "current" : "",
-        result === true ? "hit" : "",
-        result === false ? "miss" : "",
-        index < state.results.length ? "done" : "",
-      ].filter(Boolean).join(" ");
-
-      return `<li class="${classNames}">${index + 1}</li>`;
-    }).join("");
   }
 
   function renderTimer() {
@@ -320,7 +318,6 @@
   function render() {
     renderQuestion();
     renderProgress();
-    renderProgressList();
     renderTimer();
     renderControls();
     renderStats();
@@ -350,7 +347,6 @@
     state.index = 0;
     state.revealed = false;
     state.completed = false;
-    state.results = [];
     state.timeLeft = LIMIT_SECONDS;
     render();
     startTimer();
@@ -387,7 +383,6 @@
     row.attempts += 1;
     if (wasCorrect) row.correct += 1;
     state.stats[task.qualityId] = row;
-    state.results[state.index] = wasCorrect;
 
     if (state.index >= state.deck.length - 1) {
       state.completed = true;
@@ -417,6 +412,7 @@
     CHORD_QUALITIES,
     LIMIT_SECONDS,
     ROUND_SIZE,
+    VOICINGS,
     buildChord,
     createDeck,
     createFullDeck,
