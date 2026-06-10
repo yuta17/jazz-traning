@@ -13,6 +13,7 @@
 - `two-five-one/` で2-5-1キー練習
 - `recognition.html` で2-5-1 / 2-5 / メジャー / マイナー混在の進行判定トレーニング
 - `dim7/` でランダムdim7コード練習
+- `sight-reading/` で4小節大譜表の譜読み・リズム練習
 
 ## ローカル確認
 
@@ -28,4 +29,5 @@ python3 -m http.server 4173
 node scripts/validate-theory.js
 node scripts/validate-progressions.js
 node scripts/validate-dim7.js
+node scripts/validate-sight-reading.js
 ```
