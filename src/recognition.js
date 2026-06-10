@@ -1,7 +1,8 @@
 (function bootRecognitionTrainer() {
   "use strict";
 
-  const { TARGET_TYPES, CHARTS, targetById } = window.ProgressionData;
+  const { TARGET_TYPES, CHARTS, answerLabel, targetById } =
+    window.ProgressionData;
 
   const elements = {
     targetTabs: document.querySelector("#target-tabs"),
@@ -26,8 +27,9 @@
   }
 
   function currentAnswers() {
+    const target = targetById(state.targetType);
     return currentChart().answers.filter(
-      (answer) => answer.type === state.targetType,
+      (answer) => target.answerTypes.includes(answer.type),
     );
   }
 
@@ -61,10 +63,13 @@
   function renderChart() {
     const starts = answerStarts();
     const spans = answerSpans();
-    const target = targetById(state.targetType);
+    const answers = currentAnswers();
 
     elements.chartGrid.innerHTML = currentChart().bars
       .map((bar, index) => {
+        const answerAtStart = state.checked
+          ? answers.find((answer) => answer.start === index)
+          : null;
         const selected = state.selected.has(index);
         const correctStart = state.checked && selected && starts.has(index);
         const wrongStart = state.checked && selected && !starts.has(index);
@@ -90,8 +95,8 @@
             <span class="bar-number">${index + 1}</span>
             <span class="chart-chords">${chords}</span>
             ${
-              state.checked && starts.has(index)
-                ? `<span class="answer-badge">${target.answer}</span>`
+              answerAtStart
+                ? `<span class="answer-badge">${answerLabel(answerAtStart.type)}</span>`
                 : ""
             }
           </button>

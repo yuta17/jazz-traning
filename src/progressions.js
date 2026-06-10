@@ -2,11 +2,16 @@
   "use strict";
 
   const TARGET_TYPES = [
-    { id: "major251", label: "M 2-5-1", answer: "M251" },
-    { id: "minor251", label: "m 2-5-1", answer: "m251" },
-    { id: "major25", label: "M 2-5", answer: "M25" },
-    { id: "minor25", label: "m 2-5", answer: "m25" },
+    { id: "all251", label: "2-5-1", answerTypes: ["major251", "minor251"] },
+    { id: "all25", label: "2-5", answerTypes: ["major25", "minor25"] },
   ];
+
+  const ANSWER_LABELS = {
+    major251: "M251",
+    minor251: "m251",
+    major25: "M25",
+    minor25: "m25",
+  };
 
   const CHARTS = [
     {
@@ -206,7 +211,11 @@
     return TARGET_TYPES.find((target) => target.id === id) || TARGET_TYPES[0];
   }
 
-  const api = { TARGET_TYPES, CHARTS, targetById };
+  function answerLabel(type) {
+    return ANSWER_LABELS[type] || type;
+  }
+
+  const api = { ANSWER_LABELS, TARGET_TYPES, CHARTS, answerLabel, targetById };
 
   if (typeof module !== "undefined" && module.exports) {
     module.exports = api;

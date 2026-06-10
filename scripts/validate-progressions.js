@@ -1,10 +1,28 @@
 const assert = require("node:assert/strict");
-const { CHARTS, TARGET_TYPES, targetById } = require("../src/progressions.js");
+const {
+  ANSWER_LABELS,
+  CHARTS,
+  TARGET_TYPES,
+  answerLabel,
+  targetById,
+} = require("../src/progressions.js");
 
-const targetIds = new Set(TARGET_TYPES.map((target) => target.id));
-const typeCounts = Object.fromEntries(TARGET_TYPES.map((target) => [target.id, 0]));
+const answerTypeIds = new Set(Object.keys(ANSWER_LABELS));
+const typeCounts = Object.fromEntries(
+  Object.keys(ANSWER_LABELS).map((type) => [type, 0]),
+);
 
 assert.equal(CHARTS.length, 6);
+assert.deepEqual(
+  TARGET_TYPES.map((target) => target.id),
+  ["all251", "all25"],
+);
+
+TARGET_TYPES.forEach((target) => {
+  assert.equal(targetById(target.id).id, target.id);
+  assert(target.answerTypes.length >= 2);
+  target.answerTypes.forEach((type) => assert(answerTypeIds.has(type)));
+});
 
 CHARTS.forEach((chart) => {
   assert.equal(chart.bars.length, 16, `${chart.title} must have 16 bars`);
@@ -17,7 +35,8 @@ CHARTS.forEach((chart) => {
 
   const chartTypes = new Set();
   chart.answers.forEach((answer) => {
-    assert(targetIds.has(answer.type), `Unknown answer type ${answer.type}`);
+    assert(answerTypeIds.has(answer.type), `Unknown answer type ${answer.type}`);
+    assert.equal(answerLabel(answer.type), ANSWER_LABELS[answer.type]);
     assert(answer.start >= 0 && answer.start < 16, "Answer start out of range");
     assert(answer.span.includes(answer.start), "Answer span must include start");
     answer.span.forEach((barIndex) => {
@@ -27,9 +46,8 @@ CHARTS.forEach((chart) => {
     typeCounts[answer.type] += 1;
   });
 
-  TARGET_TYPES.forEach((target) => {
-    assert(chartTypes.has(target.id), `${chart.title} missing ${target.id}`);
-    assert.equal(targetById(target.id).id, target.id);
+  Object.keys(ANSWER_LABELS).forEach((type) => {
+    assert(chartTypes.has(type), `${chart.title} missing ${type}`);
   });
 });
 
