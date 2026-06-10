@@ -13,7 +13,7 @@
 - `two-five-one/` で2-5-1キー練習
 - `recognition.html` で2-5-1 / 2-5 / メジャー / マイナー混在の進行判定トレーニング
 - `dim7/` でランダムdim7コード練習
-- `chord-flash/` でmaj7 / m7 / 7 / m7♭5 / dim7を1周10問で瞬間判定
+- `chord-flash/` でmaj7 / m7 / 7 / m7♭5 / dim7をRoot positionの1周10問で瞬間判定
 - `sight-reading/` で4小節大譜表の譜読み・リズム練習
 
 ## ローカル確認

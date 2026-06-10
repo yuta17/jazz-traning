@@ -172,7 +172,8 @@ input {
   gap: 14px;
 }
 
-.chord-limit {
+.chord-limit,
+.chord-voicing {
   display: inline-flex;
   align-items: center;
   min-height: 34px;
@@ -183,6 +184,10 @@ input {
   color: var(--muted);
   font-size: 0.86rem;
   font-weight: 900;
+}
+
+.chord-voicing {
+  color: var(--primary-dark);
 }
 
 .section-heading {
