@@ -1,15 +1,17 @@
 (function attachSightReading(global) {
   "use strict";
 
-  const STAFF = {
-    width: 920,
-    height: 400,
-    startX: 112,
-    endX: 872,
-    barWidth: 190,
-    lineGap: 12,
-    trebleTop: 74,
-    bassTop: 224,
+  const SCORE = {
+    width: 1040,
+    height: 392,
+    x: 28,
+    firstMeasureWidth: 282,
+    measureWidth: 238,
+    trebleY: 62,
+    bassY: 216,
+    guideTop: 76,
+    guideBottom: 326,
+    labelY: 364,
   };
 
   const TREBLE_PITCHES = ["E4", "F4", "G4", "A4", "B4", "C5", "D5", "E5", "F5", "G5"];
@@ -78,20 +80,6 @@
     checked: false,
   };
 
-  function pitchIndex(pitch) {
-    const match = pitch.match(/^([A-G])([0-9])$/);
-    const note = { C: 0, D: 1, E: 2, F: 3, G: 4, A: 5, B: 6 }[match[1]];
-    return Number(match[2]) * 7 + note;
-  }
-
-  function pitchY(staff, pitch) {
-    const bottomY = staff === "treble"
-      ? STAFF.trebleTop + STAFF.lineGap * 4
-      : STAFF.bassTop + STAFF.lineGap * 4;
-    const reference = staff === "treble" ? "E4" : "G2";
-    return bottomY - (pitchIndex(pitch) - pitchIndex(reference)) * (STAFF.lineGap / 2);
-  }
-
   function randomItem(items) {
     return items[Math.floor(Math.random() * items.length)];
   }
@@ -152,134 +140,6 @@
     return String(event.beat + 1);
   }
 
-  function eventX(event) {
-    const barStart = STAFF.startX + event.measure * STAFF.barWidth;
-    const beatWidth = STAFF.barWidth / 4;
-    return barStart + event.beat * beatWidth + 16;
-  }
-
-  function staffTop(staff) {
-    return staff === "treble" ? STAFF.trebleTop : STAFF.bassTop;
-  }
-
-  function escapeHtml(value) {
-    return String(value)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
-  }
-
-  function drawStaff(top, clef) {
-    const lines = [];
-    for (let i = 0; i < 5; i += 1) {
-      const y = top + i * STAFF.lineGap;
-      lines.push(`<line x1="${STAFF.startX}" y1="${y}" x2="${STAFF.endX}" y2="${y}" />`);
-    }
-
-    for (let i = 0; i <= 4; i += 1) {
-      const x = STAFF.startX + i * STAFF.barWidth;
-      lines.push(`<line class="bar-line" x1="${x}" y1="${top}" x2="${x}" y2="${top + STAFF.lineGap * 4}" />`);
-    }
-
-    return `
-      <g class="staff-lines">
-        ${lines.join("")}
-      </g>
-      <text class="staff-clef ${clef === "𝄢" ? "bass-clef" : ""}" x="36" y="${top + 42}">${clef}</text>
-    `;
-  }
-
-  function drawBeatGuides() {
-    if (!state.checked) return "";
-
-    const parts = [];
-    for (let measure = 0; measure < 4; measure += 1) {
-      for (let beat = 0; beat < 4; beat += 1) {
-        const x = STAFF.startX + measure * STAFF.barWidth + beat * (STAFF.barWidth / 4) + 16;
-        parts.push(`
-          <line class="beat-guide" x1="${x}" y1="54" x2="${x}" y2="328" />
-          <text class="beat-label" x="${x}" y="350">${beat + 1}</text>
-        `);
-      }
-    }
-    return parts.join("");
-  }
-
-  function drawNote(event, statusClass) {
-    const x = eventX(event);
-    const y = pitchY(event.staff, event.pitch);
-    const openHead = event.duration >= 2;
-    const stemHeight = 38;
-    const flagCount = event.duration <= 0.25 ? 2 : event.duration <= 0.75 ? 1 : 0;
-    const dotted = event.kind.startsWith("d");
-    const ledgerLines = [];
-
-    const top = staffTop(event.staff);
-    const bottom = top + STAFF.lineGap * 4;
-    if (y < top) {
-      for (let ly = top - STAFF.lineGap; ly >= y - 1; ly -= STAFF.lineGap) {
-        ledgerLines.push(`<line class="ledger-line" x1="${x - 13}" y1="${ly}" x2="${x + 13}" y2="${ly}" />`);
-      }
-    }
-    if (y > bottom) {
-      for (let ly = bottom + STAFF.lineGap; ly <= y + 1; ly += STAFF.lineGap) {
-        ledgerLines.push(`<line class="ledger-line" x1="${x - 13}" y1="${ly}" x2="${x + 13}" y2="${ly}" />`);
-      }
-    }
-
-    const flags = [];
-    for (let i = 0; i < flagCount; i += 1) {
-      const fy = y - stemHeight + i * 9;
-      flags.push(`<path class="note-stem" d="M ${x + 8} ${fy} C ${x + 28} ${fy + 5}, ${x + 25} ${fy + 15}, ${x + 10} ${fy + 17}" />`);
-    }
-
-    return `
-      <g class="score-event ${statusClass}" data-event="${event.id}">
-        <rect class="event-hitbox" x="${x - 22}" y="${y - 48}" width="54" height="86" />
-        ${ledgerLines.join("")}
-        <ellipse class="note-head ${openHead ? "open" : ""}" cx="${x}" cy="${y}" rx="9" ry="6" transform="rotate(-18 ${x} ${y})" />
-        ${event.duration < 4 ? `<line class="note-stem" x1="${x + 8}" y1="${y}" x2="${x + 8}" y2="${y - stemHeight}" />` : ""}
-        ${flags.join("")}
-        ${dotted ? `<circle class="rhythm-dot" cx="${x + 20}" cy="${y - 1}" r="2.6" />` : ""}
-        ${state.checked && isBeatStart(event) ? `<text class="event-beat-badge" x="${x}" y="${y - 22}">${beatNumber(event)}</text>` : ""}
-      </g>
-    `;
-  }
-
-  function drawRest(event, statusClass) {
-    const x = eventX(event);
-    const y = staffTop(event.staff) + STAFF.lineGap * 2;
-    const dotted = event.kind.startsWith("d");
-    const flagCount = event.duration <= 0.25 ? 2 : event.duration <= 0.75 ? 1 : 0;
-    let shape = "";
-
-    if (event.duration >= 2) {
-      shape = `<rect class="rest-shape" x="${x - 11}" y="${y - 8}" width="22" height="7" />`;
-    } else if (event.duration >= 1) {
-      shape = `<path class="rest-shape path" d="M ${x - 4} ${y - 26} L ${x + 8} ${y - 13} L ${x - 4} ${y - 1} L ${x + 7} ${y + 12}" />`;
-    } else {
-      const flags = [];
-      for (let i = 0; i < flagCount; i += 1) {
-        const fy = y - 22 + i * 9;
-        flags.push(`<path class="rest-shape path" d="M ${x} ${fy} C ${x + 15} ${fy + 2}, ${x + 14} ${fy + 14}, ${x + 1} ${fy + 15}" />`);
-      }
-      shape = `
-        <line class="rest-shape path" x1="${x}" y1="${y - 24}" x2="${x}" y2="${y + 18}" />
-        ${flags.join("")}
-      `;
-    }
-
-    return `
-      <g class="score-event ${statusClass}" data-event="${event.id}">
-        <rect class="event-hitbox" x="${x - 24}" y="${y - 46}" width="54" height="82" />
-        ${shape}
-        ${dotted ? `<circle class="rhythm-dot" cx="${x + 20}" cy="${y - 1}" r="2.6" />` : ""}
-        ${state.checked && isBeatStart(event) ? `<text class="event-beat-badge" x="${x}" y="${y - 28}">${beatNumber(event)}</text>` : ""}
-      </g>
-    `;
-  }
-
   function statusClass(event) {
     const selected = state.selected.has(event.id);
     const target = isBeatStart(event);
@@ -291,26 +151,215 @@
     return "";
   }
 
-  function renderScore() {
-    const events = state.exercise.events.map((event) => {
-      const cls = statusClass(event);
-      return event.rest ? drawRest(event, cls) : drawNote(event, cls);
+  function measureX(measure) {
+    if (measure === 0) return SCORE.x;
+    return SCORE.x + SCORE.firstMeasureWidth + (measure - 1) * SCORE.measureWidth;
+  }
+
+  function measureWidth(measure) {
+    return measure === 0 ? SCORE.firstMeasureWidth : SCORE.measureWidth;
+  }
+
+  function eventDuration(event) {
+    const dotted = event.kind.startsWith("d");
+    const base = dotted ? event.kind.slice(1) : event.kind;
+    return `${base}${dotted ? "d" : ""}${event.rest ? "r" : ""}`;
+  }
+
+  function eventKey(event) {
+    if (event.rest) return event.staff === "treble" ? "b/4" : "d/3";
+    return event.pitch.replace(/^([A-G])([0-9])$/, (_, note, octave) => `${note.toLowerCase()}/${octave}`);
+  }
+
+  function getVexFlow() {
+    return global.VexFlow || global.VF;
+  }
+
+  function createSvgElement(tagName, attributes = {}) {
+    const element = document.createElementNS("http://www.w3.org/2000/svg", tagName);
+    Object.entries(attributes).forEach(([name, value]) => {
+      element.setAttribute(name, value);
+    });
+    return element;
+  }
+
+  function getBoxValue(box, getter, key) {
+    if (!box) return 0;
+    if (typeof box[getter] === "function") return box[getter]();
+    return box[key] || 0;
+  }
+
+  function noteBounds(note, event) {
+    const box = typeof note.getBoundingBox === "function" ? note.getBoundingBox() : null;
+    const boxY = getBoxValue(box, "getY", "y");
+    const boxHeight = getBoxValue(box, "getH", "h");
+    const ys = typeof note.getYs === "function" ? note.getYs() : [];
+    const centerX = note.getAbsoluteX();
+    const centerY = ys.length > 0 ? ys[0] : boxY + boxHeight / 2;
+    const width = event.duration >= 1.5 ? 58 : 48;
+    const height = event.rest ? 54 : 70;
+    return {
+      centerX,
+      centerY,
+      x: centerX - width / 2,
+      y: centerY - height / 2,
+      width,
+      height,
+    };
+  }
+
+  function drawConnectors(VF, context, trebleStave, bassStave, measure) {
+    if (measure !== 0) return;
+
+    [
+      VF.StaveConnector.type.BRACE,
+      VF.StaveConnector.type.SINGLE_LEFT,
+    ].forEach((type) => {
+      new VF.StaveConnector(trebleStave, bassStave)
+        .setType(type)
+        .setContext(context)
+        .draw();
+    });
+  }
+
+  function drawBeams(VF, context, notes, events) {
+    let group = [];
+    const flush = () => {
+      if (group.length > 1) {
+        VF.Beam.generateBeams(group).forEach((beam) => {
+          beam.setContext(context).draw();
+        });
+      }
+      group = [];
+    };
+
+    notes.forEach((note, index) => {
+      if (!events[index].rest && events[index].duration < 1) {
+        group.push(note);
+      } else {
+        flush();
+      }
+    });
+    flush();
+  }
+
+  function drawOverlay(svg, noteRecords) {
+    const guideLayer = createSvgElement("g", { class: "reading-guide-layer" });
+    const eventLayer = createSvgElement("g", { class: "reading-hit-layer" });
+
+    if (state.checked) {
+      for (let measure = 0; measure < 4; measure += 1) {
+        for (let beat = 0; beat < 4; beat += 1) {
+          const leftPadding = measure === 0 ? 112 : 24;
+          const usableWidth = measureWidth(measure) - leftPadding - 18;
+          const x = measureX(measure) + leftPadding + (usableWidth * beat) / 4;
+          guideLayer.appendChild(createSvgElement("line", {
+            class: "beat-guide",
+            x1: x,
+            y1: SCORE.guideTop,
+            x2: x,
+            y2: SCORE.guideBottom,
+          }));
+          const label = createSvgElement("text", {
+            class: "beat-label",
+            x,
+            y: SCORE.labelY,
+          });
+          label.textContent = String(beat + 1);
+          guideLayer.appendChild(label);
+        }
+      }
+    }
+
+    noteRecords.forEach(({ event, note }) => {
+      const bounds = noteBounds(note, event);
+      const status = statusClass(event);
+      const group = createSvgElement("g", {
+        class: `score-event ${status}`.trim(),
+        "data-event": event.id,
+      });
+      group.appendChild(createSvgElement("rect", {
+        class: "event-hitbox",
+        x: bounds.x - 16,
+        y: bounds.y - 14,
+        width: bounds.width + 36,
+        height: bounds.height + 28,
+      }));
+
+      if (state.checked && isBeatStart(event)) {
+        const badge = createSvgElement("text", {
+          class: "event-beat-badge",
+          x: bounds.centerX,
+          y: bounds.y - 8,
+        });
+        badge.textContent = beatNumber(event);
+        group.appendChild(badge);
+      }
+
+      eventLayer.appendChild(group);
     });
 
-    return `
-      <svg class="reading-svg" viewBox="0 0 ${STAFF.width} ${STAFF.height}" role="img" aria-label="4小節の大譜表">
-        <rect class="score-paper" x="0" y="0" width="${STAFF.width}" height="${STAFF.height}" />
-        ${drawBeatGuides()}
-        ${drawStaff(STAFF.trebleTop, "𝄞")}
-        ${drawStaff(STAFF.bassTop, "𝄢")}
-        <text class="time-signature" x="82" y="${STAFF.trebleTop + 27}">4</text>
-        <text class="time-signature" x="82" y="${STAFF.trebleTop + 51}">4</text>
-        <text class="time-signature" x="82" y="${STAFF.bassTop + 27}">4</text>
-        <text class="time-signature" x="82" y="${STAFF.bassTop + 51}">4</text>
-        <line class="brace-line" x1="18" y1="${STAFF.trebleTop}" x2="18" y2="${STAFF.bassTop + STAFF.lineGap * 4}" />
-        ${events.join("")}
-      </svg>
-    `;
+    svg.appendChild(guideLayer);
+    svg.appendChild(eventLayer);
+  }
+
+  function drawScore(container) {
+    const VF = getVexFlow();
+    if (!VF) {
+      container.innerHTML = '<p class="score-error">譜面ライブラリを読み込めませんでした。</p>';
+      return;
+    }
+
+    container.innerHTML = '<div class="reading-vex-score"></div>';
+    const target = container.querySelector(".reading-vex-score");
+    const renderer = new VF.Renderer(target, VF.Renderer.Backends.SVG);
+    renderer.resize(SCORE.width, SCORE.height);
+
+    const context = renderer.getContext();
+    const noteRecords = [];
+
+    for (let measure = 0; measure < 4; measure += 1) {
+      const x = measureX(measure);
+      const width = measureWidth(measure);
+      const trebleStave = new VF.Stave(x, SCORE.trebleY, width);
+      const bassStave = new VF.Stave(x, SCORE.bassY, width);
+
+      if (measure === 0) {
+        trebleStave.addClef("treble").addTimeSignature("4/4");
+        bassStave.addClef("bass").addTimeSignature("4/4");
+      }
+
+      trebleStave.setContext(context).draw();
+      bassStave.setContext(context).draw();
+      drawConnectors(VF, context, trebleStave, bassStave, measure);
+
+      ["treble", "bass"].forEach((staff) => {
+        const events = state.exercise.events.filter(
+          (event) => event.staff === staff && event.measure === measure,
+        );
+        const notes = events.map((event) => new VF.StaveNote({
+          clef: staff,
+          keys: [eventKey(event)],
+          duration: eventDuration(event),
+        }));
+        const voice = new VF.Voice({ num_beats: 4, beat_value: 4 }).addTickables(notes);
+        const stave = staff === "treble" ? trebleStave : bassStave;
+        new VF.Formatter().joinVoices([voice]).format([voice], width - (measure === 0 ? 92 : 36));
+        voice.draw(context, stave);
+        drawBeams(VF, context, notes, events);
+
+        notes.forEach((note, index) => {
+          const event = events[index];
+          noteRecords.push({ event, note });
+        });
+      });
+    }
+
+    const svg = target.querySelector("svg");
+    svg.classList.add("reading-svg");
+    svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", "4小節の大譜表");
+    drawOverlay(svg, noteRecords);
   }
 
   function renderResult() {
@@ -335,7 +384,7 @@
 
   function render() {
     const score = document.querySelector("#reading-score");
-    score.innerHTML = renderScore();
+    drawScore(score);
     document.querySelector("#reading-check").disabled = state.checked;
     document.querySelector("#reading-clear").disabled = state.selected.size === 0 && !state.checked;
     renderResult();
