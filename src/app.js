@@ -102,7 +102,7 @@
     if (state.completed) {
       elements.questionPanel.innerHTML = `
         <div class="complete-state">
-          <p>Cycle</p>
+          <p>一周</p>
           <strong>完了</strong>
         </div>
       `;
@@ -112,8 +112,8 @@
     if (!task) {
       elements.questionPanel.innerHTML = `
         <div class="ready-state">
-          <p>Key of</p>
-          <strong>Ready</strong>
+          <p>キー</p>
+          <strong>待機中</strong>
         </div>
       `;
       return;
@@ -122,7 +122,7 @@
     if (!state.revealed) {
       elements.questionPanel.innerHTML = `
         <div class="question-state">
-          <p>Key of</p>
+          <p>キー</p>
           <strong class="question-key">
             ${displayKey(task)}
             <span class="variation-token">[${task.variation}]</span>
@@ -146,7 +146,7 @@
     elements.questionPanel.innerHTML = `
       <div class="answer-state">
         <p class="answer-title">
-          Key of <strong>${plainKey(task)}</strong>
+          キー <strong>${plainKey(task)}</strong>
           <span>[${task.variation}]</span>
         </p>
         <div class="chord-list">${chords}</div>

@@ -27,12 +27,12 @@
   const VOICINGS = [
     {
       id: "root",
-      label: "Root",
+      label: "ルート",
       noteOrder: [0, 1, 2, 3],
     },
     {
       id: "second",
-      label: "2nd",
+      label: "第2形",
       noteOrder: [2, 3, 0, 1],
     },
   ];
@@ -242,7 +242,7 @@
     if (!task) {
       dom.questionPanel.innerHTML = `
         <div class="ready-state">
-          <strong>Ready</strong>
+          <strong>待機中</strong>
         </div>
       `;
       return;

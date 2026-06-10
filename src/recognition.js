@@ -87,7 +87,7 @@
 
   function renderResult() {
     if (!state.checked) {
-      elements.result.innerHTML = "<span>READY</span><strong>-</strong>";
+      elements.result.innerHTML = "<span>待機中</span><strong>-</strong>";
       return;
     }
 
@@ -103,7 +103,7 @@
     ).length;
 
     elements.result.innerHTML = `
-      <span>RESULT</span>
+      <span>結果</span>
       <strong>正解 ${correct}/${starts.size}</strong>
       <em>ミス ${extra + missed}</em>
     `;

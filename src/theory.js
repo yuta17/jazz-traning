@@ -182,7 +182,7 @@
   }
 
   function labelForQuality(quality) {
-    return quality === "minor" ? "Minor" : "Major";
+    return quality === "minor" ? "マイナー" : "メジャー";
   }
 
   const api = {

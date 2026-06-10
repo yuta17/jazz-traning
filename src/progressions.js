@@ -2,15 +2,15 @@
   "use strict";
 
   const ANSWER_LABELS = {
-    major251: "M251",
-    minor251: "m251",
-    major25: "M25",
-    minor25: "m25",
+    major251: "メジャー251",
+    minor251: "マイナー251",
+    major25: "メジャー25",
+    minor25: "マイナー25",
   };
 
   const CHARTS = [
     {
-      title: "Etude 01",
+      title: "課題 01",
       bars: [
         ["D-7", "G7"],
         ["C△"],
@@ -41,7 +41,7 @@
       ],
     },
     {
-      title: "Etude 02",
+      title: "課題 02",
       bars: [
         ["C△"],
         ["B-7", "E7"],
@@ -73,7 +73,7 @@
       ],
     },
     {
-      title: "Etude 03",
+      title: "課題 03",
       bars: [
         ["F△"],
         ["E-7(♭5)", "A7"],
@@ -104,7 +104,7 @@
       ],
     },
     {
-      title: "Etude 04",
+      title: "課題 04",
       bars: [
         ["A-7", "D7"],
         ["G△"],
@@ -135,7 +135,7 @@
       ],
     },
     {
-      title: "Etude 05",
+      title: "課題 05",
       bars: [
         ["C#-7(♭5)", "F#7"],
         ["B-7"],
@@ -166,7 +166,7 @@
       ],
     },
     {
-      title: "Etude 06",
+      title: "課題 06",
       bars: [
         ["E-7", "A7"],
         ["C△"],

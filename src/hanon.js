@@ -88,7 +88,7 @@
     number.textContent = state.current;
     cycle.textContent = `サイクル ${HANON_NUMBERS.length - state.queue.length} / ${HANON_NUMBERS.length}`;
     history.innerHTML = state.history.length
-      ? state.history.map((item) => `<li><span>${item.date}</span><strong>No. ${item.number}</strong></li>`).join("")
+      ? state.history.map((item) => `<li><span>${item.date}</span><strong>番号 ${item.number}</strong></li>`).join("")
       : `<li class="empty-row">まだ履歴はありません</li>`;
   }
 

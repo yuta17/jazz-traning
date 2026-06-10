@@ -27,7 +27,7 @@
   const SIGHT_READING_SAMPLES = [
     piece(
       "reading-sample-01",
-      "C Major Step",
+      "課題 01",
       "C",
       [
         [note("q", "C5"), note("8", "D5"), note("8", "E5"), note("q", "F5"), note("q", "E5")],
@@ -44,7 +44,7 @@
     ),
     piece(
       "reading-sample-02",
-      "G Major Answer",
+      "課題 02",
       "G",
       [
         [note("q", "G4"), note("8", "A4"), note("8", "B4"), note("q", "D5"), note("q", "B4")],
@@ -61,7 +61,7 @@
     ),
     piece(
       "reading-sample-03",
-      "F Major Ballad",
+      "課題 03",
       "F",
       [
         [note("q", "F4"), note("8", "A4"), note("8", "C5"), note("q", "D5"), note("q", "C5")],
@@ -78,7 +78,7 @@
     ),
     piece(
       "reading-sample-04",
-      "D Major Bounce",
+      "課題 04",
       "D",
       [
         [note("q", "D5"), note("8", "E5"), note("8", "F5"), note("q", "A4"), note("q", "B4")],
@@ -95,7 +95,7 @@
     ),
     piece(
       "reading-sample-05",
-      "B Flat Major March",
+      "課題 05",
       "Bb",
       [
         [note("q", "B4"), note("8", "C5"), note("8", "D5"), note("q", "F5"), note("q", "D5")],
@@ -112,7 +112,7 @@
     ),
     piece(
       "reading-sample-06",
-      "E Flat Major Lyric",
+      "課題 06",
       "Eb",
       [
         [note("q", "E4"), note("8", "G4"), note("8", "B4"), note("q", "C5"), note("q", "B4")],
@@ -129,7 +129,7 @@
     ),
     piece(
       "reading-sample-07",
-      "A Major Lift",
+      "課題 07",
       "A",
       [
         [note("q", "A4"), note("8", "B4"), note("8", "C5"), note("q", "E5"), note("q", "C5")],
@@ -146,7 +146,7 @@
     ),
     piece(
       "reading-sample-08",
-      "E Minor Walk",
+      "課題 08",
       "G",
       [
         [note("q", "E5"), note("8", "D5"), note("8", "B4"), note("q", "G4"), note("q", "A4")],
@@ -163,7 +163,7 @@
     ),
     piece(
       "reading-sample-09",
-      "D Minor Line",
+      "課題 09",
       "F",
       [
         [note("q", "D5"), note("8", "E5"), note("8", "F5"), note("q", "A4"), note("q", "F5")],
@@ -180,7 +180,7 @@
     ),
     piece(
       "reading-sample-10",
-      "C Major Tie",
+      "課題 10",
       "C",
       [
         [note("q", "C5"), note("8", "D5"), note("8", "E5"), tie("8", "G5"), note("8", "G5"), note("q", "E5")],
@@ -197,7 +197,7 @@
     ),
     piece(
       "reading-sample-11",
-      "G Major Pickup",
+      "課題 11",
       "G",
       [
         [rest("8"), note("8", "G4"), note("q", "B4"), note("q", "D5"), note("q", "C5")],
@@ -214,7 +214,7 @@
     ),
     piece(
       "reading-sample-12",
-      "F Major Answer",
+      "課題 12",
       "F",
       [
         [note("q", "A4"), note("8", "C5"), note("8", "D5"), note("q", "C5"), note("q", "A4")],
@@ -231,7 +231,7 @@
     ),
     piece(
       "reading-sample-13",
-      "D Major Scale",
+      "課題 13",
       "D",
       [
         [note("q", "F4"), note("8", "A4"), note("8", "B4"), note("q", "A4"), note("q", "F4")],
@@ -248,7 +248,7 @@
     ),
     piece(
       "reading-sample-14",
-      "B Flat Major Return",
+      "課題 14",
       "Bb",
       [
         [note("q", "D5"), note("8", "C5"), note("8", "B4"), note("q", "F4"), note("q", "G4")],
@@ -265,7 +265,7 @@
     ),
     piece(
       "reading-sample-15",
-      "E Flat Major Tie",
+      "課題 15",
       "Eb",
       [
         [note("q", "G4"), note("8", "B4"), note("8", "C5"), tie("8", "B4"), note("8", "B4"), note("q", "G4")],
@@ -282,7 +282,7 @@
     ),
     piece(
       "reading-sample-16",
-      "A Major Close",
+      "課題 16",
       "A",
       [
         [note("q", "C5"), note("8", "B4"), note("8", "A4"), note("q", "E5"), note("q", "C5")],
@@ -730,7 +730,7 @@
   function renderResult() {
     const result = document.querySelector("#reading-result");
     if (!state.checked) {
-      result.innerHTML = "<span>READY</span><strong>-</strong>";
+      result.innerHTML = "<span>待機中</span><strong>-</strong>";
       return;
     }
 
@@ -741,7 +741,7 @@
     const missed = targets.filter((event) => !state.selected.has(event.id)).length;
 
     result.innerHTML = `
-      <span>RESULT</span>
+      <span>結果</span>
       <strong>正解 ${correct}/${targets.length}</strong>
       <em>ミス ${extra + missed}</em>
     `;
