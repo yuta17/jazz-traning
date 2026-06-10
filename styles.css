@@ -85,7 +85,7 @@ input {
 }
 
 .settings {
-  padding: 20px 28px 22px;
+  padding: 18px 28px 20px;
   background: var(--surface-soft);
 }
 
@@ -105,8 +105,7 @@ input {
   font-weight: 750;
 }
 
-.section-heading span,
-.cycle-size {
+.section-heading span {
   color: var(--muted);
   font-size: 0.86rem;
   font-weight: 700;
@@ -147,7 +146,7 @@ input {
 .check-option {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   min-width: 0;
   color: #374151;
   font-size: 0.96rem;
@@ -156,8 +155,8 @@ input {
 }
 
 .check-option input {
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
   margin: 0;
   accent-color: var(--accent);
   cursor: pointer;
@@ -503,8 +502,8 @@ td {
   }
 
   .check-option input {
-    width: 21px;
-    height: 21px;
+    width: 18px;
+    height: 18px;
   }
 
   .settings .button {

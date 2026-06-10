@@ -18,7 +18,6 @@
 
   const elements = {
     checkboxes: Array.from(document.querySelectorAll("input[type='checkbox']")),
-    cycleSize: document.querySelector("#cycle-size"),
     startButton: document.querySelector("#start-button"),
     progressCount: document.querySelector("#progress-count"),
     questionPanel: document.querySelector("#question-panel"),
@@ -81,11 +80,6 @@
     elements.checkboxes.forEach((checkbox) => {
       checkbox.checked = state.settings[checkbox.name].includes(checkbox.value);
     });
-  }
-
-  function taskCountLabel() {
-    const total = cycleSize(state.settings);
-    return total > 0 ? `1周 ${total}問` : "最低1つ選択";
   }
 
   function currentTask() {
@@ -170,7 +164,6 @@
     const hasSelection = cycleSize(state.settings) > 0;
     const hasTask = Boolean(currentTask());
 
-    elements.cycleSize.textContent = taskCountLabel();
     elements.startButton.disabled = !hasSelection;
     elements.startButton.textContent = state.deck.length ? "再スタート" : "スタート";
     elements.revealButton.hidden = state.revealed || state.completed;
