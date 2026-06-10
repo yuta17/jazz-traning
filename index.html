@@ -3,115 +3,20 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="refresh" content="0; url=./two-five-one/" />
     <meta
       name="description"
-      content="12キーを均一に回すジャズ2-5-1トレーニング"
+      content="ジャズ2-5-1トレーニング"
     />
     <title>2-5-1 Training</title>
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="canonical" href="./two-five-one/" />
+    <script>
+      location.replace("./two-five-one/");
+    </script>
   </head>
   <body>
-    <main class="app-shell">
-      <header class="hero">
-        <nav class="hero-links" aria-label="ページ">
-          <a href="./recognition.html">進行判定</a>
-        </nav>
-        <h1>2-5-1 TRAINING</h1>
-        <p>スッと弾けるまで繰り返そう</p>
-      </header>
-
-      <section class="settings" aria-label="バリエーション設定">
-        <div class="settings-grid">
-          <fieldset class="variation-group">
-            <legend>メジャー</legend>
-            <label class="check-option">
-              <input type="checkbox" name="major" value="RRR" />
-              <span>RRR</span>
-            </label>
-            <label class="check-option">
-              <input type="checkbox" name="major" value="R2R" checked />
-              <span>R2R</span>
-            </label>
-            <label class="check-option">
-              <input type="checkbox" name="major" value="2R2" checked />
-              <span>2R2</span>
-            </label>
-          </fieldset>
-
-          <fieldset class="variation-group">
-            <legend>マイナー</legend>
-            <label class="check-option">
-              <input type="checkbox" name="minor" value="RRR" />
-              <span>RRR</span>
-            </label>
-            <label class="check-option">
-              <input type="checkbox" name="minor" value="R2R" />
-              <span>R2R</span>
-            </label>
-            <label class="check-option">
-              <input type="checkbox" name="minor" value="2R2" />
-              <span>2R2</span>
-            </label>
-          </fieldset>
-        </div>
-
-        <div class="settings-actions">
-          <button id="start-button" class="button primary" type="button">
-            スタート
-          </button>
-        </div>
-      </section>
-
-      <section class="practice" aria-label="出題">
-        <div class="progress-row">
-          <span>PROGRESS</span>
-          <strong id="progress-count">0 / 12</strong>
-        </div>
-
-        <div id="question-panel" class="question-panel" aria-live="polite">
-          <div class="ready-state">
-            <p>Key of</p>
-            <strong>Ready</strong>
-          </div>
-        </div>
-
-        <div class="practice-actions">
-          <button id="reveal-button" class="button primary wide" type="button" disabled>
-            正解を見る
-          </button>
-          <div id="answer-buttons" class="answer-buttons" hidden>
-            <button id="miss-button" class="button soft" type="button">
-              もたついた
-            </button>
-            <button id="hit-button" class="button success" type="button">
-              スッと弾けた
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <section class="stats" aria-labelledby="stats-title">
-        <div class="section-heading stats-heading">
-          <h2 id="stats-title">学習成績</h2>
-          <span>※均等に出題されます</span>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>KEY</th>
-                <th>出題</th>
-                <th>正解</th>
-                <th>正解率</th>
-              </tr>
-            </thead>
-            <tbody id="stats-body"></tbody>
-          </table>
-        </div>
-      </section>
-    </main>
-
-    <script src="./src/theory.js"></script>
-    <script src="./src/app.js"></script>
+    <p>
+      <a href="./two-five-one/">2-5-1 Training</a>
+    </p>
   </body>
 </html>
