@@ -5,8 +5,8 @@
     width: 1040,
     height: 392,
     x: 28,
-    firstMeasureWidth: 282,
-    measureWidth: 238,
+    firstMeasureWidth: 304,
+    measureWidth: 232,
     trebleY: 62,
     bassY: 216,
     guideTop: 76,
@@ -24,121 +24,280 @@
     dh: 3,
   };
 
-  const TREBLE_LINES = [
-    [
-      [note("q", "C5"), note("8", "D5"), note("8", "E5"), note("q", "G4"), note("q", "A4")],
-      [note("d8", "B4"), note("16", "C5"), note("8", "D5"), note("8", "C5"), note("q", "A4"), note("q", "G4")],
-      [note("dq", "E5"), note("8", "D5"), note("q", "C5"), rest("q")],
-      [note("16", "G4"), note("16", "A4"), note("16", "B4"), note("16", "C5"), note("q", "D5"), note("8", "C5"), note("8", "B4"), note("q", "A4")],
-    ],
-    [
-      [note("q", "E4"), note("q", "G4"), note("8", "A4"), note("8", "B4"), note("q", "C5")],
-      [note("dq", "D5"), note("8", "C5"), note("q", "B4"), rest("q")],
-      [note("16", "A4"), note("16", "B4"), note("16", "C5"), note("16", "D5"), note("q", "E5"), note("q", "C5"), note("q", "A4")],
-      [note("h", "G4"), note("d8", "A4"), note("16", "B4"), note("q", "C5")],
-    ],
-    [
-      [rest("8"), note("8", "G4"), note("q", "B4"), note("q", "C5"), note("q", "D5")],
-      [note("d8", "E5"), note("16", "D5"), note("8", "C5"), note("8", "B4"), note("q", "A4"), note("q", "G4")],
-      [note("q", "C5"), note("16", "B4"), note("16", "A4"), note("16", "G4"), note("16", "F4"), note("q", "E4"), note("q", "G4")],
-      [note("dq", "A4"), note("8", "C5"), note("h", "B4")],
-    ],
-    [
-      [note("d8", "A4"), note("16", "B4"), note("q", "C5"), note("8", "D5"), note("8", "C5"), note("q", "B4")],
-      [note("q", "G4"), rest("8"), note("8", "A4"), note("16", "B4"), note("16", "C5"), note("16", "D5"), note("16", "C5"), note("q", "B4")],
-      [note("h", "E5"), note("8", "D5"), note("8", "C5"), rest("q")],
-      [note("q", "A4"), note("q", "B4"), note("q", "C5"), note("8", "D5"), rest("8")],
-    ],
-    [
-      [note("q", "D5"), note("8", "C5"), note("8", "B4"), note("q", "A4"), rest("q")],
-      [note("16", "G4"), note("16", "A4"), note("16", "B4"), note("16", "C5"), note("dq", "D5"), note("8", "E5"), note("q", "C5")],
-      [note("q", "B4"), note("q", "A4"), note("d8", "G4"), note("16", "A4"), note("q", "B4")],
-      [note("h", "C5"), note("8", "B4"), note("8", "A4"), note("q", "G4")],
-    ],
-    [
-      [note("h", "G4"), note("d8", "A4"), note("16", "B4"), note("q", "C5")],
-      [note("q", "D5"), note("q", "B4"), rest("8"), note("8", "A4"), note("q", "G4")],
-      [note("16", "E4"), note("16", "F4"), note("16", "G4"), note("16", "A4"), note("8", "B4"), note("8", "C5"), note("q", "D5"), rest("q")],
-      [note("dq", "C5"), note("8", "B4"), note("q", "A4"), note("q", "G4")],
-    ],
-    [
-      [note("q", "B4"), note("q", "D5"), note("8", "C5"), note("8", "B4"), note("q", "A4")],
-      [rest("q"), note("16", "G4"), note("16", "A4"), note("16", "B4"), note("16", "C5"), note("q", "D5"), note("q", "E5")],
-      [note("d8", "D5"), note("16", "C5"), note("q", "B4"), note("8", "A4"), note("8", "G4"), note("q", "A4")],
-      [note("h", "B4"), note("q", "G4"), rest("q")],
-    ],
-    [
-      [note("dq", "C5"), note("8", "D5"), note("q", "E5"), note("q", "D5")],
-      [note("8", "C5"), note("8", "B4"), note("8", "A4"), note("8", "G4"), note("q", "A4"), rest("q")],
-      [note("q", "B4"), tie("8", "C5"), note("8", "C5"), note("q", "D5"), note("q", "A4")],
-      [note("h", "G4"), note("d8", "A4"), note("16", "B4"), note("q", "C5")],
-    ],
+  const SIGHT_READING_SAMPLES = [
+    piece(
+      "reading-sample-01",
+      "C Major Step",
+      "C",
+      [
+        [note("q", "C5"), note("8", "D5"), note("8", "E5"), note("q", "F5"), note("q", "E5")],
+        [note("d8", "D5"), note("16", "E5"), note("8", "F5"), note("8", "E5"), note("q", "D5"), note("q", "C5")],
+        [note("q", "G4"), note("q", "A4"), note("d8", "B4"), note("16", "C5"), note("q", "D5")],
+        [note("h", "E5"), note("q", "D5"), note("q", "C5")],
+      ],
+      [
+        [note("h", "C3"), note("h", "G2")],
+        [note("q", "F2"), note("q", "C3"), rest("q"), note("q", "G2")],
+        [note("q", "A2"), note("q", "E3"), note("h", "F3")],
+        [note("h", "G2"), note("h", "C3")],
+      ],
+    ),
+    piece(
+      "reading-sample-02",
+      "G Major Answer",
+      "G",
+      [
+        [note("q", "G4"), note("8", "A4"), note("8", "B4"), note("q", "D5"), note("q", "B4")],
+        [note("d8", "C5"), note("16", "B4"), note("8", "A4"), note("8", "G4"), note("q", "A4"), note("q", "B4")],
+        [note("q", "D5"), note("q", "E5"), note("16", "F5"), note("16", "E5"), note("16", "D5"), note("16", "C5"), note("q", "B4")],
+        [note("h", "A4"), note("q", "B4"), note("q", "G4")],
+      ],
+      [
+        [note("h", "G2"), note("h", "D3")],
+        [note("q", "C3"), note("q", "G2"), rest("q"), note("q", "D3")],
+        [note("q", "E3"), note("q", "B2"), note("h", "C3")],
+        [note("h", "D3"), note("h", "G2")],
+      ],
+    ),
+    piece(
+      "reading-sample-03",
+      "F Major Ballad",
+      "F",
+      [
+        [note("q", "F4"), note("8", "A4"), note("8", "C5"), note("q", "D5"), note("q", "C5")],
+        [note("d8", "B4"), note("16", "C5"), note("8", "D5"), note("8", "C5"), note("q", "A4"), note("q", "F4")],
+        [note("q", "G4"), note("q", "A4"), note("16", "B4"), note("16", "A4"), note("16", "G4"), note("16", "F4"), note("q", "E4")],
+        [note("h", "F4"), note("q", "G4"), note("q", "F4")],
+      ],
+      [
+        [note("h", "F2"), note("h", "C3")],
+        [note("q", "B2"), note("q", "F3"), rest("q"), note("q", "C3")],
+        [note("q", "D3"), note("q", "A2"), note("h", "B2")],
+        [note("h", "C3"), note("h", "F2")],
+      ],
+    ),
+    piece(
+      "reading-sample-04",
+      "D Major Bounce",
+      "D",
+      [
+        [note("q", "D5"), note("8", "E5"), note("8", "F5"), note("q", "A4"), note("q", "B4")],
+        [note("d8", "A4"), note("16", "B4"), note("q", "D5"), note("8", "C5"), note("8", "B4"), note("q", "A4")],
+        [note("q", "F5"), note("q", "E5"), note("16", "D5"), note("16", "C5"), note("16", "B4"), note("16", "A4"), note("q", "B4")],
+        [note("h", "A4"), note("q", "F5"), note("q", "D5")],
+      ],
+      [
+        [note("h", "D3"), note("h", "A2")],
+        [note("q", "G2"), note("q", "D3"), rest("q"), note("q", "A2")],
+        [note("q", "B2"), note("q", "F3"), note("h", "G3")],
+        [note("h", "A2"), note("h", "D3")],
+      ],
+    ),
+    piece(
+      "reading-sample-05",
+      "B Flat Major March",
+      "Bb",
+      [
+        [note("q", "B4"), note("8", "C5"), note("8", "D5"), note("q", "F5"), note("q", "D5")],
+        [note("d8", "E5"), note("16", "D5"), note("8", "C5"), note("8", "B4"), note("q", "C5"), note("q", "D5")],
+        [note("q", "F4"), note("q", "G4"), note("16", "A4"), note("16", "B4"), note("16", "C5"), note("16", "D5"), note("q", "C5")],
+        [note("h", "D5"), note("q", "C5"), note("q", "B4")],
+      ],
+      [
+        [note("h", "B2"), note("h", "F2")],
+        [note("q", "E3"), note("q", "B2"), rest("q"), note("q", "F2")],
+        [note("q", "G2"), note("q", "D3"), note("h", "E3")],
+        [note("h", "F2"), note("h", "B2")],
+      ],
+    ),
+    piece(
+      "reading-sample-06",
+      "E Flat Major Lyric",
+      "Eb",
+      [
+        [note("q", "E4"), note("8", "G4"), note("8", "B4"), note("q", "C5"), note("q", "B4")],
+        [note("d8", "A4"), note("16", "B4"), note("8", "C5"), note("8", "B4"), note("q", "G4"), note("q", "E4")],
+        [note("q", "G4"), note("q", "B4"), note("16", "C5"), note("16", "B4"), note("16", "A4"), note("16", "G4"), note("q", "F4")],
+        [note("h", "E4"), note("q", "F4"), note("q", "E4")],
+      ],
+      [
+        [note("h", "E2"), note("h", "B2")],
+        [note("q", "A2"), note("q", "E3"), rest("q"), note("q", "B2")],
+        [note("q", "C3"), note("q", "G2"), note("h", "A2")],
+        [note("h", "B2"), note("h", "E3")],
+      ],
+    ),
+    piece(
+      "reading-sample-07",
+      "A Major Lift",
+      "A",
+      [
+        [note("q", "A4"), note("8", "B4"), note("8", "C5"), note("q", "E5"), note("q", "C5")],
+        [note("d8", "D5"), note("16", "E5"), note("8", "F5"), note("8", "E5"), note("q", "C5"), note("q", "A4")],
+        [note("q", "B4"), note("q", "C5"), note("16", "D5"), note("16", "C5"), note("16", "B4"), note("16", "A4"), note("q", "B4")],
+        [note("h", "C5"), note("q", "B4"), note("q", "A4")],
+      ],
+      [
+        [note("h", "A2"), note("h", "E3")],
+        [note("q", "D3"), note("q", "A2"), rest("q"), note("q", "E3")],
+        [note("q", "F3"), note("q", "C3"), note("h", "D3")],
+        [note("h", "E3"), note("h", "A2")],
+      ],
+    ),
+    piece(
+      "reading-sample-08",
+      "E Minor Walk",
+      "G",
+      [
+        [note("q", "E5"), note("8", "D5"), note("8", "B4"), note("q", "G4"), note("q", "A4")],
+        [note("d8", "B4"), note("16", "A4"), note("8", "G4"), note("8", "A4"), note("q", "B4"), note("q", "D5")],
+        [note("q", "E5"), note("q", "D5"), note("16", "B4"), note("16", "A4"), note("16", "G4"), note("16", "A4"), note("q", "B4")],
+        [note("h", "G4"), note("q", "A4"), note("q", "E4")],
+      ],
+      [
+        [note("h", "E2"), note("h", "B2")],
+        [note("q", "C3"), note("q", "G2"), rest("q"), note("q", "D3")],
+        [note("q", "A2"), note("q", "E3"), note("h", "C3")],
+        [note("h", "B2"), note("h", "E3")],
+      ],
+    ),
+    piece(
+      "reading-sample-09",
+      "D Minor Line",
+      "F",
+      [
+        [note("q", "D5"), note("8", "E5"), note("8", "F5"), note("q", "A4"), note("q", "F5")],
+        [note("d8", "F5"), note("16", "E5"), note("8", "D5"), note("8", "C5"), note("q", "D5"), note("q", "F5")],
+        [note("q", "A4"), note("q", "C5"), note("16", "D5"), note("16", "C5"), note("16", "B4"), note("16", "A4"), note("q", "G4")],
+        [note("h", "F4"), note("q", "E4"), note("q", "D4")],
+      ],
+      [
+        [note("h", "D3"), note("h", "A2")],
+        [note("q", "B2"), note("q", "F3"), rest("q"), note("q", "A2")],
+        [note("q", "G2"), note("q", "D3"), note("h", "B2")],
+        [note("h", "A2"), note("h", "D3")],
+      ],
+    ),
+    piece(
+      "reading-sample-10",
+      "C Major Tie",
+      "C",
+      [
+        [note("q", "C5"), note("8", "D5"), note("8", "E5"), tie("8", "G5"), note("8", "G5"), note("q", "E5")],
+        [note("d8", "F5"), note("16", "E5"), note("8", "D5"), note("8", "C5"), note("q", "D5"), note("q", "E5")],
+        [note("q", "G4"), note("q", "A4"), note("16", "B4"), note("16", "C5"), note("16", "D5"), note("16", "C5"), note("q", "B4")],
+        [note("h", "C5"), note("q", "D5"), note("q", "C5")],
+      ],
+      [
+        [note("h", "C3"), note("h", "G2")],
+        [note("q", "F2"), note("q", "C3"), rest("q"), note("q", "G2")],
+        [note("q", "A2"), note("q", "E3"), note("h", "F3")],
+        [note("h", "G2"), note("h", "C3")],
+      ],
+    ),
+    piece(
+      "reading-sample-11",
+      "G Major Pickup",
+      "G",
+      [
+        [rest("8"), note("8", "G4"), note("q", "B4"), note("q", "D5"), note("q", "C5")],
+        [note("d8", "B4"), note("16", "A4"), note("8", "G4"), note("8", "A4"), note("q", "B4"), note("q", "D5")],
+        [note("q", "E5"), note("q", "D5"), note("16", "C5"), note("16", "B4"), note("16", "A4"), note("16", "G4"), note("q", "A4")],
+        [note("h", "B4"), note("q", "A4"), note("q", "G4")],
+      ],
+      [
+        [note("h", "G2"), note("h", "D3")],
+        [note("q", "C3"), note("q", "G2"), rest("q"), note("q", "D3")],
+        [note("q", "E3"), note("q", "B2"), note("h", "C3")],
+        [note("h", "D3"), note("h", "G2")],
+      ],
+    ),
+    piece(
+      "reading-sample-12",
+      "F Major Answer",
+      "F",
+      [
+        [note("q", "A4"), note("8", "C5"), note("8", "D5"), note("q", "C5"), note("q", "A4")],
+        [note("d8", "G4"), note("16", "A4"), note("8", "B4"), note("8", "C5"), note("q", "D5"), note("q", "C5")],
+        [note("q", "F5"), note("q", "E5"), note("16", "D5"), note("16", "C5"), note("16", "B4"), note("16", "A4"), note("q", "G4")],
+        [note("h", "F4"), note("q", "A4"), rest("q")],
+      ],
+      [
+        [note("h", "F2"), note("h", "C3")],
+        [note("q", "B2"), note("q", "F3"), rest("q"), note("q", "C3")],
+        [note("q", "D3"), note("q", "A2"), note("h", "B2")],
+        [note("h", "C3"), note("h", "F2")],
+      ],
+    ),
+    piece(
+      "reading-sample-13",
+      "D Major Scale",
+      "D",
+      [
+        [note("q", "F4"), note("8", "A4"), note("8", "B4"), note("q", "A4"), note("q", "F4")],
+        [note("d8", "E4"), note("16", "F4"), note("8", "G4"), note("8", "A4"), note("q", "B4"), note("q", "A4")],
+        [note("q", "D5"), note("q", "C5"), note("16", "B4"), note("16", "A4"), note("16", "G4"), note("16", "F4"), note("q", "E4")],
+        [note("h", "D4"), note("q", "F4"), note("q", "D4")],
+      ],
+      [
+        [note("h", "D3"), note("h", "A2")],
+        [note("q", "G2"), note("q", "D3"), rest("q"), note("q", "A2")],
+        [note("q", "B2"), note("q", "F3"), note("h", "G3")],
+        [note("h", "A2"), note("h", "D3")],
+      ],
+    ),
+    piece(
+      "reading-sample-14",
+      "B Flat Major Return",
+      "Bb",
+      [
+        [note("q", "D5"), note("8", "C5"), note("8", "B4"), note("q", "F4"), note("q", "G4")],
+        [note("d8", "A4"), note("16", "B4"), note("8", "C5"), note("8", "D5"), note("q", "C5"), note("q", "B4")],
+        [note("q", "F5"), note("q", "D5"), note("16", "C5"), note("16", "B4"), note("16", "A4"), note("16", "G4"), note("q", "F4")],
+        [note("h", "B4"), note("q", "C5"), note("q", "B4")],
+      ],
+      [
+        [note("h", "B2"), note("h", "F2")],
+        [note("q", "E3"), note("q", "B2"), rest("q"), note("q", "F2")],
+        [note("q", "G2"), note("q", "D3"), note("h", "E3")],
+        [note("h", "F2"), note("h", "B2")],
+      ],
+    ),
+    piece(
+      "reading-sample-15",
+      "E Flat Major Tie",
+      "Eb",
+      [
+        [note("q", "G4"), note("8", "B4"), note("8", "C5"), tie("8", "B4"), note("8", "B4"), note("q", "G4")],
+        [note("d8", "A4"), note("16", "G4"), note("8", "F4"), note("8", "G4"), note("q", "B4"), note("q", "C5")],
+        [note("q", "E5"), note("q", "D5"), note("16", "C5"), note("16", "B4"), note("16", "A4"), note("16", "G4"), note("q", "F4")],
+        [note("h", "E4"), note("q", "F4"), note("q", "E4")],
+      ],
+      [
+        [note("h", "E2"), note("h", "B2")],
+        [note("q", "A2"), note("q", "E3"), rest("q"), note("q", "B2")],
+        [note("q", "C3"), note("q", "G2"), note("h", "A2")],
+        [note("h", "B2"), note("h", "E3")],
+      ],
+    ),
+    piece(
+      "reading-sample-16",
+      "A Major Close",
+      "A",
+      [
+        [note("q", "C5"), note("8", "B4"), note("8", "A4"), note("q", "E5"), note("q", "C5")],
+        [note("d8", "D5"), note("16", "C5"), note("8", "B4"), note("8", "A4"), note("q", "B4"), note("q", "C5")],
+        [note("q", "E5"), note("q", "F5"), note("16", "E5"), note("16", "D5"), note("16", "C5"), note("16", "B4"), note("q", "A4")],
+        [note("h", "C5"), note("q", "B4"), note("q", "A4")],
+      ],
+      [
+        [note("h", "A2"), note("h", "E3")],
+        [note("q", "D3"), note("q", "A2"), rest("q"), note("q", "E3")],
+        [note("q", "F3"), note("q", "C3"), note("h", "D3")],
+        [note("h", "E3"), note("h", "A2")],
+      ],
+    ),
   ];
-
-  const BASS_LINES = [
-    [
-      [note("h", "C3"), note("h", "G2")],
-      [note("q", "F2"), note("q", "C3"), rest("q"), note("q", "G2")],
-      [note("q", "A2"), note("q", "E3"), note("h", "F3")],
-      [note("h", "G2"), note("h", "C3")],
-    ],
-    [
-      [note("q", "C3"), note("q", "E3"), note("q", "G2"), note("q", "B2")],
-      [note("dq", "A2"), note("8", "C3"), note("q", "D3"), rest("q")],
-      [note("16", "G2"), note("16", "A2"), note("16", "B2"), note("16", "C3"), note("q", "D3"), note("q", "E3"), note("q", "F3")],
-      [note("h", "G2"), note("d8", "B2"), note("16", "C3"), note("q", "D3")],
-    ],
-    [
-      [rest("q"), note("q", "C3"), note("q", "G2"), note("q", "C3")],
-      [note("8", "F2"), note("8", "A2"), note("q", "C3"), note("q", "E3"), note("q", "D3")],
-      [note("d8", "G2"), note("16", "A2"), note("q", "B2"), note("8", "C3"), note("8", "D3"), note("q", "E3")],
-      [note("h", "F3"), note("h", "G2")],
-    ],
-    [
-      [note("h", "A2"), note("8", "C3"), note("8", "B2"), note("q", "A2")],
-      [note("q", "D3"), rest("8"), note("8", "C3"), note("q", "B2"), note("q", "G2")],
-      [note("16", "C3"), note("16", "D3"), note("16", "E3"), note("16", "D3"), note("q", "C3"), note("q", "G2"), note("q", "E2")],
-      [note("dq", "F2"), note("8", "A2"), note("h", "C3")],
-    ],
-    [
-      [note("q", "F2"), note("q", "C3"), note("8", "D3"), note("8", "E3"), note("q", "F3")],
-      [note("q", "E3"), note("q", "C3"), rest("q"), note("q", "G2")],
-      [note("d8", "A2"), note("16", "B2"), note("q", "C3"), note("q", "D3"), note("q", "E3")],
-      [note("h", "F3"), note("8", "E3"), note("8", "D3"), note("q", "C3")],
-    ],
-    [
-      [note("dq", "G2"), note("8", "B2"), note("q", "D3"), note("q", "F3")],
-      [note("16", "E3"), note("16", "D3"), note("16", "C3"), note("16", "B2"), note("q", "A2"), note("q", "D3"), rest("q")],
-      [note("q", "G2"), note("q", "D3"), note("8", "C3"), note("8", "B2"), note("q", "A2")],
-      [note("h", "G2"), note("d8", "A2"), note("16", "B2"), note("q", "C3")],
-    ],
-    [
-      [note("q", "D3"), note("q", "A2"), note("q", "F3"), rest("q")],
-      [note("d8", "G2"), note("16", "A2"), note("8", "B2"), note("8", "C3"), note("q", "D3"), note("q", "E3")],
-      [note("h", "F3"), note("q", "D3"), note("q", "B2")],
-      [note("16", "C3"), note("16", "B2"), note("16", "A2"), note("16", "G2"), note("q", "F2"), note("q", "G2"), note("q", "C3")],
-    ],
-    [
-      [note("h", "C3"), note("d8", "D3"), note("16", "E3"), note("q", "G2")],
-      [note("q", "F2"), note("8", "A2"), note("8", "C3"), note("q", "D3"), rest("q")],
-      [note("q", "E3"), note("q", "C3"), note("16", "B2"), note("16", "A2"), note("16", "G2"), note("16", "F2"), note("q", "G2")],
-      [note("dq", "C3"), note("8", "B2"), note("h", "C3")],
-    ],
-  ];
-
-  const SAMPLE_PAIRS = [
-    [0, 0], [1, 2], [2, 4], [3, 6],
-    [4, 1], [5, 3], [6, 5], [7, 7],
-    [0, 3], [1, 5], [2, 7], [3, 1],
-    [4, 6], [5, 0], [6, 2], [7, 4],
-  ];
-
-  const SIGHT_READING_SAMPLES = SAMPLE_PAIRS.map(([trebleIndex, bassIndex], index) => ({
-    id: `reading-sample-${String(index + 1).padStart(2, "0")}`,
-    title: `Reading Sample ${index + 1}`,
-    treble: TREBLE_LINES[trebleIndex],
-    bass: BASS_LINES[bassIndex],
-  }));
 
   const state = {
     exercise: null,
@@ -156,6 +315,10 @@
 
   function rest(kind) {
     return { d: DURATIONS[kind], kind, rest: true };
+  }
+
+  function piece(id, title, keySignature, treble, bass) {
+    return { id, title, keySignature, treble, bass };
   }
 
   function randomItem(items) {
@@ -194,6 +357,7 @@
     return {
       id: sample.id,
       title: sample.title,
+      keySignature: sample.keySignature,
       events: sampleToEvents(sample),
     };
   }
@@ -232,9 +396,14 @@
     return `${base}${dotted ? "d" : ""}${event.rest ? "r" : ""}`;
   }
 
+  function parsePitch(pitch) {
+    return pitch.match(/^([A-G])([#b]?)([0-9])$/);
+  }
+
   function eventKey(event) {
     if (event.rest) return event.staff === "treble" ? "b/4" : "d/3";
-    return event.pitch.replace(/^([A-G])([0-9])$/, (_, note, octave) => `${note.toLowerCase()}/${octave}`);
+    const [, note, accidental, octave] = parsePitch(event.pitch);
+    return `${note.toLowerCase()}${accidental}/${octave}`;
   }
 
   function getVexFlow() {
@@ -505,8 +674,16 @@
       const bassStave = new VF.Stave(x, SCORE.bassY, width);
 
       if (measure === 0) {
-        trebleStave.addClef("treble").addTimeSignature("4/4");
-        bassStave.addClef("bass").addTimeSignature("4/4");
+        trebleStave.addClef("treble");
+        bassStave.addClef("bass");
+
+        if (state.exercise.keySignature !== "C") {
+          trebleStave.addKeySignature(state.exercise.keySignature);
+          bassStave.addKeySignature(state.exercise.keySignature);
+        }
+
+        trebleStave.addTimeSignature("4/4");
+        bassStave.addTimeSignature("4/4");
       }
 
       trebleStave.setContext(context).draw();
@@ -527,7 +704,7 @@
         const beams = createBeams(VF, notes, events);
         const ties = createTies(VF, notes, events);
 
-        new VF.Formatter().joinVoices([voice]).format([voice], width - (measure === 0 ? 92 : 36));
+        new VF.Formatter().joinVoices([voice]).format([voice], width - (measure === 0 ? 112 : 36));
         voice.draw(context, stave);
         beams.forEach((beam) => {
           beam.setContext(context).draw();

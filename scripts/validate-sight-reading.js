@@ -10,6 +10,45 @@ assert.equal(Object.keys(DURATIONS).length, 7);
 assert(SIGHT_READING_SAMPLES.length >= 16);
 assert.equal(new Set(SIGHT_READING_SAMPLES.map((sample) => sample.id)).size, SIGHT_READING_SAMPLES.length);
 
+const KEY_SIGNATURES = {
+  C: {},
+  G: { F: 1 },
+  D: { F: 1, C: 1 },
+  A: { F: 1, C: 1, G: 1 },
+  F: { B: -1 },
+  Bb: { B: -1, E: -1 },
+  Eb: { B: -1, E: -1, A: -1 },
+};
+
+const NATURAL_PITCHES = {
+  C: 0,
+  D: 2,
+  E: 4,
+  F: 5,
+  G: 7,
+  A: 9,
+  B: 11,
+};
+
+function parsePitch(pitch) {
+  const match = pitch.match(/^([A-G])([#b]?)([0-9])$/);
+  if (!match) return null;
+
+  const [, letter, accidental, octave] = match;
+  return { letter, accidental, octave: Number(octave) };
+}
+
+function pitchToMidi(pitch, keySignature) {
+  const parsed = parsePitch(pitch);
+  assert(parsed, `invalid pitch ${pitch}`);
+
+  const keyAlterations = KEY_SIGNATURES[keySignature] || {};
+  const explicitAlteration = parsed.accidental === "#" ? 1 : parsed.accidental === "b" ? -1 : null;
+  const alteration = explicitAlteration ?? keyAlterations[parsed.letter] ?? 0;
+
+  return (parsed.octave + 1) * 12 + NATURAL_PITCHES[parsed.letter] + alteration;
+}
+
 function measureTotal(events) {
   return events.reduce((sum, event) => sum + event.d, 0);
 }
@@ -72,9 +111,49 @@ function assertTiesAreValid(sample, staff, measure, measureIndex) {
   });
 }
 
+function assertPlayableLine(sample, staff) {
+  const range = staff === "treble"
+    ? { min: 62, max: 79, maxLeap: 9 }
+    : { min: 39, max: 55, maxLeap: 12 };
+  let previousMidi = null;
+
+  sample[staff].forEach((measure, measureIndex) => {
+    measure.forEach((event, index) => {
+      if (event.rest) {
+        previousMidi = null;
+        return;
+      }
+
+      const midi = pitchToMidi(event.pitch, sample.keySignature);
+      assert(
+        midi >= range.min && midi <= range.max,
+        `${sample.id} ${staff} m${measureIndex + 1} event ${index + 1} is out of playable range`,
+      );
+
+      if (previousMidi !== null) {
+        assert(
+          Math.abs(midi - previousMidi) <= range.maxLeap,
+          `${sample.id} ${staff} m${measureIndex + 1} event ${index + 1} has an awkward leap`,
+        );
+      }
+
+      previousMidi = midi;
+    });
+  });
+}
+
+const keySignatures = new Set(SIGHT_READING_SAMPLES.map((sample) => sample.keySignature));
+["C", "G", "D", "A", "F", "Bb", "Eb"].forEach((keySignature) => {
+  assert(keySignatures.has(keySignature), `missing ${keySignature} sight-reading sample`);
+});
+
 SIGHT_READING_SAMPLES.forEach((sample) => {
+  assert(sample.title);
+  assert(sample.keySignature in KEY_SIGNATURES);
   assert.equal(sample.treble.length, 4);
   assert.equal(sample.bass.length, 4);
+  assertPlayableLine(sample, "treble");
+  assertPlayableLine(sample, "bass");
 
   ["treble", "bass"].forEach((staff) => {
     sample[staff].forEach((measure, measureIndex) => {
@@ -84,7 +163,7 @@ SIGHT_READING_SAMPLES.forEach((sample) => {
       measure.forEach((event) => {
         assert(event.kind in DURATIONS);
         assert.equal(event.d, DURATIONS[event.kind]);
-        assert(event.rest || /^[A-G][0-9]$/.test(event.pitch));
+        assert(event.rest || parsePitch(event.pitch));
       });
     });
   });
