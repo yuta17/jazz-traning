@@ -89,11 +89,11 @@
   function displayKey(task) {
     return task.quality === "minor"
       ? `${task.keyLabel}<span class="minor-token">(-)</span>`
-      : `${task.keyLabel}<span class="major-token">△</span>`;
+      : `${task.keyLabel}<span class="major-token">maj</span>`;
   }
 
   function plainKey(task) {
-    return task.quality === "minor" ? `${task.keyLabel}(-)` : `${task.keyLabel}△`;
+    return task.quality === "minor" ? `${task.keyLabel}(-)` : `${task.keyLabel}maj`;
   }
 
   function renderQuestion() {
@@ -112,7 +112,6 @@
     if (!task) {
       elements.questionPanel.innerHTML = `
         <div class="ready-state">
-          <p>キー</p>
           <strong>待機中</strong>
         </div>
       `;
@@ -122,7 +121,6 @@
     if (!state.revealed) {
       elements.questionPanel.innerHTML = `
         <div class="question-state">
-          <p>キー</p>
           <strong class="question-key">
             ${displayKey(task)}
             <span class="variation-token">[${task.variation}]</span>
@@ -146,7 +144,7 @@
     elements.questionPanel.innerHTML = `
       <div class="answer-state">
         <p class="answer-title">
-          キー <strong>${plainKey(task)}</strong>
+          <strong>${plainKey(task)}</strong>
           <span>[${task.variation}]</span>
         </p>
         <div class="chord-list">${chords}</div>
