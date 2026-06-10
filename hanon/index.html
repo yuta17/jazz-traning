@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="ハノン1-5から今日弾く番号を偏りなく選ぶ"
+      content="ハノン1-5から開くたびに番号をランダム表示する"
     />
-    <title>今日のハノン</title>
-    <link rel="stylesheet" href="../styles.css?v=20260610-jp" />
+    <title>ハノン番号</title>
+    <link rel="stylesheet" href="../styles.css?v=20260610-hanon-simple" />
   </head>
   <body>
     <main class="app-shell">
@@ -16,27 +16,18 @@
         <nav class="hero-links" aria-label="ページ">
           <a href="../">ホーム</a>
         </nav>
-        <h1>今日のハノン</h1>
-        <p>1-5を一巡するまで偏りなく回す</p>
+        <h1>ハノン番号</h1>
+        <p>開くたびに1-5からひとつ出す</p>
       </header>
 
-      <section class="hanon-stage" aria-label="今日のハノン">
-        <div class="hanon-date" id="hanon-date">今日</div>
+      <section class="hanon-stage" aria-label="ハノン番号">
         <div class="hanon-number" aria-live="polite">
           <span>番号</span>
           <strong id="hanon-number">-</strong>
         </div>
-        <div class="hanon-cycle" id="hanon-cycle">-</div>
-      </section>
-
-      <section class="stats hanon-history-section" aria-labelledby="hanon-history-title">
-        <div class="section-heading stats-heading">
-          <h2 id="hanon-history-title">履歴</h2>
-        </div>
-        <ol id="hanon-history" class="hanon-history"></ol>
       </section>
     </main>
 
-    <script src="../src/hanon.js?v=20260610-jp"></script>
+    <script src="../src/hanon.js?v=20260610-hanon-simple"></script>
   </body>
 </html>
