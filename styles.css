@@ -111,9 +111,58 @@ input {
   border-bottom: 1px solid var(--line);
 }
 
+.home-shell {
+  width: min(100%, 720px);
+}
+
+.home-hero {
+  padding: 46px 28px 38px;
+}
+
+.home-menu {
+  display: grid;
+  gap: 12px;
+  padding: 24px 28px 30px;
+  background: var(--surface-soft);
+}
+
+.home-card {
+  display: grid;
+  gap: 8px;
+  padding: 18px 20px;
+  border: 1px solid #e1e5ef;
+  border-radius: 8px;
+  background: white;
+  color: #1f2937;
+}
+
+.home-card span {
+  color: var(--muted-light);
+  font-size: 0.74rem;
+  font-weight: 900;
+}
+
+.home-card strong {
+  font-size: 1.35rem;
+  line-height: 1.1;
+  font-weight: 900;
+}
+
+.home-card em {
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-style: normal;
+  font-weight: 700;
+}
+
 .settings {
   padding: 18px 28px 20px;
   background: var(--surface-soft);
+}
+
+.dim-start {
+  display: flex;
+  justify-content: center;
 }
 
 .section-heading {
@@ -347,6 +396,29 @@ input {
   color: var(--muted);
   font-size: 0.68em;
   margin-left: 0.04em;
+}
+
+.dim-symbol {
+  font-size: 3.7rem;
+}
+
+.dim-note-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.dim-note {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 68px;
+  border: 1px solid var(--answer-line);
+  border-radius: 8px;
+  background: var(--answer-bg);
+  color: #172033;
+  font-size: 1.7rem;
+  font-weight: 900;
 }
 
 .answer-state {
@@ -681,6 +753,7 @@ td {
   }
 
   .settings,
+  .home-menu,
   .progress-row,
   .question-panel,
   .practice-actions,
@@ -748,6 +821,23 @@ td {
 
   .chord-symbol {
     font-size: 1.65rem;
+  }
+
+  .home-card {
+    padding: 16px 18px;
+  }
+
+  .dim-symbol {
+    font-size: 2.8rem;
+  }
+
+  .dim-note-list {
+    gap: 8px;
+  }
+
+  .dim-note {
+    min-height: 56px;
+    font-size: 1.22rem;
   }
 
   .spotter-hero {
