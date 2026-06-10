@@ -165,6 +165,26 @@ input {
   justify-content: center;
 }
 
+.chord-start {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.chord-limit {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid #dde2ec;
+  border-radius: 8px;
+  background: white;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 900;
+}
+
 .section-heading {
   display: flex;
   align-items: baseline;
@@ -402,7 +422,67 @@ input {
   font-size: 3.7rem;
 }
 
+.chord-symbol {
+  font-size: clamp(3.2rem, 12vw, 5.4rem);
+  letter-spacing: 0;
+}
+
+.quality-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  margin-top: 18px;
+  padding: 0 12px;
+  border: 1px solid #e3e7ef;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 900;
+}
+
+.chord-panel {
+  min-height: 330px;
+}
+
+.chord-time-row {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  background: white;
+}
+
+.chord-timer {
+  height: 8px;
+  margin: 0 28px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #eef0f6;
+}
+
+.chord-timer span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--primary);
+  transition: width 90ms linear, background-color 120ms ease;
+}
+
+.chord-timer span[data-low="true"] {
+  background: #dc5537;
+}
+
+.chord-actions {
+  gap: 14px;
+}
+
 .dim-note-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.chord-note-list {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
@@ -418,6 +498,19 @@ input {
   background: var(--answer-bg);
   color: #172033;
   font-size: 1.7rem;
+  font-weight: 900;
+}
+
+.chord-note {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 72px;
+  border: 1px solid var(--answer-line);
+  border-radius: 8px;
+  background: var(--answer-bg);
+  color: #172033;
+  font-size: 1.8rem;
   font-weight: 900;
 }
 
@@ -979,6 +1072,10 @@ td {
 
   .answer-buttons {
     grid-template-columns: 1fr;
+  }
+
+  .chord-note-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .question-panel {

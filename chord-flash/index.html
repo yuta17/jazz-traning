@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="ランダムなコードネームを見てすぐ鍵盤で押さえるトレーニング"
+    />
+    <title>Chord Flash Training</title>
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="hero chord-hero">
+        <nav class="hero-links" aria-label="ページ">
+          <a href="../">Home</a>
+        </nav>
+        <h1>CHORD FLASH</h1>
+        <p>コードネームを反射で押さえる</p>
+      </header>
+
+      <section class="settings chord-start" aria-label="開始">
+        <button id="chord-start-button" class="button primary" type="button">
+          スタート
+        </button>
+        <span class="chord-limit">4秒</span>
+      </section>
+
+      <section class="practice" aria-label="出題">
+        <div class="progress-row">
+          <span>PROGRESS</span>
+          <strong id="chord-progress-count">0 / 60</strong>
+        </div>
+        <div class="progress-row chord-time-row">
+          <span>TIME</span>
+          <strong id="chord-time-left">4.0</strong>
+        </div>
+
+        <div id="chord-question-panel" class="question-panel chord-panel" aria-live="polite">
+          <div class="ready-state">
+            <p>Chord</p>
+            <strong>Ready</strong>
+          </div>
+        </div>
+
+        <div class="chord-timer" aria-hidden="true">
+          <span id="chord-timer-bar"></span>
+        </div>
+
+        <div class="practice-actions chord-actions">
+          <button id="chord-reveal-button" class="button primary wide" type="button" disabled>
+            構成音を見る
+          </button>
+          <div class="answer-buttons">
+            <button id="chord-miss-button" class="button soft" type="button" disabled>
+              もたついた
+            </button>
+            <button id="chord-hit-button" class="button success" type="button" disabled>
+              弾けた
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="stats" aria-labelledby="chord-stats-title">
+        <div class="section-heading stats-heading">
+          <h2 id="chord-stats-title">学習成績</h2>
+          <span>※1周60問</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>TYPE</th>
+                <th>出題</th>
+                <th>成功</th>
+                <th>成功率</th>
+              </tr>
+            </thead>
+            <tbody id="chord-stats-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="../src/chord-flash.js"></script>
+  </body>
+</html>
