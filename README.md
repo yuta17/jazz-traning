@@ -10,6 +10,7 @@
 - メジャーのみ、またはマイナーのみは1周12問
 - メジャーとマイナーを含む場合は1周24問
 - 選択したバリエーションは1周内でできるだけ均等に割り当て
+- `recognition.html` でオリジナル16小節エチュードの進行判定トレーニング
 
 ## ローカル確認
 
@@ -23,4 +24,5 @@ python3 -m http.server 4173
 
 ```bash
 node scripts/validate-theory.js
+node scripts/validate-progressions.js
 ```
