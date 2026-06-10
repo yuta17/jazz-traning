@@ -154,11 +154,6 @@ input {
   background: var(--surface-soft);
 }
 
-.dim-start {
-  display: flex;
-  justify-content: center;
-}
-
 .hanon-stage {
   padding: 34px 28px 38px;
   background: white;
@@ -471,10 +466,6 @@ input {
   margin-left: 0.04em;
 }
 
-.dim-symbol {
-  font-size: 3.7rem;
-}
-
 .question-key.chord-symbol {
   font-size: clamp(4.6rem, 16vw, 7rem);
   letter-spacing: 0;
@@ -531,29 +522,10 @@ input {
   gap: 24px;
 }
 
-.dim-note-list {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
-}
-
 .chord-note-list {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
-}
-
-.dim-note {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 68px;
-  border: 1px solid var(--answer-line);
-  border-radius: 8px;
-  background: var(--answer-bg);
-  color: #172033;
-  font-size: 1.7rem;
-  font-weight: 900;
 }
 
 .chord-note {
@@ -978,19 +950,30 @@ td {
 }
 
 .chart-chords {
-  display: grid;
-  align-content: center;
-  gap: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
   min-width: 0;
+  font-size: clamp(0.66rem, 1.55vw, 0.96rem);
+  white-space: nowrap;
 }
 
 .chart-chord {
   min-width: 0;
   color: #172033;
-  font-size: 1rem;
-  line-height: 1.08;
+  font-size: inherit;
+  line-height: 1;
   font-weight: 850;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
+}
+
+.chart-chord-separator {
+  flex: 0 0 auto;
+  color: #9ca3af;
+  font-size: inherit;
+  line-height: 1;
+  font-weight: 900;
 }
 
 .answer-badge {
@@ -1169,19 +1152,6 @@ td {
     padding: 16px 18px;
   }
 
-  .dim-symbol {
-    font-size: 2.8rem;
-  }
-
-  .dim-note-list {
-    gap: 8px;
-  }
-
-  .dim-note {
-    min-height: 56px;
-    font-size: 1.22rem;
-  }
-
   .spotter-hero {
     padding-top: 34px;
   }
@@ -1205,8 +1175,9 @@ td {
     gap: 5px;
   }
 
-  .chart-chord {
-    font-size: 0.74rem;
+  .chart-chords {
+    gap: 2px;
+    font-size: 0.62rem;
   }
 
   .answer-badge {

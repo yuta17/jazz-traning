@@ -68,7 +68,7 @@
 
         const chords = bar
           .map((symbol) => `<span class="chart-chord">${symbol}</span>`)
-          .join("");
+          .join('<span class="chart-chord-separator" aria-hidden="true">→</span>');
 
         return `
           <button class="${classes}" type="button" data-bar="${index}">
