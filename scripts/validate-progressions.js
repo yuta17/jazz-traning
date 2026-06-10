@@ -2,9 +2,7 @@ const assert = require("node:assert/strict");
 const {
   ANSWER_LABELS,
   CHARTS,
-  TARGET_TYPES,
   answerLabel,
-  targetById,
 } = require("../src/progressions.js");
 
 const answerTypeIds = new Set(Object.keys(ANSWER_LABELS));
@@ -13,16 +11,6 @@ const typeCounts = Object.fromEntries(
 );
 
 assert.equal(CHARTS.length, 6);
-assert.deepEqual(
-  TARGET_TYPES.map((target) => target.id),
-  ["all251", "all25"],
-);
-
-TARGET_TYPES.forEach((target) => {
-  assert.equal(targetById(target.id).id, target.id);
-  assert(target.answerTypes.length >= 2);
-  target.answerTypes.forEach((type) => assert(answerTypeIds.has(type)));
-});
 
 CHARTS.forEach((chart) => {
   assert.equal(chart.bars.length, 16, `${chart.title} must have 16 bars`);
@@ -49,6 +37,10 @@ CHARTS.forEach((chart) => {
   Object.keys(ANSWER_LABELS).forEach((type) => {
     assert(chartTypes.has(type), `${chart.title} missing ${type}`);
   });
+
+  const has251 = chart.answers.some((answer) => answer.type.endsWith("251"));
+  const has25 = chart.answers.some((answer) => answer.type.endsWith("25"));
+  assert(has251 && has25, `${chart.title} must mix 2-5-1 and 2-5`);
 });
 
 Object.entries(typeCounts).forEach(([type, count]) => {

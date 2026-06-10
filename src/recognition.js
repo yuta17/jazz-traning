@@ -1,11 +1,9 @@
 (function bootRecognitionTrainer() {
   "use strict";
 
-  const { TARGET_TYPES, CHARTS, answerLabel, targetById } =
-    window.ProgressionData;
+  const { CHARTS, answerLabel } = window.ProgressionData;
 
   const elements = {
-    targetTabs: document.querySelector("#target-tabs"),
     chartTitle: document.querySelector("#chart-title"),
     chartCount: document.querySelector("#chart-count"),
     chartGrid: document.querySelector("#chart-grid"),
@@ -17,7 +15,6 @@
 
   const state = {
     chartIndex: 0,
-    targetType: TARGET_TYPES[0].id,
     selected: new Set(),
     checked: false,
   };
@@ -27,10 +24,7 @@
   }
 
   function currentAnswers() {
-    const target = targetById(state.targetType);
-    return currentChart().answers.filter(
-      (answer) => target.answerTypes.includes(answer.type),
-    );
+    return currentChart().answers;
   }
 
   function answerStarts() {
@@ -39,20 +33,6 @@
 
   function answerSpans() {
     return new Set(currentAnswers().flatMap((answer) => answer.span));
-  }
-
-  function renderTargets() {
-    elements.targetTabs.innerHTML = TARGET_TYPES.map(
-      (target) => `
-        <button
-          class="target-tab ${target.id === state.targetType ? "active" : ""}"
-          type="button"
-          data-target="${target.id}"
-        >
-          ${target.label}
-        </button>
-      `,
-    ).join("");
   }
 
   function renderMeta() {
@@ -135,7 +115,6 @@
   }
 
   function render() {
-    renderTargets();
     renderMeta();
     renderChart();
     renderResult();
@@ -146,11 +125,6 @@
     state.selected.clear();
     state.checked = false;
     render();
-  }
-
-  function switchTarget(targetType) {
-    state.targetType = targetType;
-    resetMarks();
   }
 
   function toggleBar(index) {
@@ -174,12 +148,6 @@
     state.chartIndex = (state.chartIndex + 1) % CHARTS.length;
     resetMarks();
   }
-
-  elements.targetTabs.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-target]");
-    if (!button) return;
-    switchTarget(button.dataset.target);
-  });
 
   elements.chartGrid.addEventListener("click", (event) => {
     const button = event.target.closest("[data-bar]");

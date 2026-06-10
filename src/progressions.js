@@ -1,11 +1,6 @@
 (function attachProgressions(global) {
   "use strict";
 
-  const TARGET_TYPES = [
-    { id: "all251", label: "2-5-1", answerTypes: ["major251", "minor251"] },
-    { id: "all25", label: "2-5", answerTypes: ["major25", "minor25"] },
-  ];
-
   const ANSWER_LABELS = {
     major251: "M251",
     minor251: "m251",
@@ -207,15 +202,11 @@
     return { type, start, span };
   }
 
-  function targetById(id) {
-    return TARGET_TYPES.find((target) => target.id === id) || TARGET_TYPES[0];
-  }
-
   function answerLabel(type) {
     return ANSWER_LABELS[type] || type;
   }
 
-  const api = { ANSWER_LABELS, TARGET_TYPES, CHARTS, answerLabel, targetById };
+  const api = { ANSWER_LABELS, CHARTS, answerLabel };
 
   if (typeof module !== "undefined" && module.exports) {
     module.exports = api;

@@ -491,49 +491,11 @@ td {
   border-bottom: 1px solid var(--line);
 }
 
-.target-row {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: center;
-  gap: 16px;
-}
-
-.target-label {
-  color: var(--muted-light);
-  font-size: 0.78rem;
-  font-weight: 900;
-}
-
-.target-tabs {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.target-tab {
-  min-height: 40px;
-  padding: 0 10px;
-  border: 1px solid #dfe4ee;
-  border-radius: 8px;
-  background: white;
-  color: #374151;
-  font-size: 0.9rem;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.target-tab.active {
-  border-color: var(--primary);
-  background: #f0efff;
-  color: var(--primary-dark);
-}
-
 .chart-meta {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 16px;
-  margin-top: 16px;
   color: #4b5563;
 }
 
@@ -798,21 +760,6 @@ td {
   .spotter-result {
     padding-left: 14px;
     padding-right: 14px;
-  }
-
-  .target-row {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-
-  .target-tabs {
-    gap: 6px;
-  }
-
-  .target-tab {
-    min-height: 34px;
-    padding: 0 4px;
-    font-size: 0.72rem;
   }
 
   .chart-section {
