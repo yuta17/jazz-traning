@@ -2,14 +2,12 @@
   "use strict";
 
   const {
-    VARIATIONS,
     KEYS,
     sanitizeSettings,
     selectedQualities,
     cycleSize,
     buildDeck,
     statKey,
-    labelForQuality,
   } = window.JazzTheory;
 
   const STORAGE_KEY = "jazz-251-trainer-state-v1";
@@ -21,7 +19,6 @@
   const elements = {
     checkboxes: Array.from(document.querySelectorAll("input[type='checkbox']")),
     cycleSize: document.querySelector("#cycle-size"),
-    selectionSummary: document.querySelector("#selection-summary"),
     startButton: document.querySelector("#start-button"),
     progressCount: document.querySelector("#progress-count"),
     questionPanel: document.querySelector("#question-panel"),
@@ -91,17 +88,6 @@
     return total > 0 ? `1周 ${total}問` : "最低1つ選択";
   }
 
-  function selectedSummary() {
-    const parts = [];
-    const majorCount = state.settings.major.length;
-    const minorCount = state.settings.minor.length;
-
-    if (majorCount) parts.push(`Major ${majorCount}種`);
-    if (minorCount) parts.push(`Minor ${minorCount}種`);
-
-    return parts.length ? parts.join(" / ") : "未選択";
-  }
-
   function currentTask() {
     return state.deck[state.index] || null;
   }
@@ -109,11 +95,11 @@
   function displayKey(task) {
     return task.quality === "minor"
       ? `${task.keyLabel}<span class="minor-token">(-)</span>`
-      : task.keyLabel;
+      : `${task.keyLabel}<span class="major-token">△</span>`;
   }
 
   function plainKey(task) {
-    return task.quality === "minor" ? `${task.keyLabel}(-)` : task.keyLabel;
+    return task.quality === "minor" ? `${task.keyLabel}(-)` : `${task.keyLabel}△`;
   }
 
   function renderQuestion() {
@@ -185,7 +171,6 @@
     const hasTask = Boolean(currentTask());
 
     elements.cycleSize.textContent = taskCountLabel();
-    elements.selectionSummary.textContent = selectedSummary();
     elements.startButton.disabled = !hasSelection;
     elements.startButton.textContent = state.deck.length ? "再スタート" : "スタート";
     elements.revealButton.hidden = state.revealed || state.completed;

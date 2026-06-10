@@ -85,7 +85,7 @@ input {
 }
 
 .settings {
-  padding: 24px 28px 26px;
+  padding: 20px 28px 22px;
   background: var(--surface-soft);
 }
 
@@ -94,35 +94,35 @@ input {
   align-items: baseline;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .section-heading h2 {
   margin: 0;
   color: #4b5563;
-  font-size: 1.12rem;
+  font-size: 1rem;
   line-height: 1.2;
-  font-weight: 800;
+  font-weight: 750;
 }
 
 .section-heading span,
 .cycle-size {
   color: var(--muted);
-  font-size: 0.92rem;
+  font-size: 0.86rem;
   font-weight: 700;
   white-space: nowrap;
 }
 
 .settings-grid {
   display: grid;
-  gap: 20px;
+  gap: 14px;
 }
 
 .variation-group {
   display: grid;
-  grid-template-columns: minmax(72px, 0.9fr) repeat(3, minmax(58px, 1fr));
+  grid-template-columns: minmax(72px, 0.85fr) repeat(3, minmax(56px, 1fr));
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   min-inline-size: 0;
   margin: 0;
   padding: 0;
@@ -134,8 +134,8 @@ input {
   width: 72px;
   padding: 0;
   color: #374151;
-  font-size: 1rem;
-  font-weight: 800;
+  font-size: 0.96rem;
+  font-weight: 700;
 }
 
 .variation-group::after {
@@ -147,17 +147,17 @@ input {
 .check-option {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   min-width: 0;
   color: #374151;
-  font-size: 1.05rem;
-  font-weight: 800;
+  font-size: 0.96rem;
+  font-weight: 700;
   cursor: pointer;
 }
 
 .check-option input {
-  width: 26px;
-  height: 26px;
+  width: 22px;
+  height: 22px;
   margin: 0;
   accent-color: var(--accent);
   cursor: pointer;
@@ -170,15 +170,8 @@ input {
 .settings-actions {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-top: 22px;
-}
-
-.selection-summary {
-  margin: 0;
-  color: var(--muted);
-  font-weight: 800;
+  justify-content: center;
+  margin-top: 18px;
 }
 
 .button {
@@ -235,6 +228,13 @@ input {
 
 .button.wide {
   width: 100%;
+}
+
+.settings .button {
+  min-height: 46px;
+  min-width: 154px;
+  padding: 0 34px;
+  font-size: 1rem;
 }
 
 .practice {
@@ -310,6 +310,12 @@ input {
 .minor-token {
   color: var(--muted);
   font-size: 0.72em;
+}
+
+.major-token {
+  color: var(--muted);
+  font-size: 0.68em;
+  margin-left: 0.04em;
 }
 
 .answer-state {
@@ -475,33 +481,38 @@ td {
   }
 
   .section-heading {
-    align-items: flex-start;
-    flex-direction: column;
+    align-items: baseline;
+    flex-direction: row;
     gap: 8px;
   }
 
   .variation-group {
-    grid-template-columns: 1fr;
-    gap: 12px;
+    grid-template-columns: minmax(66px, 0.85fr) repeat(3, minmax(48px, 1fr));
+    gap: 7px;
   }
 
   .variation-group legend {
-    float: none;
-    width: auto;
-    margin-bottom: 2px;
+    width: 66px;
+    font-size: 0.9rem;
   }
 
   .check-option {
-    min-height: 34px;
+    min-height: 28px;
+    gap: 5px;
+    font-size: 0.88rem;
   }
 
-  .settings-actions,
+  .check-option input {
+    width: 21px;
+    height: 21px;
+  }
+
+  .settings .button {
+    width: min(100%, 180px);
+  }
+
   .answer-buttons {
     grid-template-columns: 1fr;
-  }
-
-  .settings-actions {
-    display: grid;
   }
 
   .question-panel {
