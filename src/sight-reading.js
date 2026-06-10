@@ -47,7 +47,7 @@
       [note("d8", "A4"), note("16", "B4"), note("q", "C5"), note("8", "D5"), note("8", "C5"), note("q", "B4")],
       [note("q", "G4"), rest("8"), note("8", "A4"), note("16", "B4"), note("16", "C5"), note("16", "D5"), note("16", "C5"), note("q", "B4")],
       [note("h", "E5"), note("8", "D5"), note("8", "C5"), rest("q")],
-      [note("q", "A4"), note("q", "B4"), note("dq", "C5"), note("8", "D5")],
+      [note("q", "A4"), note("q", "B4"), note("q", "C5"), note("8", "D5"), rest("8")],
     ],
     [
       [note("q", "D5"), note("8", "C5"), note("8", "B4"), note("q", "A4"), rest("q")],
@@ -70,7 +70,7 @@
     [
       [note("dq", "C5"), note("8", "D5"), note("q", "E5"), note("q", "D5")],
       [note("8", "C5"), note("8", "B4"), note("8", "A4"), note("8", "G4"), note("q", "A4"), rest("q")],
-      [note("q", "B4"), note("16", "C5"), note("16", "D5"), note("16", "E5"), note("16", "D5"), note("q", "C5"), note("q", "A4")],
+      [note("q", "B4"), tie("8", "C5"), note("8", "C5"), note("q", "D5"), note("q", "A4")],
       [note("h", "G4"), note("d8", "A4"), note("16", "B4"), note("q", "C5")],
     ],
   ];
@@ -150,6 +150,10 @@
     return { d: DURATIONS[kind], kind, pitch };
   }
 
+  function tie(kind, pitch) {
+    return { ...note(kind, pitch), tieToNext: true };
+  }
+
   function rest(kind) {
     return { d: DURATIONS[kind], kind, rest: true };
   }
@@ -175,6 +179,7 @@
             kind: item.kind,
             rest: Boolean(item.rest),
             pitch: item.pitch || null,
+            tieToNext: Boolean(item.tieToNext),
           });
           beat += item.d;
         });
@@ -357,16 +362,78 @@
     return beams;
   }
 
+  function positionForBeat(records, measure, beat) {
+    const sorted = records
+      .filter((record) => record.event.measure === measure)
+      .sort((a, b) => a.event.beat - b.event.beat);
+    const exact = sorted.find((record) => Math.abs(record.event.beat - beat) < 0.001);
+
+    if (exact) return exact.note.getAbsoluteX();
+
+    const previous = [...sorted].reverse().find((record) => record.event.beat < beat);
+    const next = sorted.find((record) => record.event.beat > beat);
+
+    if (previous) {
+      const start = previous.event.beat;
+      const end = next ? next.event.beat : Math.min(4, start + previous.event.duration);
+      const startX = previous.note.getAbsoluteX();
+      const endX = next ? next.note.getAbsoluteX() : measureX(measure) + measureWidth(measure) - 18;
+      const span = Math.max(0.001, end - start);
+
+      if (beat <= end) return startX + (endX - startX) * ((beat - start) / span);
+    }
+
+    if (next) {
+      const leftPadding = measure === 0 ? 112 : 24;
+      return measureX(measure) + leftPadding + (next.note.getAbsoluteX() - measureX(measure) - leftPadding) * (beat / Math.max(0.001, next.event.beat));
+    }
+
+    const leftPadding = measure === 0 ? 112 : 24;
+    const usableWidth = measureWidth(measure) - leftPadding - 18;
+    return measureX(measure) + leftPadding + (usableWidth * beat) / 4;
+  }
+
+  function beatGuidePositions(noteRecords) {
+    const guide = new Map();
+
+    for (let measure = 0; measure < 4; measure += 1) {
+      const trebleRecords = noteRecords.filter((record) => record.event.staff === "treble");
+      const bassRecords = noteRecords.filter((record) => record.event.staff === "bass");
+      for (let beat = 0; beat < 4; beat += 1) {
+        guide.set(`${measure}-${beat}`, positionForBeat(trebleRecords, measure, beat) || positionForBeat(bassRecords, measure, beat));
+      }
+    }
+
+    return guide;
+  }
+
+  function createTies(VF, notes, events) {
+    return events
+      .map((event, index) => {
+        const nextEvent = events[index + 1];
+        const nextNote = notes[index + 1];
+        if (!event.tieToNext || !nextEvent || !nextNote) return null;
+        if (event.rest || nextEvent.rest || event.pitch !== nextEvent.pitch) return null;
+
+        return new VF.StaveTie({
+          firstNote: notes[index],
+          lastNote: nextNote,
+          firstIndices: [0],
+          lastIndices: [0],
+        });
+      })
+      .filter(Boolean);
+  }
+
   function drawOverlay(svg, noteRecords) {
     const guideLayer = createSvgElement("g", { class: "reading-guide-layer" });
     const eventLayer = createSvgElement("g", { class: "reading-hit-layer" });
+    const guidePositions = beatGuidePositions(noteRecords);
 
     if (state.checked) {
       for (let measure = 0; measure < 4; measure += 1) {
         for (let beat = 0; beat < 4; beat += 1) {
-          const leftPadding = measure === 0 ? 112 : 24;
-          const usableWidth = measureWidth(measure) - leftPadding - 18;
-          const x = measureX(measure) + leftPadding + (usableWidth * beat) / 4;
+          const x = guidePositions.get(`${measure}-${beat}`);
           guideLayer.appendChild(createSvgElement("line", {
             class: "beat-guide",
             x1: x,
@@ -458,11 +525,15 @@
         const voice = new VF.Voice({ num_beats: 4, beat_value: 4 }).addTickables(notes);
         const stave = staff === "treble" ? trebleStave : bassStave;
         const beams = createBeams(VF, notes, events);
+        const ties = createTies(VF, notes, events);
 
         new VF.Formatter().joinVoices([voice]).format([voice], width - (measure === 0 ? 92 : 36));
         voice.draw(context, stave);
         beams.forEach((beam) => {
           beam.setContext(context).draw();
+        });
+        ties.forEach((tie) => {
+          tie.setContext(context).draw();
         });
 
         notes.forEach((note, index) => {
