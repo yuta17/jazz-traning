@@ -261,6 +261,7 @@
     if (state.index >= state.deck.length - 1) {
       state.completed = true;
       state.revealed = false;
+      window.JazzDailyProgress?.mark("two-five-one");
     } else {
       state.index += 1;
       state.revealed = false;

@@ -13,8 +13,9 @@
 - `two-five-one/` で2-5-1キー練習
 - `recognition.html` で2-5-1 / 2-5 / メジャー / マイナー混在の進行判定トレーニング
 - `hanon/` でハノン1-5から開くたびに番号をランダム表示
-- `chord-flash/` でmaj7 / m7 / 7 / m7♭5 / dim7をルート / 第2形混在の1周12問で瞬間判定
+- `chord-flash/` でmaj7 / m7 / 7 / m7♭5 / dim7をRoot / 2nd混在の1周12問で瞬間判定
 - `sight-reading/` で4小節大譜表の譜読み・リズム練習
+- HOMEでは朝6時区切りで当日の実施済みトレーニングにチェックを表示
 
 ## ローカル確認
 
@@ -29,6 +30,7 @@ python3 -m http.server 4173
 ```bash
 node scripts/validate-theory.js
 node scripts/validate-progressions.js
+node scripts/validate-daily-progress.js
 node scripts/validate-hanon.js
 node scripts/validate-chord-flash.js
 node scripts/validate-sight-reading.js

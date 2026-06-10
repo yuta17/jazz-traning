@@ -45,7 +45,7 @@ VOICINGS.forEach((voicing) => {
 deck.forEach((chord) => {
   assert(chord.label);
   assert.equal(chord.notes.length, 4);
-  assert(chord.voicingLabel === "ルート" || chord.voicingLabel === "第2形");
+  assert(chord.voicingLabel === "Root" || chord.voicingLabel === "2nd");
   chord.notes.forEach((note) => {
     assert(!note.includes("𝄫"));
     assert(!note.includes("𝄪"));
@@ -67,7 +67,7 @@ assert.deepEqual(
     qualityId: "maj7",
     qualityLabel: "maj7",
     voicingId: "root",
-    voicingLabel: "ルート",
+    voicingLabel: "Root",
   },
 );
 

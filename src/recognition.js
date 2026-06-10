@@ -141,6 +141,7 @@
 
   function checkAnswer() {
     state.checked = true;
+    window.JazzDailyProgress?.mark("recognition");
     render();
   }
 

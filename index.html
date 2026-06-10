@@ -8,7 +8,7 @@
       content="ジャズ理論とコード反応を鍛えるトレーニングアプリ"
     />
     <title>ジャズトレーニング</title>
-    <link rel="stylesheet" href="./styles.css?v=20260610-jp" />
+    <link rel="stylesheet" href="./styles.css?v=20260610-daily" />
   </head>
   <body>
     <main class="app-shell home-shell">
@@ -18,27 +18,28 @@
       </header>
 
       <section class="home-menu" aria-label="トレーニング一覧">
-        <a class="home-card" href="./hanon/">
+        <a class="home-card" href="./hanon/" data-training-id="hanon">
           <strong>ハノン番号</strong>
           <em>開くたびに1-5からランダム表示</em>
         </a>
-        <a class="home-card" href="./chord-flash/">
+        <a class="home-card" href="./chord-flash/" data-training-id="chord-flash">
           <strong>コード瞬間判定</strong>
           <em>コードネームを反射で押さえる</em>
         </a>
-        <a class="home-card" href="./two-five-one/">
+        <a class="home-card" href="./two-five-one/" data-training-id="two-five-one">
           <strong>2-5-1</strong>
           <em>12キーでメジャー / マイナーを反復</em>
         </a>
-        <a class="home-card" href="./recognition.html">
+        <a class="home-card" href="./recognition.html" data-training-id="recognition">
           <strong>進行判定</strong>
           <em>4段譜から2-5-1 / 2-5を探す</em>
         </a>
-        <a class="home-card" href="./sight-reading/">
+        <a class="home-card" href="./sight-reading/" data-training-id="sight-reading">
           <strong>譜読み</strong>
           <em>大譜表で拍頭とリズムを確認</em>
         </a>
       </section>
     </main>
+    <script src="./src/daily-progress.js?v=20260610-daily"></script>
   </body>
 </html>

@@ -17,6 +17,7 @@
 
   function boot() {
     render(pickNumber());
+    global.JazzDailyProgress?.mark("hanon");
   }
 
   const api = {

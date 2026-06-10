@@ -770,6 +770,7 @@
 
   function checkAnswer() {
     state.checked = true;
+    global.JazzDailyProgress?.mark("sight-reading");
     render();
   }
 

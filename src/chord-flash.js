@@ -27,12 +27,12 @@
   const VOICINGS = [
     {
       id: "root",
-      label: "ルート",
+      label: "Root",
       noteOrder: [0, 1, 2, 3],
     },
     {
       id: "second",
-      label: "第2形",
+      label: "2nd",
       noteOrder: [2, 3, 0, 1],
     },
   ];
@@ -394,6 +394,7 @@
       state.completed = true;
       state.revealed = false;
       stopTimer();
+      global.JazzDailyProgress?.mark("chord-flash");
     } else {
       state.index += 1;
       state.revealed = false;
