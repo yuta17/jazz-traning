@@ -2,6 +2,7 @@
   "use strict";
 
   const VARIATIONS = ["RRR", "R2R", "2R2"];
+  const ROUND_SIZE = 12;
 
   const KEYS = [
     {
@@ -105,7 +106,7 @@
   }
 
   function cycleSize(settings) {
-    return selectedQualities(settings).length * KEYS.length;
+    return selectedQualities(settings).length > 0 ? ROUND_SIZE : 0;
   }
 
   function shuffle(items, random) {
@@ -125,32 +126,51 @@
     return pool.slice(0, count);
   }
 
+  function balancedQualities(qualities, count, random) {
+    const pool = [];
+    while (pool.length < count) {
+      pool.push(...shuffle(qualities, random));
+    }
+    return pool.slice(0, count);
+  }
+
   function buildDeck(settings, random = Math.random) {
     const clean = sanitizeSettings(settings);
+    const qualities = selectedQualities(clean);
     const deck = [];
 
-    ["major", "minor"].forEach((quality) => {
-      if (clean[quality].length === 0) return;
+    if (qualities.length === 0) return deck;
 
-      const keyOrder = shuffle(KEYS, random);
-      const variationOrder = balancedVariations(
+    const keyOrder = shuffle(KEYS, random);
+    const qualityOrder = balancedQualities(qualities, ROUND_SIZE, random);
+    const variationOrders = {};
+    const variationIndexes = {};
+
+    qualities.forEach((quality) => {
+      const count = qualityOrder.filter((item) => item === quality).length;
+      variationOrders[quality] = balancedVariations(
         clean[quality],
-        KEYS.length,
+        count,
         random,
       );
+      variationIndexes[quality] = 0;
+    });
 
-      keyOrder.forEach((key, index) => {
-        deck.push({
-          id: `${quality}:${key.id}:${variationOrder[index]}`,
-          keyId: key.id,
-          keyLabel: key.label,
-          quality,
-          variation: variationOrder[index],
-          chords: key[quality].map((symbol, chordIndex) => ({
-            degree: ROMAN[quality][chordIndex],
-            symbol,
-          })),
-        });
+    keyOrder.forEach((key, index) => {
+      const quality = qualityOrder[index];
+      const variation = variationOrders[quality][variationIndexes[quality]];
+      variationIndexes[quality] += 1;
+
+      deck.push({
+        id: `${quality}:${key.id}:${variation}`,
+        keyId: key.id,
+        keyLabel: key.label,
+        quality,
+        variation,
+        chords: key[quality].map((symbol, chordIndex) => ({
+          degree: ROMAN[quality][chordIndex],
+          symbol,
+        })),
       });
     });
 
@@ -167,6 +187,7 @@
 
   const api = {
     VARIATIONS,
+    ROUND_SIZE,
     KEYS,
     ROMAN,
     sanitizeSettings,

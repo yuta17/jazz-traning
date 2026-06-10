@@ -4,6 +4,7 @@ const theory = require("../src/theory.js");
 const byId = new Map(theory.KEYS.map((key) => [key.id, key]));
 
 assert.equal(theory.KEYS.length, 12);
+assert.equal(theory.ROUND_SIZE, 12);
 assert.deepEqual(byId.get("Db").major, ["E♭m7", "A♭7", "D♭maj7"]);
 assert.deepEqual(byId.get("B").major, ["C♯m7", "F♯7", "Bmaj7"]);
 assert.deepEqual(byId.get("C").minor, ["D-7(♭5)", "G7", "C-7"]);
@@ -21,14 +22,15 @@ const majorMinorDeck = theory.buildDeck({
   major: ["R2R"],
   minor: ["2R2"],
 });
-assert.equal(majorMinorDeck.length, 24);
+assert.equal(majorMinorDeck.length, 12);
+assert.equal(new Set(majorMinorDeck.map((task) => task.keyId)).size, 12);
 assert.equal(
   majorMinorDeck.filter((task) => task.quality === "major").length,
-  12,
+  6,
 );
 assert.equal(
   majorMinorDeck.filter((task) => task.quality === "minor").length,
-  12,
+  6,
 );
 
 const variationDeck = theory.buildDeck({

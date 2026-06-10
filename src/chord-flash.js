@@ -2,7 +2,7 @@
   "use strict";
 
   const LIMIT_SECONDS = 5;
-  const ROUND_SIZE = 10;
+  const ROUND_SIZE = 12;
   const STORAGE_KEY = "jazz-chord-flash-state-v1";
 
   const NATURAL_PITCH = {
@@ -161,11 +161,20 @@
   }
 
   function createDeck() {
-    const chords = CHORD_QUALITIES.flatMap((quality) => (
-      shuffle(quality.roots)
-        .slice(0, VOICINGS.length)
-        .map((root, index) => buildChord(root, quality, VOICINGS[index]))
+    const basePlan = CHORD_QUALITIES.flatMap((quality) => (
+      VOICINGS.map((voicing) => ({ quality, voicing }))
     ));
+    const extras = shuffle(CHORD_QUALITIES)
+      .slice(0, ROUND_SIZE - basePlan.length)
+      .map((quality, index) => ({ quality, voicing: VOICINGS[index % VOICINGS.length] }));
+    const rootPools = new Map(CHORD_QUALITIES.map((quality) => [
+      quality.id,
+      shuffle(quality.roots),
+    ]));
+    const chords = [...basePlan, ...extras].map(({ quality, voicing }) => {
+      const roots = rootPools.get(quality.id);
+      return buildChord(roots.pop(), quality, voicing);
+    });
 
     return shuffle(chords);
   }
@@ -224,7 +233,6 @@
     if (state.completed) {
       dom.questionPanel.innerHTML = `
         <div class="complete-state">
-          <p>Cycle</p>
           <strong>完了</strong>
         </div>
       `;
@@ -234,7 +242,6 @@
     if (!task) {
       dom.questionPanel.innerHTML = `
         <div class="ready-state">
-          <p>Chord</p>
           <strong>Ready</strong>
         </div>
       `;
@@ -244,9 +251,8 @@
     if (!state.revealed) {
       dom.questionPanel.innerHTML = `
         <div class="question-state">
-          <p>Chord</p>
-          <strong class="question-key chord-symbol">${task.label}</strong>
           <span class="voicing-pill">${task.voicingLabel}</span>
+          <strong class="question-key chord-symbol">${task.label}</strong>
         </div>
       `;
       return;

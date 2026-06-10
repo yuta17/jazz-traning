@@ -10,7 +10,7 @@ const {
 } = require("../src/chord-flash.js");
 
 assert.equal(LIMIT_SECONDS, 5);
-assert.equal(ROUND_SIZE, 10);
+assert.equal(ROUND_SIZE, 12);
 assert.equal(CHORD_QUALITIES.length, 5);
 assert.deepEqual(
   VOICINGS.map((voicing) => voicing.id),
@@ -32,13 +32,14 @@ assert.equal(fullDeck.length, 120);
 assert.equal(new Set(fullDeck.map((chord) => chord.id)).size, 120);
 
 const deck = createDeck();
-assert.equal(deck.length, 10);
-assert.equal(new Set(deck.map((chord) => chord.id)).size, 10);
+assert.equal(deck.length, 12);
+assert.equal(new Set(deck.map((chord) => chord.id)).size, 12);
 CHORD_QUALITIES.forEach((quality) => {
-  assert.equal(deck.filter((chord) => chord.qualityId === quality.id).length, 2);
+  const count = deck.filter((chord) => chord.qualityId === quality.id).length;
+  assert(count >= 2 && count <= 3);
 });
 VOICINGS.forEach((voicing) => {
-  assert.equal(deck.filter((chord) => chord.voicingId === voicing.id).length, 5);
+  assert.equal(deck.filter((chord) => chord.voicingId === voicing.id).length, 6);
 });
 
 deck.forEach((chord) => {

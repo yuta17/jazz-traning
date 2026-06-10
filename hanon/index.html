@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="ハノン1-5から今日弾く番号を偏りなく選ぶ"
+    />
+    <title>Hanon Today</title>
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="hero hanon-hero">
+        <nav class="hero-links" aria-label="ページ">
+          <a href="../">Home</a>
+        </nav>
+        <h1>HANON TODAY</h1>
+        <p>1-5を一巡するまで偏りなく回す</p>
+      </header>
+
+      <section class="hanon-stage" aria-label="今日のハノン">
+        <div class="hanon-date" id="hanon-date">Today</div>
+        <div class="hanon-number" aria-live="polite">
+          <span>No.</span>
+          <strong id="hanon-number">-</strong>
+        </div>
+        <div class="hanon-cycle" id="hanon-cycle">-</div>
+      </section>
+
+      <section class="stats hanon-history-section" aria-labelledby="hanon-history-title">
+        <div class="section-heading stats-heading">
+          <h2 id="hanon-history-title">履歴</h2>
+        </div>
+        <ol id="hanon-history" class="hanon-history"></ol>
+      </section>
+    </main>
+
+    <script src="../src/hanon.js"></script>
+  </body>
+</html>
