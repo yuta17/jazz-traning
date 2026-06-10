@@ -14,65 +14,131 @@
     labelY: 364,
   };
 
-  const TREBLE_PITCHES = ["E4", "F4", "G4", "A4", "B4", "C5", "D5", "E5", "F5", "G5"];
-  const BASS_PITCHES = ["G2", "A2", "B2", "C3", "D3", "E3", "F3", "G3", "A3", "B3"];
+  const DURATIONS = {
+    16: 0.25,
+    8: 0.5,
+    d8: 0.75,
+    q: 1,
+    dq: 1.5,
+    h: 2,
+    dh: 3,
+  };
 
-  const RHYTHM_PATTERNS = [
+  const TREBLE_LINES = [
     [
-      { d: 1, kind: "q" },
-      { d: 1, kind: "q" },
-      { d: 1, kind: "q" },
-      { d: 1, kind: "q" },
+      [note("q", "C5"), note("8", "D5"), note("8", "E5"), note("q", "G4"), note("q", "A4")],
+      [note("d8", "B4"), note("16", "C5"), note("8", "D5"), note("8", "C5"), note("q", "A4"), note("q", "G4")],
+      [note("dq", "E5"), note("8", "D5"), note("q", "C5"), rest("q")],
+      [note("16", "G4"), note("16", "A4"), note("16", "B4"), note("16", "C5"), note("q", "D5"), note("8", "C5"), note("8", "B4"), note("q", "A4")],
     ],
     [
-      { d: 0.5, kind: "8" },
-      { d: 0.5, kind: "8" },
-      { d: 1, kind: "q" },
-      { d: 1.5, kind: "dq" },
-      { d: 0.5, kind: "8" },
+      [note("q", "E4"), note("q", "G4"), note("8", "A4"), note("8", "B4"), note("q", "C5")],
+      [note("dq", "D5"), note("8", "C5"), note("q", "B4"), rest("q")],
+      [note("16", "A4"), note("16", "B4"), note("16", "C5"), note("16", "D5"), note("q", "E5"), note("q", "C5"), note("q", "A4")],
+      [note("h", "G4"), note("d8", "A4"), note("16", "B4"), note("q", "C5")],
     ],
     [
-      { d: 0.75, kind: "d8" },
-      { d: 0.25, kind: "16" },
-      { d: 0.5, kind: "8" },
-      { d: 0.5, kind: "8" },
-      { d: 1, kind: "q" },
-      { d: 1, kind: "q" },
+      [rest("8"), note("8", "G4"), note("q", "B4"), note("q", "C5"), note("q", "D5")],
+      [note("d8", "E5"), note("16", "D5"), note("8", "C5"), note("8", "B4"), note("q", "A4"), note("q", "G4")],
+      [note("q", "C5"), note("16", "B4"), note("16", "A4"), note("16", "G4"), note("16", "F4"), note("q", "E4"), note("q", "G4")],
+      [note("dq", "A4"), note("8", "C5"), note("h", "B4")],
     ],
     [
-      { d: 1.5, kind: "dq" },
-      { d: 0.5, kind: "8" },
-      { d: 0.25, kind: "16" },
-      { d: 0.25, kind: "16" },
-      { d: 0.25, kind: "16" },
-      { d: 0.25, kind: "16" },
-      { d: 1, kind: "q" },
+      [note("d8", "A4"), note("16", "B4"), note("q", "C5"), note("8", "D5"), note("8", "C5"), note("q", "B4")],
+      [note("q", "G4"), rest("8"), note("8", "A4"), note("16", "B4"), note("16", "C5"), note("16", "D5"), note("16", "C5"), note("q", "B4")],
+      [note("h", "E5"), note("8", "D5"), note("8", "C5"), rest("q")],
+      [note("q", "A4"), note("q", "B4"), note("dq", "C5"), note("8", "D5")],
     ],
     [
-      { d: 2, kind: "h" },
-      { d: 0.5, kind: "8" },
-      { d: 0.5, kind: "8" },
-      { d: 0.75, kind: "d8" },
-      { d: 0.25, kind: "16" },
+      [note("q", "D5"), note("8", "C5"), note("8", "B4"), note("q", "A4"), rest("q")],
+      [note("16", "G4"), note("16", "A4"), note("16", "B4"), note("16", "C5"), note("dq", "D5"), note("8", "E5"), note("q", "C5")],
+      [note("q", "B4"), note("q", "A4"), note("d8", "G4"), note("16", "A4"), note("q", "B4")],
+      [note("h", "C5"), note("8", "B4"), note("8", "A4"), note("q", "G4")],
     ],
     [
-      { d: 0.25, kind: "16" },
-      { d: 0.25, kind: "16" },
-      { d: 0.25, kind: "16" },
-      { d: 0.25, kind: "16" },
-      { d: 1, kind: "q" },
-      { d: 0.5, kind: "8" },
-      { d: 0.5, kind: "8" },
-      { d: 1, kind: "q" },
+      [note("h", "G4"), note("d8", "A4"), note("16", "B4"), note("q", "C5")],
+      [note("q", "D5"), note("q", "B4"), rest("8"), note("8", "A4"), note("q", "G4")],
+      [note("16", "E4"), note("16", "F4"), note("16", "G4"), note("16", "A4"), note("8", "B4"), note("8", "C5"), note("q", "D5"), rest("q")],
+      [note("dq", "C5"), note("8", "B4"), note("q", "A4"), note("q", "G4")],
     ],
     [
-      { d: 3, kind: "dh" },
-      { d: 0.5, kind: "8" },
-      { d: 0.5, kind: "8" },
+      [note("q", "B4"), note("q", "D5"), note("8", "C5"), note("8", "B4"), note("q", "A4")],
+      [rest("q"), note("16", "G4"), note("16", "A4"), note("16", "B4"), note("16", "C5"), note("q", "D5"), note("q", "E5")],
+      [note("d8", "D5"), note("16", "C5"), note("q", "B4"), note("8", "A4"), note("8", "G4"), note("q", "A4")],
+      [note("h", "B4"), note("q", "G4"), rest("q")],
+    ],
+    [
+      [note("dq", "C5"), note("8", "D5"), note("q", "E5"), note("q", "D5")],
+      [note("8", "C5"), note("8", "B4"), note("8", "A4"), note("8", "G4"), note("q", "A4"), rest("q")],
+      [note("q", "B4"), note("16", "C5"), note("16", "D5"), note("16", "E5"), note("16", "D5"), note("q", "C5"), note("q", "A4")],
+      [note("h", "G4"), note("d8", "A4"), note("16", "B4"), note("q", "C5")],
     ],
   ];
 
-  const REQUIRED_PATTERN_INDEXES = [2, 3, 4, 6];
+  const BASS_LINES = [
+    [
+      [note("h", "C3"), note("h", "G2")],
+      [note("q", "F2"), note("q", "C3"), rest("q"), note("q", "G2")],
+      [note("q", "A2"), note("q", "E3"), note("h", "F3")],
+      [note("h", "G2"), note("h", "C3")],
+    ],
+    [
+      [note("q", "C3"), note("q", "E3"), note("q", "G2"), note("q", "B2")],
+      [note("dq", "A2"), note("8", "C3"), note("q", "D3"), rest("q")],
+      [note("16", "G2"), note("16", "A2"), note("16", "B2"), note("16", "C3"), note("q", "D3"), note("q", "E3"), note("q", "F3")],
+      [note("h", "G2"), note("d8", "B2"), note("16", "C3"), note("q", "D3")],
+    ],
+    [
+      [rest("q"), note("q", "C3"), note("q", "G2"), note("q", "C3")],
+      [note("8", "F2"), note("8", "A2"), note("q", "C3"), note("q", "E3"), note("q", "D3")],
+      [note("d8", "G2"), note("16", "A2"), note("q", "B2"), note("8", "C3"), note("8", "D3"), note("q", "E3")],
+      [note("h", "F3"), note("h", "G2")],
+    ],
+    [
+      [note("h", "A2"), note("8", "C3"), note("8", "B2"), note("q", "A2")],
+      [note("q", "D3"), rest("8"), note("8", "C3"), note("q", "B2"), note("q", "G2")],
+      [note("16", "C3"), note("16", "D3"), note("16", "E3"), note("16", "D3"), note("q", "C3"), note("q", "G2"), note("q", "E2")],
+      [note("dq", "F2"), note("8", "A2"), note("h", "C3")],
+    ],
+    [
+      [note("q", "F2"), note("q", "C3"), note("8", "D3"), note("8", "E3"), note("q", "F3")],
+      [note("q", "E3"), note("q", "C3"), rest("q"), note("q", "G2")],
+      [note("d8", "A2"), note("16", "B2"), note("q", "C3"), note("q", "D3"), note("q", "E3")],
+      [note("h", "F3"), note("8", "E3"), note("8", "D3"), note("q", "C3")],
+    ],
+    [
+      [note("dq", "G2"), note("8", "B2"), note("q", "D3"), note("q", "F3")],
+      [note("16", "E3"), note("16", "D3"), note("16", "C3"), note("16", "B2"), note("q", "A2"), note("q", "D3"), rest("q")],
+      [note("q", "G2"), note("q", "D3"), note("8", "C3"), note("8", "B2"), note("q", "A2")],
+      [note("h", "G2"), note("d8", "A2"), note("16", "B2"), note("q", "C3")],
+    ],
+    [
+      [note("q", "D3"), note("q", "A2"), note("q", "F3"), rest("q")],
+      [note("d8", "G2"), note("16", "A2"), note("8", "B2"), note("8", "C3"), note("q", "D3"), note("q", "E3")],
+      [note("h", "F3"), note("q", "D3"), note("q", "B2")],
+      [note("16", "C3"), note("16", "B2"), note("16", "A2"), note("16", "G2"), note("q", "F2"), note("q", "G2"), note("q", "C3")],
+    ],
+    [
+      [note("h", "C3"), note("d8", "D3"), note("16", "E3"), note("q", "G2")],
+      [note("q", "F2"), note("8", "A2"), note("8", "C3"), note("q", "D3"), rest("q")],
+      [note("q", "E3"), note("q", "C3"), note("16", "B2"), note("16", "A2"), note("16", "G2"), note("16", "F2"), note("q", "G2")],
+      [note("dq", "C3"), note("8", "B2"), note("h", "C3")],
+    ],
+  ];
+
+  const SAMPLE_PAIRS = [
+    [0, 0], [1, 2], [2, 4], [3, 6],
+    [4, 1], [5, 3], [6, 5], [7, 7],
+    [0, 3], [1, 5], [2, 7], [3, 1],
+    [4, 6], [5, 0], [6, 2], [7, 4],
+  ];
+
+  const SIGHT_READING_SAMPLES = SAMPLE_PAIRS.map(([trebleIndex, bassIndex], index) => ({
+    id: `reading-sample-${String(index + 1).padStart(2, "0")}`,
+    title: `Reading Sample ${index + 1}`,
+    treble: TREBLE_LINES[trebleIndex],
+    bass: BASS_LINES[bassIndex],
+  }));
 
   const state = {
     exercise: null,
@@ -80,56 +146,51 @@
     checked: false,
   };
 
+  function note(kind, pitch) {
+    return { d: DURATIONS[kind], kind, pitch };
+  }
+
+  function rest(kind) {
+    return { d: DURATIONS[kind], kind, rest: true };
+  }
+
   function randomItem(items) {
     return items[Math.floor(Math.random() * items.length)];
   }
 
-  function shuffle(items) {
-    return [...items].sort(() => Math.random() - 0.5);
-  }
-
-  function createPatternPlan() {
-    const randomIndexes = Array.from({ length: 4 }, () => Math.floor(Math.random() * RHYTHM_PATTERNS.length));
-    return shuffle([...REQUIRED_PATTERN_INDEXES, ...randomIndexes]);
-  }
-
-  function createExercise() {
+  function sampleToEvents(sample) {
     const events = [];
-    const restCandidates = [];
-    const patternPlan = createPatternPlan();
-    let slot = 0;
 
     ["treble", "bass"].forEach((staff) => {
+      const measures = sample[staff];
       for (let measure = 0; measure < 4; measure += 1) {
-        const pattern = RHYTHM_PATTERNS[patternPlan[slot]];
         let beat = 0;
-        pattern.forEach((item, index) => {
-          const canRest = index > 0;
-          const rest = canRest && Math.random() < 0.26;
-          const pitches = staff === "treble" ? TREBLE_PITCHES : BASS_PITCHES;
-          const event = {
-            id: `${staff}-${measure}-${index}`,
+        measures[measure].forEach((item, index) => {
+          events.push({
+            id: `${sample.id}-${staff}-${measure}-${index}`,
             staff,
             measure,
             beat,
             duration: item.d,
             kind: item.kind,
-            rest,
-            pitch: randomItem(pitches),
-          };
-          events.push(event);
-          if (canRest) restCandidates.push(event);
+            rest: Boolean(item.rest),
+            pitch: item.pitch || null,
+          });
           beat += item.d;
         });
-        slot += 1;
       }
     });
 
-    if (!events.some((event) => event.rest) && restCandidates.length > 0) {
-      randomItem(restCandidates).rest = true;
-    }
+    return events;
+  }
 
-    return { events };
+  function createExercise() {
+    const sample = randomItem(SIGHT_READING_SAMPLES);
+    return {
+      id: sample.id,
+      title: sample.title,
+      events: sampleToEvents(sample),
+    };
   }
 
   function isBeatStart(event) {
@@ -208,6 +269,46 @@
     };
   }
 
+  function noteHitRecords(noteRecords) {
+    const grouped = new Map();
+    noteRecords.forEach((record) => {
+      const key = `${record.event.staff}-${record.event.measure}`;
+      const records = grouped.get(key) || [];
+      records.push({
+        ...record,
+        bounds: noteBounds(record.note, record.event),
+      });
+      grouped.set(key, records);
+    });
+
+    const result = [];
+    grouped.forEach((records) => {
+      const sorted = records.sort((a, b) => a.bounds.centerX - b.bounds.centerX);
+      sorted.forEach((record, index) => {
+        const prev = sorted[index - 1];
+        const next = sorted[index + 1];
+        const left = prev
+          ? (prev.bounds.centerX + record.bounds.centerX) / 2
+          : record.bounds.centerX - 28;
+        const right = next
+          ? (record.bounds.centerX + next.bounds.centerX) / 2
+          : record.bounds.centerX + 28;
+
+        result.push({
+          ...record,
+          hit: {
+            x: left,
+            y: record.bounds.centerY - (record.event.rest ? 34 : 44),
+            width: Math.max(12, right - left),
+            height: record.event.rest ? 68 : 88,
+          },
+        });
+      });
+    });
+
+    return result;
+  }
+
   function drawConnectors(VF, context, trebleStave, bassStave, measure) {
     if (measure !== 0) return;
 
@@ -222,25 +323,38 @@
     });
   }
 
-  function drawBeams(VF, context, notes, events) {
+  function createBeams(VF, notes, events) {
+    const beams = [];
     let group = [];
+    let groupBeat = null;
+
     const flush = () => {
       if (group.length > 1) {
-        VF.Beam.generateBeams(group).forEach((beam) => {
-          beam.setContext(context).draw();
-        });
+        beams.push(...VF.Beam.generateBeams(group));
       }
       group = [];
+      groupBeat = null;
     };
 
     notes.forEach((note, index) => {
-      if (!events[index].rest && events[index].duration < 1) {
+      const event = events[index];
+      const beatGroup = Math.floor(event.beat);
+
+      if (!event.rest && event.duration < 1 && groupBeat === beatGroup) {
         group.push(note);
-      } else {
-        flush();
+        return;
+      }
+
+      flush();
+
+      if (!event.rest && event.duration < 1) {
+        group = [note];
+        groupBeat = beatGroup;
       }
     });
     flush();
+
+    return beams;
   }
 
   function drawOverlay(svg, noteRecords) {
@@ -271,8 +385,7 @@
       }
     }
 
-    noteRecords.forEach(({ event, note }) => {
-      const bounds = noteBounds(note, event);
+    noteHitRecords(noteRecords).forEach(({ event, hit, bounds }) => {
       const status = statusClass(event);
       const group = createSvgElement("g", {
         class: `score-event ${status}`.trim(),
@@ -280,10 +393,10 @@
       });
       group.appendChild(createSvgElement("rect", {
         class: "event-hitbox",
-        x: bounds.x - 16,
-        y: bounds.y - 14,
-        width: bounds.width + 36,
-        height: bounds.height + 28,
+        x: hit.x,
+        y: hit.y,
+        width: hit.width,
+        height: hit.height,
       }));
 
       if (state.checked && isBeatStart(event)) {
@@ -344,9 +457,13 @@
         }));
         const voice = new VF.Voice({ num_beats: 4, beat_value: 4 }).addTickables(notes);
         const stave = staff === "treble" ? trebleStave : bassStave;
+        const beams = createBeams(VF, notes, events);
+
         new VF.Formatter().joinVoices([voice]).format([voice], width - (measure === 0 ? 92 : 36));
         voice.draw(context, stave);
-        drawBeams(VF, context, notes, events);
+        beams.forEach((beam) => {
+          beam.setContext(context).draw();
+        });
 
         notes.forEach((note, index) => {
           const event = events[index];
@@ -431,9 +548,8 @@
   }
 
   const api = {
-    BASS_PITCHES,
-    RHYTHM_PATTERNS,
-    TREBLE_PITCHES,
+    DURATIONS,
+    SIGHT_READING_SAMPLES,
     createExercise,
     isBeatStart,
   };
