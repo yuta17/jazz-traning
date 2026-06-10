@@ -24,17 +24,18 @@
         <button id="chord-start-button" class="button primary" type="button">
           スタート
         </button>
-        <span class="chord-limit">4秒</span>
+        <span class="chord-limit">5秒</span>
       </section>
 
       <section class="practice" aria-label="出題">
         <div class="progress-row">
           <span>PROGRESS</span>
-          <strong id="chord-progress-count">0 / 60</strong>
+          <strong id="chord-progress-count">0 / 10</strong>
         </div>
+        <ol id="chord-progress-list" class="chord-progress-list" aria-label="10問の進捗"></ol>
         <div class="progress-row chord-time-row">
           <span>TIME</span>
-          <strong id="chord-time-left">4.0</strong>
+          <strong id="chord-time-left">5.0</strong>
         </div>
 
         <div id="chord-question-panel" class="question-panel chord-panel" aria-live="polite">
@@ -66,7 +67,7 @@
       <section class="stats" aria-labelledby="chord-stats-title">
         <div class="section-heading stats-heading">
           <h2 id="chord-stats-title">学習成績</h2>
-          <span>※1周60問</span>
+          <span>※1周10問</span>
         </div>
         <div class="table-wrap">
           <table>

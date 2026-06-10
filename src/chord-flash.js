@@ -1,7 +1,8 @@
 (function attachChordFlash(global) {
   "use strict";
 
-  const LIMIT_SECONDS = 4;
+  const LIMIT_SECONDS = 5;
+  const ROUND_SIZE = 10;
   const STORAGE_KEY = "jazz-chord-flash-state-v1";
 
   const NATURAL_PITCH = {
@@ -72,6 +73,7 @@
     index: 0,
     revealed: false,
     completed: false,
+    results: [],
     timeLeft: LIMIT_SECONDS,
     timerId: null,
     deadline: 0,
@@ -135,10 +137,20 @@
     };
   }
 
-  function createDeck() {
-    const chords = CHORD_QUALITIES.flatMap((quality) => (
+  function createFullDeck() {
+    return CHORD_QUALITIES.flatMap((quality) => (
       quality.roots.map((root) => buildChord(root, quality))
     ));
+  }
+
+  function createDeck() {
+    const perQuality = ROUND_SIZE / CHORD_QUALITIES.length;
+    const chords = CHORD_QUALITIES.flatMap((quality) => (
+      shuffle(quality.roots)
+        .slice(0, perQuality)
+        .map((root) => buildChord(root, quality))
+    ));
+
     return shuffle(chords);
   }
 
@@ -179,6 +191,7 @@
     return {
       startButton: document.querySelector("#chord-start-button"),
       progressCount: document.querySelector("#chord-progress-count"),
+      progressList: document.querySelector("#chord-progress-list"),
       questionPanel: document.querySelector("#chord-question-panel"),
       revealButton: document.querySelector("#chord-reveal-button"),
       hitButton: document.querySelector("#chord-hit-button"),
@@ -238,9 +251,26 @@
 
   function renderProgress() {
     const dom = elements();
-    const total = state.deck.length || CHORD_QUALITIES.length * 12;
-    const current = state.deck.length && !state.completed ? state.index + 1 : 0;
+    const total = state.deck.length || ROUND_SIZE;
+    const current = state.completed ? total : state.deck.length ? state.index + 1 : 0;
     dom.progressCount.textContent = `${current} / ${total}`;
+  }
+
+  function renderProgressList() {
+    const dom = elements();
+    dom.progressList.innerHTML = Array.from({ length: ROUND_SIZE }, (_, index) => {
+      const result = state.results[index];
+      const current = state.deck.length && !state.completed && index === state.index;
+      const classNames = [
+        "chord-progress-item",
+        current ? "current" : "",
+        result === true ? "hit" : "",
+        result === false ? "miss" : "",
+        index < state.results.length ? "done" : "",
+      ].filter(Boolean).join(" ");
+
+      return `<li class="${classNames}">${index + 1}</li>`;
+    }).join("");
   }
 
   function renderTimer() {
@@ -290,6 +320,7 @@
   function render() {
     renderQuestion();
     renderProgress();
+    renderProgressList();
     renderTimer();
     renderControls();
     renderStats();
@@ -319,6 +350,7 @@
     state.index = 0;
     state.revealed = false;
     state.completed = false;
+    state.results = [];
     state.timeLeft = LIMIT_SECONDS;
     render();
     startTimer();
@@ -355,6 +387,7 @@
     row.attempts += 1;
     if (wasCorrect) row.correct += 1;
     state.stats[task.qualityId] = row;
+    state.results[state.index] = wasCorrect;
 
     if (state.index >= state.deck.length - 1) {
       state.completed = true;
@@ -383,8 +416,10 @@
   const api = {
     CHORD_QUALITIES,
     LIMIT_SECONDS,
+    ROUND_SIZE,
     buildChord,
     createDeck,
+    createFullDeck,
     parseRoot,
     spellPitch,
   };

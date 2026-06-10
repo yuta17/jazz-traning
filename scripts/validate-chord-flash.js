@@ -2,11 +2,14 @@ const assert = require("node:assert/strict");
 const {
   CHORD_QUALITIES,
   LIMIT_SECONDS,
+  ROUND_SIZE,
   buildChord,
   createDeck,
+  createFullDeck,
 } = require("../src/chord-flash.js");
 
-assert.equal(LIMIT_SECONDS, 4);
+assert.equal(LIMIT_SECONDS, 5);
+assert.equal(ROUND_SIZE, 10);
 assert.equal(CHORD_QUALITIES.length, 5);
 assert.deepEqual(
   CHORD_QUALITIES.map((quality) => quality.id),
@@ -19,9 +22,16 @@ CHORD_QUALITIES.forEach((quality) => {
   assert.equal(quality.degrees.length, 4);
 });
 
+const fullDeck = createFullDeck();
+assert.equal(fullDeck.length, 60);
+assert.equal(new Set(fullDeck.map((chord) => chord.id)).size, 60);
+
 const deck = createDeck();
-assert.equal(deck.length, 60);
-assert.equal(new Set(deck.map((chord) => chord.id)).size, 60);
+assert.equal(deck.length, 10);
+assert.equal(new Set(deck.map((chord) => chord.id)).size, 10);
+CHORD_QUALITIES.forEach((quality) => {
+  assert.equal(deck.filter((chord) => chord.qualityId === quality.id).length, 2);
+});
 
 deck.forEach((chord) => {
   assert(chord.label);
