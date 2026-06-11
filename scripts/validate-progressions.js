@@ -22,14 +22,30 @@ CHARTS.forEach((chart) => {
   });
 
   const chartTypes = new Set();
+  const answerSpanKeys = new Set();
   chart.answers.forEach((answer) => {
     assert(answerTypeIds.has(answer.type), `Unknown answer type ${answer.type}`);
     assert.equal(answerLabel(answer.type), ANSWER_LABELS[answer.type]);
     assert(answer.start >= 0 && answer.start < 16, "Answer start out of range");
     assert(answer.span.includes(answer.start), "Answer span must include start");
+    assert.deepEqual(
+      answer.span,
+      answer.span.slice().sort((a, b) => a - b),
+      "Answer span must be sorted",
+    );
     answer.span.forEach((barIndex) => {
       assert(barIndex >= 0 && barIndex < 16, "Answer span out of range");
     });
+    answer.span.slice(1).forEach((barIndex, index) => {
+      assert.equal(
+        barIndex,
+        answer.span[index] + 1,
+        "Answer span must be contiguous",
+      );
+    });
+    const spanKey = answer.span.join(",");
+    assert(!answerSpanKeys.has(spanKey), `${chart.title} duplicate answer span ${spanKey}`);
+    answerSpanKeys.add(spanKey);
     chartTypes.add(answer.type);
     typeCounts[answer.type] += 1;
   });

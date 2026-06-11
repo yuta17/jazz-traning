@@ -15,7 +15,10 @@
 
   const state = {
     chartIndex: 0,
-    selected: new Set(),
+    marks: [],
+    pendingSpan: [],
+    dragStart: null,
+    dragPointerId: null,
     checked: false,
   };
 
@@ -35,6 +38,54 @@
     return new Set(currentAnswers().flatMap((answer) => answer.span));
   }
 
+  function spanKey(span) {
+    return span.slice().sort((a, b) => a - b).join(",");
+  }
+
+  function spanBetween(start, end) {
+    const min = Math.min(start, end);
+    const max = Math.max(start, end);
+    return Array.from({ length: max - min + 1 }, (_, offset) => min + offset);
+  }
+
+  function spansOverlap(first, second) {
+    const secondSet = new Set(second);
+    return first.some((index) => secondSet.has(index));
+  }
+
+  function markedBars() {
+    return new Set(state.marks.flatMap((mark) => mark.span));
+  }
+
+  function pendingBars() {
+    return new Set(state.pendingSpan);
+  }
+
+  function gradeSelection() {
+    const answerBySpan = new Map(
+      currentAnswers().map((answer) => [spanKey(answer.span), answer]),
+    );
+    const selectedBySpan = new Set(state.marks.map((mark) => spanKey(mark.span)));
+    const correctAnswers = currentAnswers().filter((answer) =>
+      selectedBySpan.has(spanKey(answer.span)),
+    );
+    const missedAnswers = currentAnswers().filter((answer) =>
+      !selectedBySpan.has(spanKey(answer.span)),
+    );
+    const wrongMarks = state.marks.filter((mark) =>
+      !answerBySpan.has(spanKey(mark.span)),
+    );
+
+    return {
+      correctAnswers,
+      missedAnswers,
+      wrongMarks,
+      correctBars: new Set(correctAnswers.flatMap((answer) => answer.span)),
+      missedBars: new Set(missedAnswers.flatMap((answer) => answer.span)),
+      wrongBars: new Set(wrongMarks.flatMap((mark) => mark.span)),
+    };
+  }
+
   function renderMeta() {
     elements.chartTitle.textContent = currentChart().title;
     elements.chartCount.textContent = `${state.chartIndex + 1} / ${CHARTS.length}`;
@@ -44,21 +95,32 @@
     const starts = answerStarts();
     const spans = answerSpans();
     const answers = currentAnswers();
+    const selectedBars = markedBars();
+    const previewBars = pendingBars();
+    const grade = state.checked ? gradeSelection() : null;
 
     elements.chartGrid.innerHTML = currentChart().bars
       .map((bar, index) => {
         const answerAtStart = state.checked
           ? answers.find((answer) => answer.start === index)
           : null;
-        const selected = state.selected.has(index);
-        const correctStart = state.checked && selected && starts.has(index);
-        const wrongStart = state.checked && selected && !starts.has(index);
-        const missedStart = state.checked && !selected && starts.has(index);
+        const selected = selectedBars.has(index);
+        const preview = previewBars.has(index);
+        const correctSpan = state.checked && grade.correctBars.has(index);
+        const wrongSpan = state.checked && grade.wrongBars.has(index);
+        const missedSpan = state.checked && grade.missedBars.has(index);
+        const correctStart = correctSpan && starts.has(index);
+        const wrongStart = wrongSpan && starts.has(index);
+        const missedStart = missedSpan && starts.has(index);
         const inAnswerSpan = state.checked && spans.has(index);
         const classes = [
           "bar-cell",
           selected ? "selected" : "",
+          preview ? "range-preview" : "",
           inAnswerSpan ? "answer-span" : "",
+          correctSpan ? "correct-span" : "",
+          wrongSpan ? "wrong-span" : "",
+          missedSpan ? "missed-span" : "",
           correctStart ? "correct-start" : "",
           wrongStart ? "wrong-start" : "",
           missedStart ? "missed-start" : "",
@@ -68,7 +130,7 @@
 
         const chords = bar
           .map((symbol) => `<span class="chart-chord">${symbol}</span>`)
-          .join('<span class="chart-chord-separator" aria-hidden="true">→</span>');
+          .join("");
 
         return `
           <button class="${classes}" type="button" data-bar="${index}">
@@ -91,27 +153,21 @@
       return;
     }
 
-    const starts = answerStarts();
-    const correct = Array.from(state.selected).filter((index) =>
-      starts.has(index),
-    ).length;
-    const extra = Array.from(state.selected).filter(
-      (index) => !starts.has(index),
-    ).length;
-    const missed = Array.from(starts).filter(
-      (index) => !state.selected.has(index),
-    ).length;
+    const grade = gradeSelection();
+    const correct = grade.correctAnswers.length;
+    const extra = grade.wrongMarks.length;
+    const missed = grade.missedAnswers.length;
 
     elements.result.innerHTML = `
       <span>結果</span>
-      <strong>正解 ${correct}/${starts.size}</strong>
+      <strong>正解 ${correct}/${currentAnswers().length}</strong>
       <em>ミス ${extra + missed}</em>
     `;
   }
 
   function renderControls() {
     elements.checkAnswer.disabled = state.checked;
-    elements.clearMarks.disabled = state.selected.size === 0 && !state.checked;
+    elements.clearMarks.disabled = state.marks.length === 0 && !state.checked;
   }
 
   function render() {
@@ -122,20 +178,108 @@
   }
 
   function resetMarks() {
-    state.selected.clear();
+    state.marks = [];
+    state.pendingSpan = [];
+    state.dragStart = null;
+    state.dragPointerId = null;
     state.checked = false;
     render();
   }
 
-  function toggleBar(index) {
-    if (state.checked) return;
+  function removeMark(mark) {
+    state.marks = state.marks.filter((item) => item !== mark);
+  }
 
-    if (state.selected.has(index)) {
-      state.selected.delete(index);
-    } else {
-      state.selected.add(index);
+  function toggleSingleBar(index) {
+    const existing = state.marks.find((mark) => mark.span.includes(index));
+    if (existing) {
+      removeMark(existing);
+      render();
+      return;
     }
 
+    state.marks.push({ span: [index] });
+    render();
+  }
+
+  function toggleRange(start, end) {
+    if (state.checked) return;
+
+    const span = spanBetween(start, end);
+    const key = spanKey(span);
+    const existing = state.marks.find((mark) => spanKey(mark.span) === key);
+
+    if (existing) {
+      removeMark(existing);
+    } else {
+      state.marks = state.marks.filter((mark) => !spansOverlap(mark.span, span));
+      state.marks.push({ span });
+    }
+
+    render();
+  }
+
+  function indexFromEvent(event) {
+    const element = document.elementFromPoint(event.clientX, event.clientY);
+    const button = element?.closest("[data-bar]");
+    return button ? Number(button.dataset.bar) : null;
+  }
+
+  function startRange(event) {
+    if (state.checked) return;
+
+    const button = event.target.closest("[data-bar]");
+    if (!button) return;
+
+    const index = Number(button.dataset.bar);
+    state.dragStart = index;
+    state.dragPointerId = event.pointerId;
+    state.pendingSpan = [index];
+    elements.chartGrid.setPointerCapture?.(event.pointerId);
+    event.preventDefault();
+    render();
+  }
+
+  function updateRange(event) {
+    if (state.dragPointerId !== event.pointerId || state.dragStart === null) return;
+
+    const index = indexFromEvent(event);
+    if (index === null) return;
+
+    const nextSpan = spanBetween(state.dragStart, index);
+    if (spanKey(nextSpan) === spanKey(state.pendingSpan)) return;
+
+    state.pendingSpan = nextSpan;
+    render();
+  }
+
+  function finishRange(event) {
+    if (state.dragPointerId !== event.pointerId || state.dragStart === null) return;
+
+    const index = indexFromEvent(event);
+    const start = state.dragStart;
+    const fallbackEnd = state.pendingSpan[state.pendingSpan.length - 1];
+    const end = index === null ? fallbackEnd : index;
+    const span = spanBetween(start, end);
+
+    state.pendingSpan = [];
+    state.dragStart = null;
+    state.dragPointerId = null;
+    elements.chartGrid.releasePointerCapture?.(event.pointerId);
+
+    if (span.length === 1) {
+      toggleSingleBar(span[0]);
+    } else {
+      toggleRange(span[0], span[span.length - 1]);
+    }
+  }
+
+  function cancelRange(event) {
+    if (state.dragPointerId !== event.pointerId) return;
+
+    state.pendingSpan = [];
+    state.dragStart = null;
+    state.dragPointerId = null;
     render();
   }
 
@@ -150,11 +294,10 @@
     resetMarks();
   }
 
-  elements.chartGrid.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-bar]");
-    if (!button) return;
-    toggleBar(Number(button.dataset.bar));
-  });
+  elements.chartGrid.addEventListener("pointerdown", startRange);
+  elements.chartGrid.addEventListener("pointermove", updateRange);
+  elements.chartGrid.addEventListener("pointerup", finishRange);
+  elements.chartGrid.addEventListener("pointercancel", cancelRange);
 
   elements.clearMarks.addEventListener("click", resetMarks);
   elements.checkAnswer.addEventListener("click", checkAnswer);

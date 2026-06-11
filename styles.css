@@ -1011,6 +1011,8 @@ td {
   background: #ffffff;
   color: #1f2937;
   text-align: left;
+  touch-action: none;
+  user-select: none;
   cursor: pointer;
 }
 
@@ -1023,8 +1025,28 @@ td {
   box-shadow: inset 0 0 0 3px rgba(81, 66, 232, 0.56);
 }
 
+.bar-cell.range-preview {
+  background: #f7f5ff;
+  box-shadow: inset 0 0 0 3px rgba(81, 66, 232, 0.34);
+}
+
 .bar-cell.answer-span {
   background: #f8fbff;
+}
+
+.bar-cell.correct-span {
+  background: #ebfbf4;
+  box-shadow: inset 0 0 0 3px rgba(24, 187, 131, 0.72);
+}
+
+.bar-cell.wrong-span {
+  background: #fff1ed;
+  box-shadow: inset 0 0 0 3px rgba(220, 85, 55, 0.68);
+}
+
+.bar-cell.missed-span {
+  background: #fff8e8;
+  box-shadow: inset 0 0 0 3px rgba(232, 164, 42, 0.68);
 }
 
 .bar-cell.correct-start {
@@ -1052,7 +1074,7 @@ td {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 8px;
   min-width: 0;
   font-size: clamp(0.66rem, 1.55vw, 0.96rem);
   white-space: nowrap;
