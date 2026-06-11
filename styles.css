@@ -606,8 +606,10 @@ input {
   border-radius: 8px;
   background: var(--answer-bg);
   color: #172033;
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 900;
+  line-height: 1.15;
+  white-space: nowrap;
   cursor: pointer;
 }
 
@@ -1257,7 +1259,7 @@ td {
 
   .signature-choice {
     min-height: 48px;
-    font-size: 1.1rem;
+    font-size: 0.9rem;
   }
 
   .signature-mark {

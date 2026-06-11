@@ -5,6 +5,7 @@ const {
   MODE_LABELS,
   MODES,
   ROUND_SIZE,
+  answerLabel,
   answerForTask,
   balancedModes,
   buildDeck,
@@ -18,6 +19,8 @@ assert.deepEqual(MODE_LABELS, {
   major: "メジャー",
   minor: "マイナー",
 });
+assert.equal(answerLabel("major", "D♭"), "D♭メジャー");
+assert.equal(answerLabel("minor", "F♯"), "F♯マイナー");
 
 assert.deepEqual(sanitizeModes(["minor", "unknown", "major"]), ["major", "minor"]);
 assert.deepEqual(sanitizeModes(["unknown"]), []);

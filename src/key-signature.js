@@ -83,6 +83,10 @@
     return task.signature[task.mode];
   }
 
+  function answerLabel(mode, answer) {
+    return `${answer}${MODE_LABELS[mode]}`;
+  }
+
   function buildDeck(modes, random = Math.random) {
     const selected = sanitizeModes(modes);
     if (selected.length === 0) return [];
@@ -153,7 +157,11 @@
     }
 
     const result = state.answered
-      ? `<p class="signature-result">${state.answered === task.answer ? "正解" : `正解は ${task.answer}`}</p>`
+      ? `<p class="signature-result">${
+        state.answered === task.answer
+          ? "正解"
+          : `正解は ${answerLabel(task.mode, task.answer)}`
+      }</p>`
       : "";
 
     dom.questionPanel.innerHTML = `
@@ -192,7 +200,7 @@
             data-answer="${answer}"
             ${state.answered ? "disabled" : ""}
           >
-            ${answer}
+            ${answerLabel(task.mode, answer)}
           </button>
         `;
       })
@@ -294,6 +302,7 @@
     MODE_LABELS,
     MODES,
     ROUND_SIZE,
+    answerLabel,
     answerForTask,
     balancedModes,
     buildDeck,
