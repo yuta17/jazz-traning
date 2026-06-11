@@ -205,6 +205,60 @@ input {
   font-weight: 900;
 }
 
+.peterson-stage {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 48px 28px;
+  border-bottom: 1px solid var(--line);
+  background: white;
+}
+
+.peterson-stage span {
+  color: #172033;
+  font-size: clamp(4.4rem, 18vw, 6.4rem);
+  line-height: 0.9;
+  font-weight: 900;
+}
+
+.practice-note {
+  padding: 28px;
+  background: var(--surface-soft);
+}
+
+.practice-note h2 {
+  margin: 0 0 22px;
+  color: #1f2937;
+  font-size: 1.25rem;
+  line-height: 1.45;
+  font-weight: 900;
+}
+
+.practice-note ol {
+  display: grid;
+  gap: 20px;
+  margin: 0;
+  padding-left: 1.45rem;
+}
+
+.practice-note li {
+  color: #374151;
+  line-height: 1.72;
+  font-size: 0.98rem;
+  font-weight: 700;
+}
+
+.practice-note strong {
+  color: #172033;
+  font-size: 1.04rem;
+  font-weight: 900;
+}
+
+.practice-note ul {
+  margin: 8px 0 0;
+  padding-left: 1.2rem;
+}
+
 .chord-start {
   display: flex;
   align-items: center;
@@ -1194,7 +1248,9 @@ td {
   .question-panel,
   .practice-actions,
   .stats-heading,
-  .hanon-stage {
+  .hanon-stage,
+  .peterson-stage,
+  .practice-note {
     padding-left: 20px;
     padding-right: 20px;
   }

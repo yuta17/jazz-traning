@@ -13,6 +13,7 @@
 - `two-five-one/` で2-5-1キー練習
 - `recognition.html` で2-5-1 / 2-5 / メジャー / マイナー混在の進行判定トレーニング
 - `hanon/` でハノン1-5から開くたびに番号をランダム表示
+- `oscar-peterson/` でJazz Exercise 1〜3をゆっくり練習するメモを表示
 - `chord-flash/` でmaj7 / m7 / 7 / m7♭5 / dim7をRoot / 2nd混在の1周12問で瞬間判定
 - `key-signature/` で♯/♭の数からメジャー / マイナーキーを答える1周12問の調号判定
 - `sight-reading/` で4小節大譜表の譜読み・リズム練習
