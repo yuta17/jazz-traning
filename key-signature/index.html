@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="調号の♯/♭の数からメジャーキーとマイナーキーを答えるトレーニング"
+    />
+    <title>調号判定</title>
+    <link rel="stylesheet" href="../styles.css?v=20260611-key-signature" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="hero">
+        <nav class="hero-links" aria-label="ページ">
+          <a href="../">ホーム</a>
+        </nav>
+        <h1>調号判定</h1>
+        <p>♯/♭の数からキーを答える</p>
+      </header>
+
+      <section class="settings" aria-label="出題設定">
+        <div class="settings-grid">
+          <fieldset class="key-mode-group">
+            <legend>出題</legend>
+            <label class="check-option">
+              <input type="checkbox" name="mode" value="major" checked />
+              <span>メジャー</span>
+            </label>
+            <label class="check-option">
+              <input type="checkbox" name="mode" value="minor" checked />
+              <span>マイナー</span>
+            </label>
+          </fieldset>
+        </div>
+
+        <div class="settings-actions">
+          <button id="signature-start-button" class="button primary" type="button">
+            スタート
+          </button>
+        </div>
+      </section>
+
+      <section class="practice" aria-label="出題">
+        <div class="progress-row">
+          <span>進捗</span>
+          <strong id="signature-progress-count">0 / 12</strong>
+        </div>
+
+        <div
+          id="signature-question-panel"
+          class="question-panel signature-panel"
+          aria-live="polite"
+        >
+          <div class="ready-state">
+            <strong>待機中</strong>
+          </div>
+        </div>
+
+        <div class="practice-actions signature-actions">
+          <div
+            id="signature-choice-grid"
+            class="signature-choice-grid"
+            aria-label="回答"
+          ></div>
+          <button
+            id="signature-next-button"
+            class="button primary wide"
+            type="button"
+            hidden
+          >
+            次へ
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <script src="../src/daily-progress.js?v=20260611-key-signature"></script>
+    <script src="../src/key-signature.js?v=20260611-key-signature"></script>
+  </body>
+</html>

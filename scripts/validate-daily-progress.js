@@ -8,6 +8,7 @@ const {
 assert.deepEqual(TRAINING_IDS, [
   "hanon",
   "chord-flash",
+  "key-signature",
   "two-five-one",
   "recognition",
   "sight-reading",
