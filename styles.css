@@ -404,6 +404,10 @@ input {
   background: #fbfcff;
 }
 
+.progress-count-only {
+  justify-content: flex-end;
+}
+
 .progress-row span {
   color: var(--muted-light);
   font-size: 0.82rem;
