@@ -5,6 +5,7 @@
   const RESET_HOUR = 6;
   const TRAINING_IDS = [
     "hanon",
+    "oscar-peterson",
     "chord-flash",
     "key-signature",
     "two-five-one",

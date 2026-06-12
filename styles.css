@@ -208,16 +208,40 @@ input {
 .peterson-stage {
   display: grid;
   justify-items: center;
-  gap: 12px;
+  gap: 18px;
   padding: 48px 28px;
   border-bottom: 1px solid var(--line);
   background: white;
 }
 
-.peterson-stage span {
+.peterson-exercise {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+}
+
+.peterson-exercise span {
   color: #172033;
   font-size: clamp(4.4rem, 18vw, 6.4rem);
   line-height: 0.9;
+  font-weight: 900;
+}
+
+.peterson-done-button {
+  min-width: 132px;
+  min-height: 42px;
+  font-size: 0.96rem;
+}
+
+.peterson-done-button:disabled {
+  opacity: 1;
+}
+
+.peterson-status {
+  min-height: 28px;
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 0.98rem;
   font-weight: 900;
 }
 
