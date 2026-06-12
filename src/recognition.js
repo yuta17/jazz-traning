@@ -48,13 +48,17 @@
     return Array.from({ length: max - min + 1 }, (_, offset) => min + offset);
   }
 
-  function spansOverlap(first, second) {
-    const secondSet = new Set(second);
-    return first.some((index) => secondSet.has(index));
-  }
-
   function markedBars() {
     return new Set(state.marks.flatMap((mark) => mark.span));
+  }
+
+  function selectedCountsByBar() {
+    return state.marks.reduce((counts, mark) => {
+      mark.span.forEach((index) => {
+        counts.set(index, (counts.get(index) || 0) + 1);
+      });
+      return counts;
+    }, new Map());
   }
 
   function pendingBars() {
@@ -96,6 +100,7 @@
     const spans = answerSpans();
     const answers = currentAnswers();
     const selectedBars = markedBars();
+    const selectedCounts = selectedCountsByBar();
     const previewBars = pendingBars();
     const grade = state.checked ? gradeSelection() : null;
 
@@ -105,6 +110,7 @@
           ? answers.find((answer) => answer.start === index)
           : null;
         const selected = selectedBars.has(index);
+        const multiSelected = (selectedCounts.get(index) || 0) > 1;
         const preview = previewBars.has(index);
         const correctSpan = state.checked && grade.correctBars.has(index);
         const wrongSpan = state.checked && grade.wrongBars.has(index);
@@ -116,6 +122,7 @@
         const classes = [
           "bar-cell",
           selected ? "selected" : "",
+          multiSelected ? "multi-selected" : "",
           preview ? "range-preview" : "",
           inAnswerSpan ? "answer-span" : "",
           correctSpan ? "correct-span" : "",
@@ -191,7 +198,9 @@
   }
 
   function toggleSingleBar(index) {
-    const existing = state.marks.find((mark) => mark.span.includes(index));
+    const existing = state.marks.find((mark) =>
+      mark.span.length === 1 && mark.span[0] === index,
+    );
     if (existing) {
       removeMark(existing);
       render();
@@ -212,7 +221,6 @@
     if (existing) {
       removeMark(existing);
     } else {
-      state.marks = state.marks.filter((mark) => !spansOverlap(mark.span, span));
       state.marks.push({ span });
     }
 

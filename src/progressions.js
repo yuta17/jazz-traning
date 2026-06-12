@@ -196,6 +196,38 @@
         answer("major251", 14, [14, 15]),
       ],
     },
+    {
+      title: "課題 07",
+      bars: [
+        ["B-7(♭5)", "E7"],
+        ["A-7"],
+        ["D7"],
+        ["G△"],
+        ["E-7(♭5)", "A7"],
+        ["D-7"],
+        ["G7"],
+        ["C△"],
+        ["C-7", "F7"],
+        ["B♭△"],
+        ["A-7", "D7"],
+        ["G△"],
+        ["F#-7(♭5)", "B7"],
+        ["E-7"],
+        ["A7"],
+        ["D-7(♭5)", "G7"],
+      ],
+      answers: [
+        answer("minor251", 0, [0, 1]),
+        answer("major25", 1, [1, 2]),
+        answer("minor251", 4, [4, 5]),
+        answer("major25", 5, [5, 6]),
+        answer("major251", 8, [8, 9]),
+        answer("major251", 10, [10, 11]),
+        answer("minor251", 12, [12, 13]),
+        answer("major25", 13, [13, 14]),
+        answer("minor25", 15, [15]),
+      ],
+    },
   ];
 
   function answer(type, start, span) {

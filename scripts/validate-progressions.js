@@ -9,8 +9,9 @@ const answerTypeIds = new Set(Object.keys(ANSWER_LABELS));
 const typeCounts = Object.fromEntries(
   Object.keys(ANSWER_LABELS).map((type) => [type, 0]),
 );
+let overlappingAnswerPairCount = 0;
 
-assert.equal(CHARTS.length, 6);
+assert.equal(CHARTS.length, 7);
 
 CHARTS.forEach((chart) => {
   assert.equal(chart.bars.length, 16, `${chart.title} must have 16 bars`);
@@ -23,7 +24,7 @@ CHARTS.forEach((chart) => {
 
   const chartTypes = new Set();
   const answerSpanKeys = new Set();
-  chart.answers.forEach((answer) => {
+  chart.answers.forEach((answer, answerIndex) => {
     assert(answerTypeIds.has(answer.type), `Unknown answer type ${answer.type}`);
     assert.equal(answerLabel(answer.type), ANSWER_LABELS[answer.type]);
     assert(answer.start >= 0 && answer.start < 16, "Answer start out of range");
@@ -46,6 +47,11 @@ CHARTS.forEach((chart) => {
     const spanKey = answer.span.join(",");
     assert(!answerSpanKeys.has(spanKey), `${chart.title} duplicate answer span ${spanKey}`);
     answerSpanKeys.add(spanKey);
+    chart.answers.slice(answerIndex + 1).forEach((nextAnswer) => {
+      if (answer.span.some((barIndex) => nextAnswer.span.includes(barIndex))) {
+        overlappingAnswerPairCount += 1;
+      }
+    });
     chartTypes.add(answer.type);
     typeCounts[answer.type] += 1;
   });
@@ -62,5 +68,7 @@ CHARTS.forEach((chart) => {
 Object.entries(typeCounts).forEach(([type, count]) => {
   assert(count >= 6, `${type} should appear across the deck`);
 });
+
+assert(overlappingAnswerPairCount >= 1, "Deck should include overlapping 251 -> 25 patterns");
 
 console.log("Progression validation passed");
