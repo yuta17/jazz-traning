@@ -218,6 +218,12 @@ input {
   display: grid;
   justify-items: center;
   gap: 10px;
+  width: min(100%, 300px);
+}
+
+.peterson-exercise + .peterson-exercise {
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
 }
 
 .peterson-exercise span {
