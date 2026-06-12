@@ -297,6 +297,40 @@
         [note("h", "E3"), note("h", "A2")],
       ],
     ),
+    piece(
+      "reading-sample-17",
+      "課題 17",
+      "C",
+      [
+        [note("dq", "C5"), note("8", "D5"), note("q", "E5"), note("q", "G4")],
+        [rest("d8"), note("16", "E5"), note("dq", "F5"), note("8", "E5"), note("q", "D5")],
+        [note("q", "G4"), note("dq", "A4"), note("8", "B4"), note("q", "C5")],
+        [note("h", "E5"), note("dq", "D5"), note("8", "C5")],
+      ],
+      [
+        [note("dq", "C3"), note("8", "G2"), note("h", "C3")],
+        [note("q", "F2"), rest("d8"), note("16", "C3"), note("dq", "G2"), note("8", "C3")],
+        [note("h", "A2"), note("dq", "F3"), note("8", "E3")],
+        [note("dq", "G2"), note("8", "C3"), note("h", "C3")],
+      ],
+    ),
+    piece(
+      "reading-sample-18",
+      "課題 18",
+      "F",
+      [
+        [note("dh", "A4"), note("q", "C5")],
+        [note("dq", "D5"), note("8", "C5"), note("q", "A4"), note("q", "G4")],
+        [rest("d8"), note("16", "A4"), note("q", "B4"), note("dq", "C5"), note("8", "B4")],
+        [note("h", "A4"), note("q", "G4"), note("q", "F4")],
+      ],
+      [
+        [note("dh", "F2"), note("q", "C3")],
+        [note("dq", "B2"), note("8", "F3"), note("h", "C3")],
+        [note("q", "D3"), rest("d8"), note("16", "A2"), note("dq", "B2"), note("8", "C3")],
+        [note("h", "C3"), note("h", "F2")],
+      ],
+    ),
   ];
 
   const state = {

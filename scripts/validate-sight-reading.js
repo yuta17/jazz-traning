@@ -7,7 +7,7 @@ const {
 } = require("../src/sight-reading.js");
 
 assert.equal(Object.keys(DURATIONS).length, 7);
-assert(SIGHT_READING_SAMPLES.length >= 16);
+assert(SIGHT_READING_SAMPLES.length >= 18);
 assert.equal(new Set(SIGHT_READING_SAMPLES.map((sample) => sample.id)).size, SIGHT_READING_SAMPLES.length);
 
 const KEY_SIGNATURES = {
@@ -174,6 +174,14 @@ SIGHT_READING_SAMPLES.forEach((sample) => {
   assert(allEvents.some((event) => event.kind.startsWith("d")));
   assert(allEvents.some((event) => event.rest));
 });
+
+const catalogEvents = SIGHT_READING_SAMPLES.flatMap((sample) => [
+  ...sample.treble.flat(),
+  ...sample.bass.flat(),
+]);
+assert(catalogEvents.some((event) => event.kind === "dq" && !event.rest));
+assert(catalogEvents.some((event) => event.kind === "dh" && !event.rest));
+assert(catalogEvents.some((event) => event.kind.startsWith("d") && event.rest));
 
 assert(
   SIGHT_READING_SAMPLES.some((sample) => [...sample.treble.flat(), ...sample.bass.flat()].some((event) => event.tieToNext)),
