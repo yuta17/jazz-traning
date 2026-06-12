@@ -20,7 +20,7 @@ assert.deepEqual(MODE_LABELS, {
   minor: "マイナー",
 });
 assert.equal(answerLabel("major", "D♭"), "D♭メジャー");
-assert.equal(answerLabel("minor", "F♯"), "F♯マイナー");
+assert.equal(answerLabel("minor", "F♯"), "F♯(-)");
 
 assert.deepEqual(sanitizeModes(["minor", "unknown", "major"]), ["major", "minor"]);
 assert.deepEqual(sanitizeModes(["unknown"]), []);

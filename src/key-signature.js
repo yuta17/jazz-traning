@@ -84,7 +84,7 @@
   }
 
   function answerLabel(mode, answer) {
-    return `${answer}${MODE_LABELS[mode]}`;
+    return mode === "minor" ? `${answer}(-)` : `${answer}${MODE_LABELS[mode]}`;
   }
 
   function buildDeck(modes, random = Math.random) {
