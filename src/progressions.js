@@ -7,6 +7,7 @@
     major25: "メジャー25",
     minor25: "マイナー25",
   };
+  const ANSWER_TYPES = ["major251", "minor251", "major25", "minor25"];
 
   const CHARTS = [
     {
@@ -34,6 +35,7 @@
         answer("minor251", 2, [2, 3]),
         answer("major251", 4, [4, 5]),
         answer("major25", 6, [6]),
+        answer("major25", 7, [7]),
         answer("minor251", 8, [8, 9]),
         answer("major251", 10, [10, 11]),
         answer("minor25", 12, [12]),
@@ -218,14 +220,43 @@
       ],
       answers: [
         answer("minor251", 0, [0, 1]),
-        answer("major25", 1, [1, 2]),
+        answer("major251", 1, [1, 2, 3]),
         answer("minor251", 4, [4, 5]),
-        answer("major25", 5, [5, 6]),
+        answer("major251", 5, [5, 6, 7]),
         answer("major251", 8, [8, 9]),
         answer("major251", 10, [10, 11]),
         answer("minor251", 12, [12, 13]),
         answer("major25", 13, [13, 14]),
         answer("minor25", 15, [15]),
+      ],
+    },
+    {
+      title: "課題 08",
+      bars: [
+        ["C△"],
+        ["A7"],
+        ["D-7", "G7"],
+        ["C△"],
+        ["F△"],
+        ["E-7", "A7"],
+        ["A♭7"],
+        ["D♭△"],
+        ["F#-7(♭5)", "B7"],
+        ["E-7"],
+        ["B♭-7", "E♭7"],
+        ["A♭△"],
+        ["C#-7(♭5)", "F#7"],
+        ["G△"],
+        ["G-7", "C7"],
+        ["E△"],
+      ],
+      answers: [
+        answer("major251", 2, [2, 3]),
+        answer("major25", 5, [5]),
+        answer("minor251", 8, [8, 9]),
+        answer("major251", 10, [10, 11]),
+        answer("minor25", 12, [12]),
+        answer("major25", 14, [14]),
       ],
     },
   ];
@@ -238,7 +269,7 @@
     return ANSWER_LABELS[type] || type;
   }
 
-  const api = { ANSWER_LABELS, CHARTS, answerLabel };
+  const api = { ANSWER_LABELS, ANSWER_TYPES, CHARTS, answerLabel };
 
   if (typeof module !== "undefined" && module.exports) {
     module.exports = api;

@@ -1,11 +1,12 @@
 (function bootRecognitionTrainer() {
   "use strict";
 
-  const { CHARTS, answerLabel } = window.ProgressionData;
+  const { ANSWER_TYPES, CHARTS, answerLabel } = window.ProgressionData;
 
   const elements = {
     chartTitle: document.querySelector("#chart-title"),
     chartCount: document.querySelector("#chart-count"),
+    typePicker: document.querySelector("#mark-type-picker"),
     chartGrid: document.querySelector("#chart-grid"),
     clearMarks: document.querySelector("#clear-marks"),
     checkAnswer: document.querySelector("#check-answer"),
@@ -15,6 +16,7 @@
 
   const state = {
     chartIndex: 0,
+    activeType: ANSWER_TYPES[0],
     marks: [],
     pendingSpan: [],
     dragStart: null,
@@ -30,16 +32,16 @@
     return currentChart().answers;
   }
 
-  function answerStarts() {
-    return new Set(currentAnswers().map((answer) => answer.start));
-  }
-
   function answerSpans() {
     return new Set(currentAnswers().flatMap((answer) => answer.span));
   }
 
   function spanKey(span) {
     return span.slice().sort((a, b) => a - b).join(",");
+  }
+
+  function answerKey(answer) {
+    return `${answer.type}:${spanKey(answer.span)}`;
   }
 
   function spanBetween(start, end) {
@@ -66,22 +68,30 @@
   }
 
   function gradeSelection() {
-    const answerBySpan = new Map(
-      currentAnswers().map((answer) => [spanKey(answer.span), answer]),
+    const answerByKey = new Map(
+      currentAnswers().map((answer) => [answerKey(answer), answer]),
     );
-    const selectedBySpan = new Set(state.marks.map((mark) => spanKey(mark.span)));
+    const selectedByKey = new Set(state.marks.map((mark) => answerKey(mark)));
     const correctAnswers = currentAnswers().filter((answer) =>
-      selectedBySpan.has(spanKey(answer.span)),
+      selectedByKey.has(answerKey(answer)),
     );
     const missedAnswers = currentAnswers().filter((answer) =>
-      !selectedBySpan.has(spanKey(answer.span)),
+      !selectedByKey.has(answerKey(answer)),
     );
     const wrongMarks = state.marks.filter((mark) =>
-      !answerBySpan.has(spanKey(mark.span)),
+      !answerByKey.has(answerKey(mark)),
     );
+    const correctMarkKeys = new Set(
+      state.marks
+        .filter((mark) => answerByKey.has(answerKey(mark)))
+        .map((mark) => answerKey(mark)),
+    );
+    const correctAnswerKeys = new Set(correctAnswers.map((answer) => answerKey(answer)));
 
     return {
       correctAnswers,
+      correctAnswerKeys,
+      correctMarkKeys,
       missedAnswers,
       wrongMarks,
       correctBars: new Set(correctAnswers.flatMap((answer) => answer.span)),
@@ -90,13 +100,29 @@
     };
   }
 
+  function renderTypePicker() {
+    elements.typePicker.innerHTML = ANSWER_TYPES.map((type) => {
+      const active = state.activeType === type;
+      return `
+        <button
+          class="type-toggle"
+          type="button"
+          data-type="${type}"
+          aria-pressed="${active ? "true" : "false"}"
+          ${state.checked ? "disabled" : ""}
+        >
+          ${answerLabel(type)}
+        </button>
+      `;
+    }).join("");
+  }
+
   function renderMeta() {
     elements.chartTitle.textContent = currentChart().title;
     elements.chartCount.textContent = `${state.chartIndex + 1} / ${CHARTS.length}`;
   }
 
   function renderChart() {
-    const starts = answerStarts();
     const spans = answerSpans();
     const answers = currentAnswers();
     const selectedBars = markedBars();
@@ -106,18 +132,25 @@
 
     elements.chartGrid.innerHTML = currentChart().bars
       .map((bar, index) => {
-        const answerAtStart = state.checked
-          ? answers.find((answer) => answer.start === index)
-          : null;
+        const selectedAtStart = state.marks.filter((mark) => mark.span[0] === index);
+        const answersAtStart = state.checked
+          ? answers.filter((answer) => answer.start === index)
+          : [];
         const selected = selectedBars.has(index);
         const multiSelected = (selectedCounts.get(index) || 0) > 1;
         const preview = previewBars.has(index);
         const correctSpan = state.checked && grade.correctBars.has(index);
         const wrongSpan = state.checked && grade.wrongBars.has(index);
         const missedSpan = state.checked && grade.missedBars.has(index);
-        const correctStart = correctSpan && starts.has(index);
-        const wrongStart = wrongSpan && starts.has(index);
-        const missedStart = missedSpan && starts.has(index);
+        const correctStart =
+          state.checked &&
+          answersAtStart.some((answer) => grade.correctAnswerKeys.has(answerKey(answer)));
+        const wrongStart =
+          state.checked &&
+          selectedAtStart.some((mark) => !grade.correctMarkKeys.has(answerKey(mark)));
+        const missedStart =
+          state.checked &&
+          answersAtStart.some((answer) => !grade.correctAnswerKeys.has(answerKey(answer)));
         const inAnswerSpan = state.checked && spans.has(index);
         const classes = [
           "bar-cell",
@@ -138,16 +171,35 @@
         const chords = bar
           .map((symbol) => `<span class="chart-chord">${symbol}</span>`)
           .join("");
+        const selectedBadges = selectedAtStart
+          .map((mark) => {
+            const correct = state.checked && grade.correctMarkKeys.has(answerKey(mark));
+            const wrong = state.checked && !grade.correctMarkKeys.has(answerKey(mark));
+            const badgeClass = correct ? "correct-badge" : wrong ? "wrong-badge" : "";
+            return `
+              <span class="answer-badge selected-badge ${badgeClass}">
+                ${answerLabel(mark.type)}
+              </span>
+            `;
+          })
+          .join("");
+        const missedBadges = answersAtStart
+          .filter((answer) => !grade.correctAnswerKeys.has(answerKey(answer)))
+          .map(
+            (answer) => `
+              <span class="answer-badge missed-badge">
+                ${answerLabel(answer.type)}
+              </span>
+            `,
+          )
+          .join("");
+        const badges = `${selectedBadges}${missedBadges}`;
 
         return `
           <button class="${classes}" type="button" data-bar="${index}">
             <span class="bar-number">${index + 1}</span>
             <span class="chart-chords">${chords}</span>
-            ${
-              answerAtStart
-                ? `<span class="answer-badge">${answerLabel(answerAtStart.type)}</span>`
-                : ""
-            }
+            ${badges ? `<span class="answer-badges">${badges}</span>` : ""}
           </button>
         `;
       })
@@ -178,6 +230,7 @@
   }
 
   function render() {
+    renderTypePicker();
     renderMeta();
     renderChart();
     renderResult();
@@ -197,33 +250,39 @@
     state.marks = state.marks.filter((item) => item !== mark);
   }
 
-  function toggleSingleBar(index) {
-    const existing = state.marks.find((mark) =>
-      mark.span.length === 1 && mark.span[0] === index,
-    );
-    if (existing) {
-      removeMark(existing);
+  function toggleSpan(span) {
+    if (state.checked) return;
+
+    const key = spanKey(span);
+    const existingIndex = state.marks.findIndex((mark) => spanKey(mark.span) === key);
+
+    if (existingIndex >= 0) {
+      const existing = state.marks[existingIndex];
+      if (existing.type === state.activeType) {
+        removeMark(existing);
+      } else {
+        state.marks[existingIndex] = { type: state.activeType, span };
+      }
       render();
       return;
     }
 
-    state.marks.push({ span: [index] });
+    state.marks.push({ type: state.activeType, span });
     render();
   }
 
+  function toggleSingleBar(index) {
+    toggleSpan([index]);
+  }
+
   function toggleRange(start, end) {
-    if (state.checked) return;
+    toggleSpan(spanBetween(start, end));
+  }
 
-    const span = spanBetween(start, end);
-    const key = spanKey(span);
-    const existing = state.marks.find((mark) => spanKey(mark.span) === key);
+  function setActiveType(type) {
+    if (state.checked || !ANSWER_TYPES.includes(type)) return;
 
-    if (existing) {
-      removeMark(existing);
-    } else {
-      state.marks.push({ span });
-    }
-
+    state.activeType = type;
     render();
   }
 
@@ -307,6 +366,12 @@
   elements.chartGrid.addEventListener("pointerup", finishRange);
   elements.chartGrid.addEventListener("pointercancel", cancelRange);
 
+  elements.typePicker.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-type]");
+    if (!button) return;
+
+    setActiveType(button.dataset.type);
+  });
   elements.clearMarks.addEventListener("click", resetMarks);
   elements.checkAnswer.addEventListener("click", checkAnswer);
   elements.nextChart.addEventListener("click", nextChart);
