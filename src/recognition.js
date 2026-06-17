@@ -44,6 +44,17 @@
     return `${answer.type}:${spanKey(answer.span)}`;
   }
 
+  function markKey(mark) {
+    return `${mark.type}:${spanKey(mark.span)}`;
+  }
+
+  function markMatchesAnswer(mark, answer) {
+    return (
+      mark.type === answer.type &&
+      mark.span.every((barIndex) => answer.span.includes(barIndex))
+    );
+  }
+
   function spanBetween(start, end) {
     const min = Math.min(start, end);
     const max = Math.max(start, end);
@@ -68,23 +79,20 @@
   }
 
   function gradeSelection() {
-    const answerByKey = new Map(
-      currentAnswers().map((answer) => [answerKey(answer), answer]),
-    );
-    const selectedByKey = new Set(state.marks.map((mark) => answerKey(mark)));
+    const answers = currentAnswers();
     const correctAnswers = currentAnswers().filter((answer) =>
-      selectedByKey.has(answerKey(answer)),
+      state.marks.some((mark) => markMatchesAnswer(mark, answer)),
     );
     const missedAnswers = currentAnswers().filter((answer) =>
-      !selectedByKey.has(answerKey(answer)),
+      !state.marks.some((mark) => markMatchesAnswer(mark, answer)),
     );
     const wrongMarks = state.marks.filter((mark) =>
-      !answerByKey.has(answerKey(mark)),
+      !answers.some((answer) => markMatchesAnswer(mark, answer)),
     );
     const correctMarkKeys = new Set(
       state.marks
-        .filter((mark) => answerByKey.has(answerKey(mark)))
-        .map((mark) => answerKey(mark)),
+        .filter((mark) => answers.some((answer) => markMatchesAnswer(mark, answer)))
+        .map((mark) => markKey(mark)),
     );
     const correctAnswerKeys = new Set(correctAnswers.map((answer) => answerKey(answer)));
 
@@ -173,12 +181,13 @@
           .join("");
         const selectedBadges = selectedAtStart
           .map((mark) => {
-            const correct = state.checked && grade.correctMarkKeys.has(answerKey(mark));
-            const wrong = state.checked && !grade.correctMarkKeys.has(answerKey(mark));
+            const correct = state.checked && grade.correctMarkKeys.has(markKey(mark));
+            const wrong = state.checked && !grade.correctMarkKeys.has(markKey(mark));
             const badgeClass = correct ? "correct-badge" : wrong ? "wrong-badge" : "";
+            const prefix = correct ? "正解 " : wrong ? "違う " : "";
             return `
               <span class="answer-badge selected-badge ${badgeClass}">
-                ${answerLabel(mark.type)}
+                ${prefix}${answerLabel(mark.type)}
               </span>
             `;
           })
@@ -188,7 +197,7 @@
           .map(
             (answer) => `
               <span class="answer-badge missed-badge">
-                ${answerLabel(answer.type)}
+                正解: ${answerLabel(answer.type)}
               </span>
             `,
           )
@@ -214,13 +223,13 @@
 
     const grade = gradeSelection();
     const correct = grade.correctAnswers.length;
-    const extra = grade.wrongMarks.length;
+    const wrong = grade.wrongMarks.length;
     const missed = grade.missedAnswers.length;
 
     elements.result.innerHTML = `
       <span>結果</span>
       <strong>正解 ${correct}/${currentAnswers().length}</strong>
-      <em>ミス ${extra + missed}</em>
+      <em>違う ${wrong} / 未回答 ${missed}</em>
     `;
   }
 
@@ -254,15 +263,12 @@
     if (state.checked) return;
 
     const key = spanKey(span);
-    const existingIndex = state.marks.findIndex((mark) => spanKey(mark.span) === key);
+    const existingIndex = state.marks.findIndex(
+      (mark) => mark.type === state.activeType && spanKey(mark.span) === key,
+    );
 
     if (existingIndex >= 0) {
-      const existing = state.marks[existingIndex];
-      if (existing.type === state.activeType) {
-        removeMark(existing);
-      } else {
-        state.marks[existingIndex] = { type: state.activeType, span };
-      }
+      removeMark(state.marks[existingIndex]);
       render();
       return;
     }
