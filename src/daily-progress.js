@@ -10,7 +10,6 @@
     "key-signature",
     "two-five-one",
     "recognition",
-    "sight-reading",
   ];
 
   function pad(value) {

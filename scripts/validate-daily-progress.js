@@ -12,7 +12,6 @@ assert.deepEqual(TRAINING_IDS, [
   "key-signature",
   "two-five-one",
   "recognition",
-  "sight-reading",
 ]);
 
 assert.equal(trainingDayKey(new Date(2026, 5, 10, 5, 59)), "2026-06-09");

@@ -16,7 +16,6 @@
 - `oscar-peterson/` でJazz Exercise 1〜3の練習メモと日次完了ボタンを表示
 - `chord-flash/` でmaj7 / m7 / 7 / m7♭5 / dim7をRoot / 2nd混在の1周12問で瞬間判定
 - `key-signature/` で♯/♭の数からメジャー / マイナーキーを答える1周12問の調号判定
-- `sight-reading/` で4小節大譜表の譜読み・リズム練習
 - HOMEでは朝6時区切りで当日の実施済みトレーニングにチェックを表示
 
 ## ローカル確認
@@ -37,5 +36,4 @@ node scripts/validate-hanon.js
 node scripts/validate-chord-flash.js
 node scripts/validate-key-signature.js
 node scripts/validate-oscar-peterson.js
-node scripts/validate-sight-reading.js
 ```
