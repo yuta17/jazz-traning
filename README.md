@@ -14,6 +14,7 @@
 - `hanon/` でハノン1-5から開くたびに番号をランダム表示
 - `oscar-peterson/` でJazz Exercise 1〜3の練習メモと日次完了ボタンを表示
 - `chord-flash/` でmaj7 / m7 / 7 / m7♭5 / dim7をRoot / 2nd混在の1周12問で瞬間判定
+- `rootless-9th/` でコードからルートを抜いた3・5・7・9の音を答える1周12問の練習
 - `key-signature/` で♯/♭の数からメジャー / マイナーキーを答える1周12問の調号判定
 - HOMEでは朝6時区切りで当日の実施済みトレーニングにチェックを表示
 
@@ -32,6 +33,7 @@ node scripts/validate-theory.js
 node scripts/validate-daily-progress.js
 node scripts/validate-hanon.js
 node scripts/validate-chord-flash.js
+node scripts/validate-rootless-9th.js
 node scripts/validate-key-signature.js
 node scripts/validate-oscar-peterson.js
 ```

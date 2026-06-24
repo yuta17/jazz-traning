@@ -635,6 +635,64 @@ input {
   font-weight: 900;
 }
 
+.rootless-panel {
+  min-height: 330px;
+}
+
+.rootless-actions {
+  display: grid;
+  gap: 24px;
+}
+
+.rootless-note-line {
+  margin: 0 0 16px;
+  color: #172033;
+  font-size: clamp(2rem, 9vw, 3.4rem);
+  line-height: 1.05;
+  font-weight: 900;
+  text-align: center;
+}
+
+.rootless-note-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.rootless-note {
+  display: grid;
+  align-content: center;
+  gap: 5px;
+  min-height: 96px;
+  padding: 10px 8px;
+  border: 1px solid var(--answer-line);
+  border-radius: 8px;
+  background: var(--answer-bg);
+  color: #172033;
+  text-align: center;
+}
+
+.rootless-note small {
+  color: #746fe2;
+  font-size: 0.72rem;
+  line-height: 1;
+  font-weight: 900;
+}
+
+.rootless-note strong {
+  font-size: 1.8rem;
+  line-height: 1;
+  font-weight: 900;
+}
+
+.rootless-note em {
+  color: var(--muted);
+  font-size: 0.68rem;
+  line-height: 1.15;
+  font-style: normal;
+  font-weight: 800;
+}
+
 .signature-panel {
   min-height: 300px;
 }
@@ -943,6 +1001,10 @@ td {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .rootless-note-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .question-panel {
     min-height: 320px;
   }
@@ -971,6 +1033,10 @@ td {
 
   .question-key.chord-symbol {
     font-size: 4.2rem;
+  }
+
+  .rootless-note {
+    min-height: 88px;
   }
 
   .signature-choice-grid {
