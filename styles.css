@@ -693,6 +693,123 @@ input {
   font-weight: 800;
 }
 
+.lick-shell {
+  width: min(100%, 760px);
+}
+
+.lick-source {
+  padding: 22px 28px;
+  border-bottom: 1px solid var(--line);
+  background: white;
+}
+
+.lick-source-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid #e4e7ef;
+  border-radius: 8px;
+  background: white;
+}
+
+.lick-panel {
+  min-height: 390px;
+  align-items: stretch;
+}
+
+.lick-task {
+  display: grid;
+  align-content: center;
+  gap: 18px;
+  width: 100%;
+}
+
+.lick-key-block {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.lick-key-block span {
+  color: var(--muted);
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.lick-key-block strong {
+  color: #172033;
+  font-size: clamp(4.4rem, 18vw, 6.6rem);
+  line-height: 0.92;
+  font-weight: 900;
+}
+
+.lick-key-block p {
+  margin: 0;
+  color: #4b5563;
+  font-size: clamp(1.35rem, 5vw, 2.1rem);
+  line-height: 1.2;
+  font-weight: 900;
+}
+
+.lick-degree-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.lick-degree-card {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  border: 1px solid var(--answer-line);
+  border-radius: 8px;
+  background: var(--answer-bg);
+}
+
+.lick-degree-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.lick-degree-header span {
+  color: #746fe2;
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
+.lick-degree-header strong {
+  color: #172033;
+  font-size: 1.25rem;
+  line-height: 1.1;
+  font-weight: 900;
+}
+
+.lick-degree-line,
+.lick-note-line {
+  margin: 0;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.lick-degree-line {
+  color: #172033;
+  font-size: 1.45rem;
+  font-weight: 900;
+}
+
+.lick-note-line {
+  color: var(--muted);
+  font-size: 0.98rem;
+  font-weight: 800;
+}
+
+.lick-actions {
+  display: grid;
+  gap: 16px;
+}
+
 .signature-panel {
   min-height: 300px;
 }
@@ -947,7 +1064,8 @@ td {
   .stats-heading,
   .hanon-stage,
   .peterson-stage,
-  .practice-note {
+  .practice-note,
+  .lick-source {
     padding-left: 20px;
     padding-right: 20px;
   }
@@ -1037,6 +1155,28 @@ td {
 
   .rootless-note {
     min-height: 88px;
+  }
+
+  .lick-panel {
+    min-height: 360px;
+  }
+
+  .lick-degree-card {
+    padding: 13px 14px;
+  }
+
+  .lick-degree-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .lick-degree-line {
+    font-size: 1.24rem;
+  }
+
+  .lick-note-line {
+    font-size: 0.88rem;
   }
 
   .signature-choice-grid {

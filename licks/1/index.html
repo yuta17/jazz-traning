@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="ii-V-Iリックを12メジャーキーで弾くトレーニング"
+    />
+    <title>リック 1</title>
+    <link rel="stylesheet" href="../../styles.css?v=20260625-lick-1" />
+  </head>
+  <body>
+    <main class="app-shell lick-shell">
+      <header class="hero">
+        <nav class="hero-links" aria-label="ページ">
+          <a href="../../">ホーム</a>
+        </nav>
+        <h1>リック 1</h1>
+        <p>ii-V-Iを12キーで弾く</p>
+      </header>
+
+      <section class="lick-source" aria-label="譜例">
+        <img
+          class="lick-source-image"
+          src="../../assets/licks/lick-1.jpg"
+          alt="D-7、G7、Cmajのii-V-Iリック譜例"
+        />
+      </section>
+
+      <section class="settings chord-start" aria-label="開始">
+        <button id="lick-start-button" class="button primary" type="button">
+          スタート
+        </button>
+      </section>
+
+      <section class="practice" aria-label="出題">
+        <div class="progress-row">
+          <span>進捗</span>
+          <strong id="lick-progress-count">0 / 12</strong>
+        </div>
+
+        <div id="lick-question-panel" class="question-panel lick-panel" aria-live="polite">
+          <div class="ready-state">
+            <strong>待機中</strong>
+          </div>
+        </div>
+
+        <div class="practice-actions lick-actions">
+          <button id="lick-hit-button" class="button success wide" type="button" disabled>
+            弾けた
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <script src="../../src/daily-progress.js?v=20260625-lick-1"></script>
+    <script src="../../src/lick-1.js?v=20260625-lick-1"></script>
+  </body>
+</html>
