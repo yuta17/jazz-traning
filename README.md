@@ -11,7 +11,6 @@
 - メジャーとマイナーを含む場合も1周12問
 - 選択したバリエーションは1周内でできるだけ均等に割り当て
 - `two-five-one/` で2-5-1キー練習
-- `recognition.html` で2-5-1 / 2-5 / メジャー / マイナー混在の進行判定トレーニング
 - `hanon/` でハノン1-5から開くたびに番号をランダム表示
 - `oscar-peterson/` でJazz Exercise 1〜3の練習メモと日次完了ボタンを表示
 - `chord-flash/` でmaj7 / m7 / 7 / m7♭5 / dim7をRoot / 2nd混在の1周12問で瞬間判定
@@ -30,7 +29,6 @@ python3 -m http.server 4173
 
 ```bash
 node scripts/validate-theory.js
-node scripts/validate-progressions.js
 node scripts/validate-daily-progress.js
 node scripts/validate-hanon.js
 node scripts/validate-chord-flash.js

@@ -11,7 +11,6 @@ assert.deepEqual(TRAINING_IDS, [
   "chord-flash",
   "key-signature",
   "two-five-one",
-  "recognition",
 ]);
 
 assert.equal(trainingDayKey(new Date(2026, 5, 10, 5, 59)), "2026-06-09");

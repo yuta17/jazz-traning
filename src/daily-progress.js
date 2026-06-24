@@ -9,7 +9,6 @@
     "chord-flash",
     "key-signature",
     "two-five-one",
-    "recognition",
   ];
 
   function pad(value) {
