@@ -11,6 +11,7 @@
     "rootless-9th",
     "key-signature",
     "two-five-one",
+    "standard-sight-reading",
   ];
 
   function pad(value) {

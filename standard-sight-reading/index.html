@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Jazz 1460 Standardsから日替わりで1曲を選ぶ初見練習"
+    />
+    <title>初見スタンダード</title>
+    <link rel="stylesheet" href="../styles.css?v=20260625-standard-sight-reading" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="hero">
+        <nav class="hero-links" aria-label="ページ">
+          <a href="../">ホーム</a>
+        </nav>
+        <h1>初見スタンダード</h1>
+        <p>今日の1曲を止まらず読む</p>
+      </header>
+
+      <section class="practice" aria-label="今日の曲">
+        <div id="standard-song-panel" class="question-panel standard-panel" aria-live="polite">
+          <div class="ready-state">
+            <strong>読込中</strong>
+          </div>
+        </div>
+
+        <div class="practice-actions standard-actions">
+          <button id="standard-done-button" class="button success wide" type="button">
+            弾いた
+          </button>
+          <a
+            class="button neutral wide"
+            href="https://forums.irealpro.com/threads/jazz-1460-standards.12753/"
+            target="_blank"
+            rel="noopener"
+          >
+            一覧元を開く
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <script src="../src/daily-progress.js?v=20260625-standard-sight-reading"></script>
+    <script src="../src/standard-songs.js?v=20260625-standard-sight-reading"></script>
+    <script src="../src/standard-sight-reading.js?v=20260625-standard-sight-reading"></script>
+  </body>
+</html>

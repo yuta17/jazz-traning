@@ -17,6 +17,7 @@
 - `chord-flash/` でmaj7 / m7 / 7 / m7♭5 / dim7をRoot / 2nd混在の1周12問で瞬間判定
 - `rootless-9th/` でコードからルートを抜いた3・5・7・9の音を答える1周12問の練習
 - `key-signature/` で♯/♭の数からメジャー / マイナーキーを答える1周12問の調号判定
+- `standard-sight-reading/` でJazz 1460 Standardsから日替わりで1曲を表示
 - HOMEでは朝6時区切りで当日の実施済みトレーニングにチェックを表示
 
 ## ローカル確認
@@ -38,4 +39,5 @@ node scripts/validate-rootless-9th.js
 node scripts/validate-lick-1.js
 node scripts/validate-key-signature.js
 node scripts/validate-oscar-peterson.js
+node scripts/validate-standard-sight-reading.js
 ```
