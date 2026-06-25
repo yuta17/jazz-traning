@@ -9,6 +9,30 @@ const {
   createDeck,
 } = require("../src/lick-1.js");
 
+const PITCH_CLASS = {
+  C: 0,
+  "B♯": 0,
+  "C♯": 1,
+  "D♭": 1,
+  D: 2,
+  "D♯": 3,
+  "E♭": 3,
+  E: 4,
+  "F♭": 4,
+  F: 5,
+  "E♯": 5,
+  "F♯": 6,
+  "G♭": 6,
+  G: 7,
+  "G♯": 8,
+  "A♭": 8,
+  A: 9,
+  "A♯": 10,
+  "B♭": 10,
+  B: 11,
+  "C♭": 11,
+};
+
 assert.equal(ROUND_SIZE, 12);
 assert.equal(MAJOR_KEYS.length, 12);
 assert.equal(new Set(MAJOR_KEYS.map((key) => key.id)).size, 12);
@@ -35,6 +59,27 @@ const dbTask = buildTask(MAJOR_KEYS.find((key) => key.id === "Db"));
 assert.equal(dbTask.progression, "E♭-7 → A♭7 → D♭maj");
 assert.deepEqual(dbTask.segments[0].notes, ["E♭", "G♭", "B♭", "D♭", "C", "B♭", "G♭", "E♭"]);
 assert.deepEqual(dbTask.segments[1].notes, ["A♭", "C", "E♭", "G♭", "A", "A♭", "G♭", "F", "E♭"]);
+
+const cPitchRows = cTask.segments.map((segment) => (
+  segment.notes.map((note) => PITCH_CLASS[note])
+));
+
+MAJOR_KEYS.forEach((key) => {
+  const task = buildTask(key);
+  task.segments.forEach((segment, segmentIndex) => {
+    assert.deepEqual(
+      segment.notes.filter((note) => !(note in PITCH_CLASS)),
+      [],
+      `${task.key} ${segment.chord} has unsupported note spelling`,
+    );
+
+    assert.deepEqual(
+      segment.notes.map((note) => PITCH_CLASS[note]),
+      cPitchRows[segmentIndex].map((pitchClass) => (pitchClass + key.pitch) % 12),
+      `${task.key} ${segment.chord} should transpose from the C source lick`,
+    );
+  });
+});
 
 const deck = createDeck();
 assert.equal(deck.length, 12);
