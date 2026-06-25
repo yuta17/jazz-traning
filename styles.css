@@ -712,6 +712,20 @@ input {
   background: white;
 }
 
+.lick-source-link {
+  display: inline-flex;
+  margin-top: 12px;
+  color: #4f46e5;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.lick-source-link:hover {
+  text-decoration: underline;
+}
+
 .lick-panel {
   min-height: 390px;
   align-items: stretch;
