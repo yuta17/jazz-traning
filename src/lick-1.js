@@ -46,9 +46,9 @@
       suffix: "7",
       rootOffset: 7,
       rootLetterOffset: 4,
-      intervals: [4, 7, 10, 13, 12, 10, 9, 7],
-      noteLetterOffsets: [2, 4, 6, 1, 0, 6, 5, 4],
-      degreeLabels: ["3", "5", "♭7", "♭9", "1", "♭7", "13", "5"],
+      intervals: [4, 7, 10, 12, 13, 15, 13, 12, 10],
+      noteLetterOffsets: [2, 4, 6, 0, 1, 2, 1, 0, 6],
+      degreeLabels: ["3", "5", "♭7", "1", "♭9", "♭3", "♭9", "1", "♭7"],
     },
     {
       id: "i",
