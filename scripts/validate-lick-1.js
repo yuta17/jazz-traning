@@ -25,14 +25,16 @@ LICK_SEGMENTS.forEach((segment) => {
 const cTask = buildTask(MAJOR_KEYS.find((key) => key.id === "C"));
 assert.equal(cTask.key, "C");
 assert.equal(cTask.progression, "D-7 → G7 → Cmaj");
-assert.deepEqual(cTask.segments[0].degreeLabels.slice(0, 4), ["1", "♭3", "5", "♭7"]);
-assert.deepEqual(cTask.segments[0].notes.slice(0, 4), ["D", "F", "A", "C"]);
-assert.deepEqual(cTask.segments[1].degreeLabels, ["1", "9", "3", "5", "♭13", "♭5", "11", "3", "9", "1"]);
+assert.deepEqual(cTask.segments[0].degreeLabels, ["1", "♭3", "5", "♭7", "13", "5", "♭3", "1"]);
+assert.deepEqual(cTask.segments[0].notes, ["D", "F", "A", "C", "B", "A", "F", "D"]);
+assert.deepEqual(cTask.segments[1].degreeLabels, ["1", "3", "5", "♭7", "♭9", "1", "♭7", "13", "5"]);
+assert.deepEqual(cTask.segments[1].notes, ["G", "B", "D", "F", "A♭", "G", "F", "E", "D"]);
 assert.deepEqual(cTask.segments[2].notes, ["C"]);
 
 const dbTask = buildTask(MAJOR_KEYS.find((key) => key.id === "Db"));
 assert.equal(dbTask.progression, "E♭-7 → A♭7 → D♭maj");
-assert.deepEqual(dbTask.segments[0].notes.slice(0, 4), ["E♭", "G♭", "B♭", "D♭"]);
+assert.deepEqual(dbTask.segments[0].notes, ["E♭", "G♭", "B♭", "D♭", "C", "B♭", "G♭", "E♭"]);
+assert.deepEqual(dbTask.segments[1].notes, ["A♭", "C", "E♭", "G♭", "A", "A♭", "G♭", "F", "E♭"]);
 
 const deck = createDeck();
 assert.equal(deck.length, 12);
