@@ -853,12 +853,6 @@ input {
   overflow-wrap: anywhere;
 }
 
-.standard-song small {
-  color: var(--muted-light);
-  font-size: 0.86rem;
-  font-weight: 900;
-}
-
 .standard-actions {
   display: grid;
   gap: 14px;

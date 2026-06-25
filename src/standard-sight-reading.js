@@ -70,7 +70,6 @@
         <span class="standard-song-label">今日の1曲</span>
         <strong>${song.title}</strong>
         <p>${song.composer}</p>
-        <small>${song.total}曲から選曲</small>
       </div>
     `;
 
