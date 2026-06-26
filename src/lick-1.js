@@ -36,9 +36,9 @@
       suffix: "-7",
       rootOffset: 2,
       rootLetterOffset: 1,
-      intervals: [0, 3, 7, 10, 9, 7, 3, 0],
-      noteLetterOffsets: [0, 2, 4, 6, 5, 4, 2, 0],
-      degreeLabels: ["1", "♭3", "5", "♭7", "13", "5", "♭3", "1"],
+      intervals: [0, 3, 7, 10, 14, 10, 7, 10],
+      noteLetterOffsets: [0, 2, 4, 6, 1, 6, 4, 6],
+      degreeLabels: ["1", "♭3", "5", "♭7", "9", "♭7", "5", "♭7"],
     },
     {
       id: "v",
@@ -56,9 +56,9 @@
       suffix: "maj",
       rootOffset: 0,
       rootLetterOffset: 0,
-      intervals: [0],
-      noteLetterOffsets: [0],
-      degreeLabels: ["1"],
+      intervals: [4],
+      noteLetterOffsets: [2],
+      degreeLabels: ["3"],
     },
   ];
 

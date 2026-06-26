@@ -50,16 +50,18 @@ LICK_SEGMENTS.forEach((segment) => {
 const cTask = buildTask(MAJOR_KEYS.find((key) => key.id === "C"));
 assert.equal(cTask.key, "C");
 assert.equal(cTask.progression, "D-7 → G7 → Cmaj");
-assert.deepEqual(cTask.segments[0].degreeLabels, ["1", "♭3", "5", "♭7", "13", "5", "♭3", "1"]);
-assert.deepEqual(cTask.segments[0].notes, ["D", "F", "A", "C", "B", "A", "F", "D"]);
+assert.deepEqual(cTask.segments[0].degreeLabels, ["1", "♭3", "5", "♭7", "9", "♭7", "5", "♭7"]);
+assert.deepEqual(cTask.segments[0].notes, ["D", "F", "A", "C", "E", "C", "A", "C"]);
 assert.deepEqual(cTask.segments[1].degreeLabels, ["3", "5", "♭7", "1", "♭9", "♭3", "♭9", "1", "♭7"]);
 assert.deepEqual(cTask.segments[1].notes, ["B", "D", "F", "G", "A♭", "B♭", "A♭", "G", "F"]);
-assert.deepEqual(cTask.segments[2].notes, ["C"]);
+assert.deepEqual(cTask.segments[2].degreeLabels, ["3"]);
+assert.deepEqual(cTask.segments[2].notes, ["E"]);
 
 const dbTask = buildTask(MAJOR_KEYS.find((key) => key.id === "Db"));
 assert.equal(dbTask.progression, "E♭-7 → A♭7 → D♭maj");
-assert.deepEqual(dbTask.segments[0].notes, ["E♭", "G♭", "B♭", "D♭", "C", "B♭", "G♭", "E♭"]);
+assert.deepEqual(dbTask.segments[0].notes, ["E♭", "G♭", "B♭", "D♭", "F", "D♭", "B♭", "D♭"]);
 assert.deepEqual(dbTask.segments[1].notes, ["C", "E♭", "G♭", "A♭", "A", "C♭", "A", "A♭", "G♭"]);
+assert.deepEqual(dbTask.segments[2].notes, ["F"]);
 
 const cPitchRows = cTask.segments.map((segment) => (
   segment.notes.map((note) => PITCH_CLASS[note])
