@@ -38,7 +38,7 @@
       rootLetterOffset: 1,
       intervals: [0, 3, 7, 10, 14, 10, 7, 10],
       noteLetterOffsets: [0, 2, 4, 6, 1, 6, 4, 6],
-      degreeLabels: ["1", "♭3", "5", "♭7", "9", "♭7", "5", "♭7"],
+      degreeLabels: ["1", "3", "5", "7", "9", "7", "5", "7"],
     },
     {
       id: "v",
@@ -48,7 +48,7 @@
       rootLetterOffset: 4,
       intervals: [4, 7, 10, 12, 13, 15, 13, 12, 10],
       noteLetterOffsets: [2, 4, 6, 0, 1, 2, 1, 0, 6],
-      degreeLabels: ["3", "5", "♭7", "1", "♭9", "♭3", "♭9", "1", "♭7"],
+      degreeLabels: ["3", "5", "7", "1", "♭9", "♭3", "♭9", "1", "7"],
     },
     {
       id: "i",

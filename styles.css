@@ -805,6 +805,7 @@ input {
   margin: 0;
   line-height: 1.35;
   overflow-wrap: anywhere;
+  word-spacing: 0.18rem;
 }
 
 .lick-degree-line {

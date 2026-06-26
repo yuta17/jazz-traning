@@ -50,9 +50,9 @@ LICK_SEGMENTS.forEach((segment) => {
 const cTask = buildTask(MAJOR_KEYS.find((key) => key.id === "C"));
 assert.equal(cTask.key, "C");
 assert.equal(cTask.progression, "D-7 → G7 → Cmaj");
-assert.deepEqual(cTask.segments[0].degreeLabels, ["1", "♭3", "5", "♭7", "9", "♭7", "5", "♭7"]);
+assert.deepEqual(cTask.segments[0].degreeLabels, ["1", "3", "5", "7", "9", "7", "5", "7"]);
 assert.deepEqual(cTask.segments[0].notes, ["D", "F", "A", "C", "E", "C", "A", "C"]);
-assert.deepEqual(cTask.segments[1].degreeLabels, ["3", "5", "♭7", "1", "♭9", "♭3", "♭9", "1", "♭7"]);
+assert.deepEqual(cTask.segments[1].degreeLabels, ["3", "5", "7", "1", "♭9", "♭3", "♭9", "1", "7"]);
 assert.deepEqual(cTask.segments[1].notes, ["B", "D", "F", "G", "A♭", "B♭", "A♭", "G", "F"]);
 assert.deepEqual(cTask.segments[2].degreeLabels, ["3"]);
 assert.deepEqual(cTask.segments[2].notes, ["E"]);
