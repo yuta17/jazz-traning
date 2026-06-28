@@ -12,6 +12,7 @@
     "key-signature",
     "two-five-one",
     "standard-sight-reading",
+    "instagram-lick",
   ];
 
   function pad(value) {

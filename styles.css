@@ -873,6 +873,28 @@ input {
   gap: 14px;
 }
 
+.instagram-lick-panel {
+  min-height: 340px;
+}
+
+.instagram-lick-task {
+  display: grid;
+  justify-items: center;
+  width: 100%;
+  text-align: center;
+}
+
+.instagram-lick-task strong {
+  color: #172033;
+  font-size: clamp(4rem, 18vw, 6.4rem);
+  line-height: 0.95;
+  font-weight: 900;
+}
+
+.instagram-lick-actions {
+  display: grid;
+}
+
 .signature-panel {
   min-height: 300px;
 }
