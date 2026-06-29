@@ -880,15 +880,44 @@ input {
 .instagram-lick-task {
   display: grid;
   justify-items: center;
+  gap: 12px;
   width: 100%;
   text-align: center;
 }
 
 .instagram-lick-task strong {
   color: #172033;
-  font-size: clamp(4rem, 18vw, 6.4rem);
-  line-height: 0.95;
+  font-size: clamp(3.2rem, 13vw, 5.2rem);
+  line-height: 1.02;
   font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.instagram-lick-task p {
+  margin: 0;
+  color: #4b5563;
+  font-size: clamp(1.15rem, 4vw, 1.65rem);
+  line-height: 1.25;
+  font-weight: 900;
+}
+
+.instagram-song-label,
+.instagram-youtube-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 14px;
+  border: 1px solid #e3e7ef;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: var(--primary-dark);
+  font-size: 0.92rem;
+  font-weight: 900;
+}
+
+.instagram-youtube-link {
+  margin-top: 6px;
 }
 
 .instagram-lick-actions {

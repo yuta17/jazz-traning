@@ -8,7 +8,7 @@
       content="気になったLickを1小節だけ耳コピする日課"
     />
     <title>1小節耳コピしよう</title>
-    <link rel="stylesheet" href="../styles.css?v=20260629-instagram-ear-copy" />
+    <link rel="stylesheet" href="../styles.css?v=20260629-instagram-ear-copy-songs" />
   </head>
   <body>
     <main class="app-shell">
@@ -21,8 +21,9 @@
 
       <section class="practice" aria-label="今日のLick">
         <div class="question-panel instagram-lick-panel">
-          <div class="instagram-lick-task">
-            <strong>1小節</strong>
+          <div id="instagram-lick-panel" class="instagram-lick-task" aria-live="polite">
+            <span class="instagram-song-label">今日の1曲</span>
+            <strong>読込中</strong>
           </div>
         </div>
 
@@ -40,6 +41,6 @@
     </main>
 
     <script src="../src/daily-progress.js?v=20260629-instagram-ear-copy"></script>
-    <script src="../src/instagram-lick.js?v=20260629-instagram-ear-copy"></script>
+    <script src="../src/instagram-lick.js?v=20260629-instagram-ear-copy-songs"></script>
   </body>
 </html>
