@@ -9,7 +9,8 @@ assert(TRAINING_IDS.includes(TRAINING_ID));
 assert(fs.existsSync(path.join(__dirname, "../instagram-lick/index.html")));
 
 const html = fs.readFileSync(path.join(__dirname, "../instagram-lick/index.html"), "utf8");
-assert(html.includes("インスタで見たLickを一つだけコピー"));
+assert(html.includes("1小節耳コピしよう"));
+assert(html.includes("1小節"));
 assert(html.includes("弾けた"));
 assert(html.includes("src/instagram-lick.js"));
 
