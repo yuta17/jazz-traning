@@ -39,7 +39,7 @@
       rootLetterOffset: 1,
       intervals: [5, 4, 3, null, 7, 6, 7],
       noteLetterOffsets: [3, 2, 2, null, 4, 3, 4],
-      degreeLabels: ["11", "♯3", "3", REST_LABEL, "5", "♯11", "5"],
+      degreeLabels: ["", "", "3", REST_LABEL, "5", "♯11", "5"],
     },
     {
       id: "v",
@@ -165,6 +165,18 @@
     };
   }
 
+  function renderNotePairs(segment) {
+    return segment.notes.map((note, index) => {
+      const label = segment.degreeLabels[index] || "&nbsp;";
+      return `
+        <span class="lick-note-pair">
+          <span class="lick-degree-label">${label}</span>
+          <span class="lick-note-label">${note}</span>
+        </span>
+      `;
+    }).join("");
+  }
+
   function renderQuestion() {
     const dom = elements();
     const task = currentTask();
@@ -202,8 +214,7 @@
                 <span>${segment.degree}</span>
                 <strong>${segment.chord}</strong>
               </div>
-              <p class="lick-degree-line">${segment.degreeLabels.join(" ")}</p>
-              <p class="lick-note-line">${segment.notes.join(" ")}</p>
+              <div class="lick-note-pairs">${renderNotePairs(segment)}</div>
             </div>
           `).join("")}
         </div>

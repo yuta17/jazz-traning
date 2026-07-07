@@ -800,21 +800,27 @@ input {
   font-weight: 900;
 }
 
-.lick-degree-line,
-.lick-note-line {
-  margin: 0;
-  line-height: 1.35;
-  overflow-wrap: anywhere;
-  word-spacing: 0.18rem;
+.lick-note-pairs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.38rem 0.56rem;
 }
 
-.lick-degree-line {
+.lick-note-pair {
+  display: inline-grid;
+  grid-template-rows: auto auto;
+  justify-items: center;
+  min-width: 1.75rem;
+  line-height: 1.2;
+}
+
+.lick-degree-label {
   color: #172033;
   font-size: 1.45rem;
   font-weight: 900;
 }
 
-.lick-note-line {
+.lick-note-label {
   color: var(--muted);
   font-size: 0.98rem;
   font-weight: 800;
@@ -1285,11 +1291,11 @@ td {
     gap: 5px;
   }
 
-  .lick-degree-line {
+  .lick-degree-label {
     font-size: 1.24rem;
   }
 
-  .lick-note-line {
+  .lick-note-label {
     font-size: 0.88rem;
   }
 
