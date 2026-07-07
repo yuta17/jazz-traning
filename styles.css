@@ -179,6 +179,9 @@ input {
 }
 
 .hanon-stage {
+  display: grid;
+  justify-items: center;
+  gap: 28px;
   padding: 54px 28px 62px;
   background: white;
   border-bottom: 1px solid var(--line);
@@ -186,10 +189,8 @@ input {
 }
 
 .hanon-number {
-  display: inline-grid;
-  grid-template-columns: auto auto;
+  display: grid;
   align-items: baseline;
-  gap: 12px;
 }
 
 .hanon-number span {
@@ -208,7 +209,6 @@ input {
 .hanon-done-button {
   min-width: 132px;
   min-height: 42px;
-  margin-top: 28px;
   font-size: 0.96rem;
 }
 

@@ -24,7 +24,7 @@ assert(html.includes("<h1>ハノン</h1>"));
 assert(html.includes('aria-label="ハノン"'));
 assert(html.includes('id="hanon-done-button"'));
 assert(html.includes("練習した"));
-assert(html.includes("styles.css?v=20260708-hanon-done"));
+assert(html.includes("styles.css?v=20260708-hanon-button"));
 assert(html.includes("hanon.js?v=20260708-hanon-done"));
 assert(!html.includes("ハノン番号"));
 assert(!html.includes(">番号<"));
