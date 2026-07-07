@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="ハノン1-5から開くたびに番号をランダム表示する"
+      content="ハノン1-5から開くたびにひとつ表示する"
     />
-    <title>ハノン番号</title>
-    <link rel="stylesheet" href="../styles.css?v=20260610-daily" />
+    <title>ハノン</title>
+    <link rel="stylesheet" href="../styles.css?v=20260708-hanon-numberless" />
   </head>
   <body>
     <main class="app-shell">
@@ -16,19 +16,18 @@
         <nav class="hero-links" aria-label="ページ">
           <a href="../">ホーム</a>
         </nav>
-        <h1>ハノン番号</h1>
+        <h1>ハノン</h1>
         <p>開くたびに1-5からひとつ出す</p>
       </header>
 
-      <section class="hanon-stage" aria-label="ハノン番号">
+      <section class="hanon-stage" aria-label="ハノン">
         <div class="hanon-number" aria-live="polite">
-          <span>番号</span>
           <strong id="hanon-number">-</strong>
         </div>
       </section>
     </main>
 
     <script src="../src/daily-progress.js?v=20260707-licks"></script>
-    <script src="../src/hanon.js?v=20260610-daily"></script>
+    <script src="../src/hanon.js?v=20260708-hanon-numberless"></script>
   </body>
 </html>
