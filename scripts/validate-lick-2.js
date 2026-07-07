@@ -13,24 +13,38 @@ const {
 const PITCH_CLASS = {
   C: 0,
   "B♯": 0,
+  "D♭♭": 0,
   "C♯": 1,
+  "B♯♯": 1,
   "D♭": 1,
   D: 2,
+  "C♯♯": 2,
+  "E♭♭": 2,
   "D♯": 3,
   "E♭": 3,
+  "F♭♭": 3,
   E: 4,
+  "D♯♯": 4,
   "F♭": 4,
   F: 5,
   "E♯": 5,
+  "G♭♭": 5,
   "F♯": 6,
+  "E♯♯": 6,
   "G♭": 6,
   G: 7,
+  "F♯♯": 7,
+  "A♭♭": 7,
   "G♯": 8,
   "A♭": 8,
   A: 9,
+  "G♯♯": 9,
+  "B♭♭": 9,
   "A♯": 10,
   "B♭": 10,
+  "C♭♭": 10,
   B: 11,
+  "A♯♯": 11,
   "C♭": 11,
 };
 
@@ -54,16 +68,22 @@ assert.equal(cTask.key, "C");
 assert.equal(cTask.progression, "D-7 → G7 → Cmaj7");
 assert.deepEqual(cTask.segments[0].degreeLabels, ["半", "半", "3", "休", "5", "半", "5"]);
 assert.deepEqual(cTask.segments[0].notes, ["G", "F♯", "F", "休", "A", "G♯", "A"]);
-assert.deepEqual(cTask.segments[1].degreeLabels, ["13", "11", "5", "♭13", "3", "1", "1", "7", "13"]);
-assert.deepEqual(cTask.segments[1].notes, ["E", "C", "D", "E♭", "B", "G", "G", "F", "E"]);
+assert.deepEqual(cTask.segments[1].degreeLabels, ["3", "11", "5", "♭13", "♯9", "♭9", "1", "♭7", "13"]);
+assert.deepEqual(cTask.segments[1].notes, ["B", "C", "D", "E♭", "A♯", "A♭", "G", "F", "E"]);
 assert.deepEqual(cTask.segments[2].degreeLabels, ["3"]);
 assert.deepEqual(cTask.segments[2].notes, ["E"]);
 
 const gTask = buildTask(MAJOR_KEYS.find((key) => key.id === "G"));
 assert.equal(gTask.progression, "A-7 → D7 → Gmaj7");
 assert.deepEqual(gTask.segments[0].notes, ["D", "C♯", "C", "休", "E", "D♯", "E"]);
-assert.deepEqual(gTask.segments[1].notes, ["B", "G", "A", "B♭", "F♯", "D", "D", "C", "B"]);
+assert.deepEqual(gTask.segments[1].notes, ["F♯", "G", "A", "B♭", "E♯", "E♭", "D", "C", "B"]);
 assert.deepEqual(gTask.segments[2].notes, ["B"]);
+
+const dbTask = buildTask(MAJOR_KEYS.find((key) => key.id === "Db"));
+assert.deepEqual(dbTask.segments[1].notes, ["C", "D♭", "E♭", "F♭", "B", "B♭♭", "A♭", "G♭", "F"]);
+
+const bTask = buildTask(MAJOR_KEYS.find((key) => key.id === "B"));
+assert.deepEqual(bTask.segments[1].notes, ["A♯", "B", "C♯", "D", "G♯♯", "G", "F♯", "E", "D♯"]);
 
 const cPitchRows = cTask.segments.map((segment) => (
   segment.notes.map((note) => (note === REST_LABEL ? REST_LABEL : PITCH_CLASS[note]))
