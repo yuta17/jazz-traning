@@ -11,7 +11,6 @@ assert.deepEqual(TRAINING_IDS, [
   "lick-1",
   "lick-2",
   "chord-flash",
-  "rootless-9th",
   "key-signature",
   "two-five-one",
   "standard-sight-reading",
