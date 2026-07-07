@@ -54,7 +54,7 @@
     const exercise = exerciseForDay();
     const completed = Boolean(global.JazzDailyProgress?.isComplete(TRAINING_ID));
 
-    dom.exerciseTitle.textContent = exercise.title;
+    dom.exerciseTitle.textContent = exercise.id;
     dom.doneButton.disabled = completed;
     dom.doneButton.setAttribute("aria-pressed", completed ? "true" : "false");
     dom.doneButton.textContent = completed ? "完了済み" : "練習した";

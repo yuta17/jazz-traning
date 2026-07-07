@@ -27,6 +27,7 @@ const evening = exerciseForDay(new Date(2026, 5, 12, 23, 30));
 assert.equal(morning.day, "2026-06-12");
 assert.equal(morning.id, evening.id);
 assert.equal(morning.title, evening.title);
+assert(["1", "2", "3"].includes(morning.id));
 assert(morning.index >= 0);
 assert(morning.index < EXERCISES.length);
 assert.equal(morning.total, EXERCISES.length);
@@ -39,7 +40,7 @@ assert.notEqual(hashString("oscar-peterson:2026-06-12"), hashString("oscar-peter
 const html = fs.readFileSync(path.join(__dirname, "../oscar-peterson/index.html"), "utf8");
 [
   "今日の重点練習",
-  "Oscar Peterson Exercise 1",
+  '<strong id="peterson-exercise-title">1</strong>',
   "毎日、Exercise 1〜3の中から1曲をランダムで選び",
   "まず1回通して弾き、ミスしやすい箇所を確認する。",
   "ミスした箇所（2〜4拍程度）だけを切り出して、超ゆっくり5回弾く。",
@@ -47,7 +48,7 @@ const html = fs.readFileSync(path.join(__dirname, "../oscar-peterson/index.html"
   "元のテンポで通して弾く。",
   "ノーミスを目指して繰り返す（3〜10回連続成功を目標）。",
   "styles.css?v=20260708-daily-exercise",
-  "oscar-peterson.js?v=20260708-daily-exercise",
+  "oscar-peterson.js?v=20260708-daily-exercise-number",
 ].forEach((text) => {
   assert(html.includes(text), `Missing text: ${text}`);
 });
