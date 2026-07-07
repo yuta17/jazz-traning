@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="オスカー・ピーターソン Jazz Exercise 1〜3を練習するためのメモ"
+      content="Oscar Peterson Exercise 1〜3から今日の重点練習を選ぶ"
     />
     <title>オスカーピーターソン</title>
-    <link rel="stylesheet" href="../styles.css?v=20260612-oscar-peterson-lines" />
+    <link rel="stylesheet" href="../styles.css?v=20260708-daily-exercise" />
   </head>
   <body>
     <main class="app-shell">
@@ -17,73 +17,39 @@
           <a href="../">ホーム</a>
         </nav>
         <h1>オスカーピーターソン</h1>
-        <p>Jazz Exercise 1〜3</p>
+        <p>今日の重点練習</p>
       </header>
 
-      <section class="peterson-stage" aria-label="今日の番号">
+      <section class="peterson-stage" aria-label="今日の重点練習">
         <div class="peterson-exercise">
-          <span>1</span>
-          <button class="button neutral peterson-done-button" type="button" data-exercise="1">
-            やった
+          <span>今日の重点練習</span>
+          <strong id="peterson-exercise-title">Oscar Peterson Exercise 1</strong>
+          <button id="peterson-done-button" class="button success peterson-done-button" type="button">
+            練習した
           </button>
         </div>
-        <div class="peterson-exercise">
-          <span>2</span>
-          <button class="button neutral peterson-done-button" type="button" data-exercise="2">
-            やった
-          </button>
-        </div>
-        <div class="peterson-exercise">
-          <span>3</span>
-          <button class="button neutral peterson-done-button" type="button" data-exercise="3">
-            やった
-          </button>
-        </div>
-        <p id="peterson-status" class="peterson-status" aria-live="polite">0 / 3</p>
+      </section>
+
+      <section class="practice-note" aria-labelledby="peterson-purpose-title">
+        <h2 id="peterson-purpose-title">目的</h2>
+        <p>
+          毎日、Exercise 1〜3の中から1曲をランダムで選び、その曲を重点的に練習することで、ミスを減らし、演奏の安定性を高める。
+        </p>
       </section>
 
       <section class="practice-note" aria-labelledby="peterson-note-title">
-        <h2 id="peterson-note-title">
-          オスカー・ピーターソン Jazz Exercise 1〜3：粒・脱力・タイム感
-        </h2>
+        <h2 id="peterson-note-title">練習方法</h2>
 
         <ol>
-          <li>
-            <strong>♩=60前後で各曲を通す</strong>
-            <ul>
-              <li>音量、タイミング、音の長さを揃える</li>
-              <li>力まず、小さい音でも均一に弾く</li>
-              <li>止まった箇所に印をつける</li>
-            </ul>
-          </li>
-          <li>
-            <strong>崩れた箇所を2〜3個だけ部分練習</strong>
-            <ul>
-              <li>1〜2拍、長くても1小節に切る</li>
-              <li>移動で崩れる場合は、小節の境目をまたいで練習する</li>
-              <li>右手5回 → 左手5回 → 両手5回</li>
-              <li>5回連続で綺麗に弾けたら、前後をつなぐ</li>
-              <li>難しければ♩=40〜50まで落とす</li>
-            </ul>
-          </li>
-          <li>
-            <strong>速い箇所はリズム変奏</strong>
-            <ul>
-              <li>長短、短長で弾く</li>
-              <li>最後に元の均等なリズムへ戻す</li>
-            </ul>
-          </li>
-          <li>
-            <strong>仕上げにもう一度通す</strong>
-            <ul>
-              <li>直した箇所が流れの中でも崩れないか確認する</li>
-              <li>余裕があれば録音して聴く</li>
-            </ul>
-          </li>
+          <li>まず1回通して弾き、ミスしやすい箇所を確認する。</li>
+          <li>ミスした箇所（2〜4拍程度）だけを切り出して、超ゆっくり5回弾く。</li>
+          <li>少しテンポを上げて5回弾く。</li>
+          <li>元のテンポで通して弾く。</li>
+          <li>ノーミスを目指して繰り返す（3〜10回連続成功を目標）。</li>
         </ol>
       </section>
     </main>
     <script src="../src/daily-progress.js?v=20260707-licks"></script>
-    <script src="../src/oscar-peterson.js?v=20260612-oscar-peterson-done"></script>
+    <script src="../src/oscar-peterson.js?v=20260708-daily-exercise"></script>
   </body>
 </html>

@@ -1,10 +1,13 @@
 (function attachOscarPeterson(global) {
   "use strict";
 
-  const STORAGE_KEY = "jazz-oscar-peterson-state-v1";
   const TRAINING_ID = "oscar-peterson";
   const RESET_HOUR = 6;
-  const EXERCISES = ["1", "2", "3"];
+  const EXERCISES = [
+    { id: "1", title: "Oscar Peterson Exercise 1" },
+    { id: "2", title: "Oscar Peterson Exercise 2" },
+    { id: "3", title: "Oscar Peterson Exercise 3" },
+  ];
 
   function pad(value) {
     return String(value).padStart(2, "0");
@@ -19,107 +22,62 @@
     return global.JazzDailyProgress?.trainingDayKey(date) || fallbackTrainingDayKey(date);
   }
 
-  function normalizeSnapshot(snapshot, date = new Date()) {
+  function hashString(value) {
+    let hash = 2166136261;
+    for (let index = 0; index < value.length; index += 1) {
+      hash ^= value.charCodeAt(index);
+      hash = Math.imul(hash, 16777619);
+    }
+    return hash >>> 0;
+  }
+
+  function exerciseForDay(date = new Date()) {
     const day = trainingDayKey(date);
-    if (!snapshot || snapshot.day !== day || !Array.isArray(snapshot.completed)) {
-      return { day, completed: [] };
-    }
-
+    const seed = hashString(`${TRAINING_ID}:${day}`);
     return {
+      ...EXERCISES[seed % EXERCISES.length],
       day,
-      completed: EXERCISES.filter((exercise) => snapshot.completed.includes(exercise)),
+      index: seed % EXERCISES.length,
+      total: EXERCISES.length,
     };
-  }
-
-  function readRaw() {
-    try {
-      return JSON.parse(global.localStorage?.getItem(STORAGE_KEY) || "{}");
-    } catch {
-      return {};
-    }
-  }
-
-  function load(date = new Date()) {
-    return normalizeSnapshot(readRaw(), date);
-  }
-
-  function save(snapshot) {
-    global.localStorage?.setItem(STORAGE_KEY, JSON.stringify(snapshot));
-  }
-
-  function isCompleteSnapshot(snapshot) {
-    return EXERCISES.every((exercise) => snapshot.completed.includes(exercise));
-  }
-
-  function markExercise(exercise, date = new Date()) {
-    if (!EXERCISES.includes(exercise)) return load(date);
-
-    const snapshot = load(date);
-    if (!snapshot.completed.includes(exercise)) {
-      snapshot.completed.push(exercise);
-    }
-    save(snapshot);
-
-    if (isCompleteSnapshot(snapshot)) {
-      global.JazzDailyProgress?.mark(TRAINING_ID, date);
-    }
-
-    return snapshot;
   }
 
   function elements() {
     return {
-      buttons: Array.from(document.querySelectorAll("[data-exercise]")),
-      status: document.querySelector("#peterson-status"),
+      doneButton: document.querySelector("#peterson-done-button"),
+      exerciseTitle: document.querySelector("#peterson-exercise-title"),
     };
   }
 
   function render() {
-    const snapshot = load();
-    const completed = new Set(snapshot.completed);
     const dom = elements();
+    const exercise = exerciseForDay();
+    const completed = Boolean(global.JazzDailyProgress?.isComplete(TRAINING_ID));
 
-    dom.buttons.forEach((button) => {
-      const done = completed.has(button.dataset.exercise);
-      button.disabled = done;
-      button.classList.toggle("success", done);
-      button.classList.toggle("neutral", !done);
-      button.setAttribute("aria-pressed", done ? "true" : "false");
-      button.textContent = done ? "完了" : "やった";
-    });
+    dom.exerciseTitle.textContent = exercise.title;
+    dom.doneButton.disabled = completed;
+    dom.doneButton.setAttribute("aria-pressed", completed ? "true" : "false");
+    dom.doneButton.textContent = completed ? "完了済み" : "練習した";
+  }
 
-    if (dom.status) {
-      dom.status.textContent = isCompleteSnapshot(snapshot)
-        ? "今日のタスク完了"
-        : `${snapshot.completed.length} / ${EXERCISES.length}`;
-    }
-
-    if (isCompleteSnapshot(snapshot)) {
-      global.JazzDailyProgress?.mark(TRAINING_ID);
-    }
+  function markDone() {
+    global.JazzDailyProgress?.mark(TRAINING_ID);
+    render();
   }
 
   function boot() {
-    elements().buttons.forEach((button) => {
-      button.addEventListener("click", () => {
-        markExercise(button.dataset.exercise);
-        render();
-      });
-    });
-
+    const dom = elements();
+    dom.doneButton.addEventListener("click", markDone);
     render();
   }
 
   const api = {
     EXERCISES,
     RESET_HOUR,
-    STORAGE_KEY,
     TRAINING_ID,
+    exerciseForDay,
     fallbackTrainingDayKey,
-    isCompleteSnapshot,
-    load,
-    markExercise,
-    normalizeSnapshot,
+    hashString,
     trainingDayKey,
   };
 
