@@ -1,8 +1,9 @@
-(function attachLick1(global) {
+(function attachLick2(global) {
   "use strict";
 
   const ROUND_SIZE = 12;
-  const TRAINING_ID = "lick-1";
+  const TRAINING_ID = "lick-2";
+  const REST_LABEL = "休";
   const NATURAL_PITCH = {
     C: 0,
     D: 2,
@@ -36,9 +37,9 @@
       suffix: "-7",
       rootOffset: 2,
       rootLetterOffset: 1,
-      intervals: [0, 3, 7, 10, 14, 10, 7, 10],
-      noteLetterOffsets: [0, 2, 4, 6, 1, 6, 4, 6],
-      degreeLabels: ["1", "3", "5", "7", "9", "7", "5", "7"],
+      intervals: [5, 4, 3, null, 7, 6, 7],
+      noteLetterOffsets: [3, 2, 2, null, 4, 3, 4],
+      degreeLabels: ["11", "♯3", "3", REST_LABEL, "5", "♯11", "5"],
     },
     {
       id: "v",
@@ -46,14 +47,14 @@
       suffix: "7",
       rootOffset: 7,
       rootLetterOffset: 4,
-      intervals: [4, 7, 10, 12, 13, 15, 13, 12, 10],
-      noteLetterOffsets: [2, 4, 6, 0, 1, 2, 1, 0, 6],
-      degreeLabels: ["3", "5", "7", "1", "♭9", "♭10", "♭9", "1", "7"],
+      intervals: [9, 5, 7, 8, 4, 0, 0, 10, 9],
+      noteLetterOffsets: [5, 3, 4, 5, 2, 0, 0, 6, 5],
+      degreeLabels: ["13", "11", "5", "♭13", "3", "1", "1", "7", "13"],
     },
     {
       id: "i",
-      degree: "Imaj",
-      suffix: "maj",
+      degree: "Imaj7",
+      suffix: "maj7",
       rootOffset: 0,
       rootLetterOffset: 0,
       intervals: [4],
@@ -117,9 +118,10 @@
 
   function segmentNotes(key, segment) {
     const root = parseRoot(chordRoot(key, segment));
-    return segment.intervals.map((interval, index) => (
-      spellPitch(root, segment.noteLetterOffsets[index], interval)
-    ));
+    return segment.intervals.map((interval, index) => {
+      if (interval === null) return REST_LABEL;
+      return spellPitch(root, segment.noteLetterOffsets[index], interval);
+    });
   }
 
   function buildTask(key) {
@@ -278,6 +280,7 @@
     LICK_SEGMENTS,
     MAJOR_KEYS,
     PITCH_NAMES,
+    REST_LABEL,
     ROUND_SIZE,
     buildTask,
     chordRoot,
@@ -292,7 +295,7 @@
     module.exports = api;
   }
 
-  global.Lick1 = api;
+  global.Lick2 = api;
 
   if (typeof document !== "undefined") {
     boot();

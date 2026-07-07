@@ -4,10 +4,11 @@ const path = require("node:path");
 const {
   LICK_SEGMENTS,
   MAJOR_KEYS,
+  REST_LABEL,
   ROUND_SIZE,
   buildTask,
   createDeck,
-} = require("../src/lick-1.js");
+} = require("../src/lick-2.js");
 
 const PITCH_CLASS = {
   C: 0,
@@ -38,7 +39,7 @@ assert.equal(MAJOR_KEYS.length, 12);
 assert.equal(new Set(MAJOR_KEYS.map((key) => key.id)).size, 12);
 assert.deepEqual(
   LICK_SEGMENTS.map((segment) => segment.degree),
-  ["II-7", "V7", "Imaj"],
+  ["II-7", "V7", "Imaj7"],
 );
 
 LICK_SEGMENTS.forEach((segment) => {
@@ -50,36 +51,38 @@ LICK_SEGMENTS.forEach((segment) => {
 
 const cTask = buildTask(MAJOR_KEYS.find((key) => key.id === "C"));
 assert.equal(cTask.key, "C");
-assert.equal(cTask.progression, "D-7 → G7 → Cmaj");
-assert.deepEqual(cTask.segments[0].degreeLabels, ["1", "3", "5", "7", "9", "7", "5", "7"]);
-assert.deepEqual(cTask.segments[0].notes, ["D", "F", "A", "C", "E", "C", "A", "C"]);
-assert.deepEqual(cTask.segments[1].degreeLabels, ["3", "5", "7", "1", "♭9", "♭10", "♭9", "1", "7"]);
-assert.deepEqual(cTask.segments[1].notes, ["B", "D", "F", "G", "A♭", "B♭", "A♭", "G", "F"]);
+assert.equal(cTask.progression, "D-7 → G7 → Cmaj7");
+assert.deepEqual(cTask.segments[0].degreeLabels, ["11", "♯3", "3", "休", "5", "♯11", "5"]);
+assert.deepEqual(cTask.segments[0].notes, ["G", "F♯", "F", "休", "A", "G♯", "A"]);
+assert.deepEqual(cTask.segments[1].degreeLabels, ["13", "11", "5", "♭13", "3", "1", "1", "7", "13"]);
+assert.deepEqual(cTask.segments[1].notes, ["E", "C", "D", "E♭", "B", "G", "G", "F", "E"]);
 assert.deepEqual(cTask.segments[2].degreeLabels, ["3"]);
 assert.deepEqual(cTask.segments[2].notes, ["E"]);
 
-const dbTask = buildTask(MAJOR_KEYS.find((key) => key.id === "Db"));
-assert.equal(dbTask.progression, "E♭-7 → A♭7 → D♭maj");
-assert.deepEqual(dbTask.segments[0].notes, ["E♭", "G♭", "B♭", "D♭", "F", "D♭", "B♭", "D♭"]);
-assert.deepEqual(dbTask.segments[1].notes, ["C", "E♭", "G♭", "A♭", "A", "C♭", "A", "A♭", "G♭"]);
-assert.deepEqual(dbTask.segments[2].notes, ["F"]);
+const gTask = buildTask(MAJOR_KEYS.find((key) => key.id === "G"));
+assert.equal(gTask.progression, "A-7 → D7 → Gmaj7");
+assert.deepEqual(gTask.segments[0].notes, ["D", "C♯", "C", "休", "E", "D♯", "E"]);
+assert.deepEqual(gTask.segments[1].notes, ["B", "G", "A", "B♭", "F♯", "D", "D", "C", "B"]);
+assert.deepEqual(gTask.segments[2].notes, ["B"]);
 
 const cPitchRows = cTask.segments.map((segment) => (
-  segment.notes.map((note) => PITCH_CLASS[note])
+  segment.notes.map((note) => (note === REST_LABEL ? REST_LABEL : PITCH_CLASS[note]))
 ));
 
 MAJOR_KEYS.forEach((key) => {
   const task = buildTask(key);
   task.segments.forEach((segment, segmentIndex) => {
     assert.deepEqual(
-      segment.notes.filter((note) => !(note in PITCH_CLASS)),
+      segment.notes.filter((note) => note !== REST_LABEL && !(note in PITCH_CLASS)),
       [],
       `${task.key} ${segment.chord} has unsupported note spelling`,
     );
 
     assert.deepEqual(
-      segment.notes.map((note) => PITCH_CLASS[note]),
-      cPitchRows[segmentIndex].map((pitchClass) => (pitchClass + key.pitch) % 12),
+      segment.notes.map((note) => (note === REST_LABEL ? REST_LABEL : PITCH_CLASS[note])),
+      cPitchRows[segmentIndex].map((pitchClass) => (
+        pitchClass === REST_LABEL ? REST_LABEL : (pitchClass + key.pitch) % 12
+      )),
       `${task.key} ${segment.chord} should transpose from the C source lick`,
     );
   });
@@ -93,6 +96,7 @@ deck.forEach((task) => {
   assert(task.progression.includes(" → "));
 });
 
-assert(fs.existsSync(path.join(__dirname, "../assets/licks/lick-1.jpg")));
+assert(fs.existsSync(path.join(__dirname, "../assets/licks/lick-2.jpg")));
+assert(fs.existsSync(path.join(__dirname, "../licks/2/index.html")));
 
-console.log("Lick 1 validation passed");
+console.log("Lick 2 validation passed");

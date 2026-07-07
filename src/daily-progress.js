@@ -7,6 +7,7 @@
     "hanon",
     "oscar-peterson",
     "lick-1",
+    "lick-2",
     "chord-flash",
     "rootless-9th",
     "key-signature",
