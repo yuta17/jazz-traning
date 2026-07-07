@@ -52,7 +52,7 @@ LICK_SEGMENTS.forEach((segment) => {
 const cTask = buildTask(MAJOR_KEYS.find((key) => key.id === "C"));
 assert.equal(cTask.key, "C");
 assert.equal(cTask.progression, "D-7 → G7 → Cmaj7");
-assert.deepEqual(cTask.segments[0].degreeLabels, ["", "", "3", "休", "5", "♯11", "5"]);
+assert.deepEqual(cTask.segments[0].degreeLabels, ["半", "半", "3", "休", "5", "♯11", "5"]);
 assert.deepEqual(cTask.segments[0].notes, ["G", "F♯", "F", "休", "A", "G♯", "A"]);
 assert.deepEqual(cTask.segments[1].degreeLabels, ["13", "11", "5", "♭13", "3", "1", "1", "7", "13"]);
 assert.deepEqual(cTask.segments[1].notes, ["E", "C", "D", "E♭", "B", "G", "G", "F", "E"]);
@@ -97,6 +97,7 @@ deck.forEach((task) => {
 });
 
 assert(fs.existsSync(path.join(__dirname, "../assets/licks/lick-2.jpg")));
-assert(fs.existsSync(path.join(__dirname, "../licks/2/index.html")));
+const lick2Html = fs.readFileSync(path.join(__dirname, "../licks/2/index.html"), "utf8");
+assert(lick2Html.includes("https://www.youtube.com/watch?v=HlAxgeO1WXI"));
 
 console.log("Lick 2 validation passed");

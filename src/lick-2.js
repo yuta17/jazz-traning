@@ -39,7 +39,7 @@
       rootLetterOffset: 1,
       intervals: [5, 4, 3, null, 7, 6, 7],
       noteLetterOffsets: [3, 2, 2, null, 4, 3, 4],
-      degreeLabels: ["", "", "3", REST_LABEL, "5", "♯11", "5"],
+      degreeLabels: ["半", "半", "3", REST_LABEL, "5", "♯11", "5"],
     },
     {
       id: "v",
