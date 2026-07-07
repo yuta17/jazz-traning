@@ -47,8 +47,8 @@
       rootOffset: 7,
       rootLetterOffset: 4,
       intervals: [4, 7, 10, 12, 13, 15, 13, 12, 10],
-      noteLetterOffsets: [2, 4, 6, 0, 1, 2, 1, 0, 6],
-      degreeLabels: ["3", "5", "7", "1", "♭9", "♭10", "♭9", "1", "7"],
+      noteLetterOffsets: [2, 4, 6, 0, 1, 1, 1, 0, 6],
+      degreeLabels: ["3", "5", "7", "1", "♭9", "♯9", "♭9", "1", "7"],
     },
     {
       id: "i",
@@ -101,9 +101,9 @@
     const targetPitch = normalizePitch(root.pitchClass + interval);
     const delta = accidentalDelta(NATURAL_PITCH[letter], targetPitch);
 
-    if (Math.abs(delta) > 1) return pitchName(targetPitch);
+    if (Math.abs(delta) > 2) return pitchName(targetPitch);
 
-    const accidental = delta === 1 ? "♯" : delta === -1 ? "♭" : "";
+    const accidental = delta > 0 ? "♯".repeat(delta) : delta < 0 ? "♭".repeat(Math.abs(delta)) : "";
     return `${letter}${accidental}`;
   }
 
