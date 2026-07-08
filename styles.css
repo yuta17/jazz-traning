@@ -578,12 +578,20 @@ input {
   letter-spacing: 0;
 }
 
+.voicing-labels {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
 .voicing-pill {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 46px;
-  margin-bottom: 22px;
   padding: 0 20px;
   border: 1px solid #e3e7ef;
   border-radius: 8px;
@@ -592,6 +600,12 @@ input {
   font-size: 1.48rem;
   line-height: 1;
   font-weight: 900;
+}
+
+.voicing-pill-extension {
+  border-color: #d5e8ff;
+  background: #eef6ff;
+  color: #1768b3;
 }
 
 .chord-panel {

@@ -14,7 +14,7 @@
 - `hanon/` でハノン1-5から開くたびにひとつ表示し、練習したボタンで完了
 - `oscar-peterson/` でJazz Exercise 1〜3の練習メモと日次完了ボタンを表示
 - `licks/1/` でii-V-Iリック1を譜例と度数で確認しながら12メジャーキーで練習
-- `chord-flash/` でmaj7 / m7 / 7 / m7♭5 / dim7をRoot / 2nd混在の1周12問で瞬間判定
+- `chord-flash/` で基本コードとルートレス9thをRoot / 2nd混在の1周12問で瞬間判定
 - `key-signature/` で♯/♭の数からメジャー / マイナーキーを答える1周12問の調号判定
 - `standard-sight-reading/` でJazz 1460 Standardsから日替わりで1曲を表示
 - HOMEでは朝6時区切りで当日の実施済みトレーニングにチェックを表示

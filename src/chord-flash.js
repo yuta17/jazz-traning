@@ -37,6 +37,19 @@
     },
   ];
 
+  const CHORD_FORMS = [
+    {
+      id: "basic",
+      extensionLabel: "",
+    },
+    {
+      id: "rootless9",
+      extensionLabel: "9th",
+    },
+  ];
+
+  const ROOTLESS_NINTH_DEGREES = [2, 4, 6, 1];
+
   const CHORD_QUALITIES = [
     {
       id: "maj7",
@@ -133,50 +146,108 @@
     return SIMPLE_ACCIDENTAL_BLACKLIST.has(spelled) ? practicalName(targetPitch) : spelled;
   }
 
-  function buildChord(rootLabel, quality, voicing = VOICINGS[0]) {
-    const root = parseRoot(rootLabel);
-    const rootPositionNotes = quality.intervals.map((interval, index) => (
-      spellPitch(root, quality.degrees[index], interval)
+  function supportsForm(quality, form) {
+    return form.id === "basic" || quality.id !== "dim7";
+  }
+
+  function allowedVoicings(quality) {
+    return quality.id === "dim7" ? [VOICINGS[0]] : VOICINGS;
+  }
+
+  function chordFormsForQuality(quality) {
+    return CHORD_FORMS.filter((form) => supportsForm(quality, form));
+  }
+
+  function questionPlans() {
+    return CHORD_QUALITIES.flatMap((quality) => (
+      chordFormsForQuality(quality).flatMap((form) => (
+        allowedVoicings(quality).map((voicing) => ({ quality, form, voicing }))
+      ))
     ));
-    const notes = voicing.noteOrder.map((noteIndex) => rootPositionNotes[noteIndex]);
+  }
+
+  function planKey(plan) {
+    return `${plan.quality.id}:${plan.form.id}:${plan.voicing.id}`;
+  }
+
+  function noteSetForQuality(quality, form) {
+    if (form.id === "rootless9") {
+      return {
+        degrees: ROOTLESS_NINTH_DEGREES,
+        intervals: quality.intervals.slice(1).concat(14),
+      };
+    }
 
     return {
-      id: `${root.label}-${quality.id}-${voicing.id}`,
+      degrees: quality.degrees,
+      intervals: quality.intervals,
+    };
+  }
+
+  function buildChord(rootLabel, quality, voicing = VOICINGS[0], form = CHORD_FORMS[0]) {
+    const activeForm = supportsForm(quality, form) ? form : CHORD_FORMS[0];
+    const activeVoicing = allowedVoicings(quality).some((item) => item.id === voicing.id)
+      ? voicing
+      : VOICINGS[0];
+    const root = parseRoot(rootLabel);
+    const noteSet = noteSetForQuality(quality, activeForm);
+    const rootPositionNotes = noteSet.intervals.map((interval, index) => (
+      spellPitch(root, noteSet.degrees[index], interval)
+    ));
+    const notes = activeVoicing.noteOrder.map((noteIndex) => rootPositionNotes[noteIndex]);
+    const suffix = activeForm.id === "basic" ? "" : `-${activeForm.id}`;
+
+    return {
+      id: `${root.label}-${quality.id}-${activeVoicing.id}${suffix}`,
       label: `${root.label}${quality.suffix}`,
       notes,
       root: root.label,
+      formId: activeForm.id,
+      extensionLabel: activeForm.extensionLabel,
       qualityId: quality.id,
       qualityLabel: quality.label,
-      voicingId: voicing.id,
-      voicingLabel: voicing.label,
+      voicingId: activeVoicing.id,
+      voicingLabel: activeVoicing.label,
     };
   }
 
   function createFullDeck() {
     return CHORD_QUALITIES.flatMap((quality) => (
       quality.roots.flatMap((root) => (
-        VOICINGS.map((voicing) => buildChord(root, quality, voicing))
+        chordFormsForQuality(quality).flatMap((form) => (
+          allowedVoicings(quality).map((voicing) => buildChord(root, quality, voicing, form))
+        ))
       ))
     ));
   }
 
   function createDeck() {
-    const basePlan = CHORD_QUALITIES.flatMap((quality) => (
-      VOICINGS.map((voicing) => ({ quality, voicing }))
-    ));
-    const extras = shuffle(CHORD_QUALITIES)
-      .slice(0, ROUND_SIZE - basePlan.length)
-      .map((quality, index) => ({ quality, voicing: VOICINGS[index % VOICINGS.length] }));
+    const allPlans = questionPlans();
+    const rootlessRoot = shuffle(
+      allPlans.filter((plan) => plan.form.id === "rootless9" && plan.voicing.id === "root"),
+    )[0];
+    const rootlessSecond = shuffle(
+      allPlans.filter((plan) => (
+        plan.form.id === "rootless9"
+        && plan.voicing.id === "second"
+        && plan.quality.id !== rootlessRoot.quality.id
+      )),
+    )[0];
+    const dimRoot = allPlans.find((plan) => plan.quality.id === "dim7");
+    const requiredPlans = [rootlessRoot, rootlessSecond, dimRoot].filter(Boolean);
+    const requiredKeys = new Set(requiredPlans.map(planKey));
+    const rest = shuffle(allPlans.filter((plan) => !requiredKeys.has(planKey(plan))))
+      .slice(0, ROUND_SIZE - requiredPlans.length);
     const rootPools = new Map(CHORD_QUALITIES.map((quality) => [
       quality.id,
       shuffle(quality.roots),
     ]));
-    const chords = [...basePlan, ...extras].map(({ quality, voicing }) => {
+    const chords = shuffle([...requiredPlans, ...rest]).map(({ quality, form, voicing }) => {
       const roots = rootPools.get(quality.id);
-      return buildChord(roots.pop(), quality, voicing);
+      return buildChord(roots.pop(), quality, voicing, form);
     });
 
-    return shuffle(chords);
+    return chords;
   }
 
   function loadStats() {
@@ -249,9 +320,15 @@
     }
 
     if (!state.revealed) {
+      const extensionLabel = task.extensionLabel
+        ? `<span class="voicing-pill voicing-pill-extension">${task.extensionLabel}</span>`
+        : "";
       dom.questionPanel.innerHTML = `
         <div class="question-state">
-          <span class="voicing-pill">${task.voicingLabel}</span>
+          <div class="voicing-labels">
+            <span class="voicing-pill">${task.voicingLabel}</span>
+            ${extensionLabel}
+          </div>
           <strong class="question-key chord-symbol">${task.label}</strong>
         </div>
       `;
@@ -416,13 +493,16 @@
   }
 
   const api = {
+    CHORD_FORMS,
     CHORD_QUALITIES,
     LIMIT_SECONDS,
     ROUND_SIZE,
     VOICINGS,
+    allowedVoicings,
     buildChord,
     createDeck,
     createFullDeck,
+    questionPlans,
     parseRoot,
     spellPitch,
   };
