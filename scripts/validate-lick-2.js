@@ -68,22 +68,22 @@ assert.equal(cTask.key, "C");
 assert.equal(cTask.progression, "D-7 → G7 → Cmaj7");
 assert.deepEqual(cTask.segments[0].degreeLabels, ["半", "半", "3", "休", "5", "半", "5"]);
 assert.deepEqual(cTask.segments[0].notes, ["G", "F♯", "F", "休", "A", "G♯", "A"]);
-assert.deepEqual(cTask.segments[1].degreeLabels, ["3", "11", "5", "♭13", "♯9", "♭9", "1", "♭7", "13"]);
-assert.deepEqual(cTask.segments[1].notes, ["B", "C", "D", "E♭", "A♯", "A♭", "G", "F", "E"]);
+assert.deepEqual(cTask.segments[1].degreeLabels, ["3", "11", "5", "♭13", "♯9", "♭9", "1", "7"]);
+assert.deepEqual(cTask.segments[1].notes, ["B", "C", "D", "E♭", "A♯", "A♭", "G", "F"]);
 assert.deepEqual(cTask.segments[2].degreeLabels, ["3"]);
 assert.deepEqual(cTask.segments[2].notes, ["E"]);
 
 const gTask = buildTask(MAJOR_KEYS.find((key) => key.id === "G"));
 assert.equal(gTask.progression, "A-7 → D7 → Gmaj7");
 assert.deepEqual(gTask.segments[0].notes, ["D", "C♯", "C", "休", "E", "D♯", "E"]);
-assert.deepEqual(gTask.segments[1].notes, ["F♯", "G", "A", "B♭", "E♯", "E♭", "D", "C", "B"]);
+assert.deepEqual(gTask.segments[1].notes, ["F♯", "G", "A", "B♭", "E♯", "E♭", "D", "C"]);
 assert.deepEqual(gTask.segments[2].notes, ["B"]);
 
 const dbTask = buildTask(MAJOR_KEYS.find((key) => key.id === "Db"));
-assert.deepEqual(dbTask.segments[1].notes, ["C", "D♭", "E♭", "F♭", "B", "B♭♭", "A♭", "G♭", "F"]);
+assert.deepEqual(dbTask.segments[1].notes, ["C", "D♭", "E♭", "F♭", "B", "B♭♭", "A♭", "G♭"]);
 
 const bTask = buildTask(MAJOR_KEYS.find((key) => key.id === "B"));
-assert.deepEqual(bTask.segments[1].notes, ["A♯", "B", "C♯", "D", "G♯♯", "G", "F♯", "E", "D♯"]);
+assert.deepEqual(bTask.segments[1].notes, ["A♯", "B", "C♯", "D", "G♯♯", "G", "F♯", "E"]);
 
 const cPitchRows = cTask.segments.map((segment) => (
   segment.notes.map((note) => (note === REST_LABEL ? REST_LABEL : PITCH_CLASS[note]))
@@ -119,5 +119,6 @@ deck.forEach((task) => {
 assert(fs.existsSync(path.join(__dirname, "../assets/licks/lick-2.jpg")));
 const lick2Html = fs.readFileSync(path.join(__dirname, "../licks/2/index.html"), "utf8");
 assert(lick2Html.includes("https://www.youtube.com/watch?v=HlAxgeO1WXI"));
+assert(lick2Html.includes("lick-2.js?v=20260708-lick-2-v7-trim"));
 
 console.log("Lick 2 validation passed");
