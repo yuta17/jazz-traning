@@ -216,6 +216,44 @@ input {
   opacity: 1;
 }
 
+.daily-key-stage {
+  display: grid;
+  justify-items: center;
+  gap: 28px;
+  padding: 56px 28px 64px;
+  border-bottom: 1px solid var(--line);
+  background: white;
+  text-align: center;
+}
+
+.daily-key-display {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+}
+
+.daily-key-display span {
+  color: var(--muted);
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.daily-key-display strong {
+  color: #172033;
+  font-size: clamp(5.2rem, 22vw, 8rem);
+  line-height: 0.9;
+  font-weight: 900;
+}
+
+.daily-key-done-button {
+  min-width: 148px;
+  min-height: 48px;
+}
+
+.daily-key-done-button:disabled {
+  opacity: 1;
+}
+
 .peterson-stage {
   display: grid;
   justify-items: center;
@@ -1153,6 +1191,7 @@ td {
   .practice-actions,
   .stats-heading,
   .hanon-stage,
+  .daily-key-stage,
   .peterson-stage,
   .practice-note,
   .lick-source {

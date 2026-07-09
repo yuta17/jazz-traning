@@ -16,6 +16,7 @@
 - `licks/1/` でii-V-Iリック1を譜例と度数で確認しながら12メジャーキーで練習
 - `chord-flash/` で基本コードとルートレス9thをRoot / 2nd混在の1周12問で瞬間判定
 - `key-signature/` で♯/♭の数からメジャー / マイナーキーを答える1周12問の調号判定
+- `all-the-things-you-are/` で日替わりのキーに移調してAll the Things You Areを弾く
 - `standard-sight-reading/` でJazz 1460 Standardsから日替わりで1曲を表示
 - HOMEでは朝6時区切りで当日の実施済みトレーニングにチェックを表示
 
@@ -38,6 +39,7 @@ node scripts/validate-lick-1.js
 node scripts/validate-lick-2.js
 node scripts/validate-key-signature.js
 node scripts/validate-oscar-peterson.js
+node scripts/validate-all-the-things-you-are.js
 node scripts/validate-standard-sight-reading.js
 node scripts/validate-instagram-lick.js
 ```
