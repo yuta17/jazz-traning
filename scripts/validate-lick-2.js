@@ -13,38 +13,24 @@ const {
 const PITCH_CLASS = {
   C: 0,
   "B♯": 0,
-  "D♭♭": 0,
   "C♯": 1,
-  "B♯♯": 1,
   "D♭": 1,
   D: 2,
-  "C♯♯": 2,
-  "E♭♭": 2,
   "D♯": 3,
   "E♭": 3,
-  "F♭♭": 3,
   E: 4,
-  "D♯♯": 4,
   "F♭": 4,
   F: 5,
   "E♯": 5,
-  "G♭♭": 5,
   "F♯": 6,
-  "E♯♯": 6,
   "G♭": 6,
   G: 7,
-  "F♯♯": 7,
-  "A♭♭": 7,
   "G♯": 8,
   "A♭": 8,
   A: 9,
-  "G♯♯": 9,
-  "B♭♭": 9,
   "A♯": 10,
   "B♭": 10,
-  "C♭♭": 10,
   B: 11,
-  "A♯♯": 11,
   "C♭": 11,
 };
 
@@ -83,7 +69,7 @@ const dbTask = buildTask(MAJOR_KEYS.find((key) => key.id === "Db"));
 assert.deepEqual(dbTask.segments[1].notes, ["F", "D♭", "E♭", "F♭", "C♭", "A", "A♭", "G♭"]);
 
 const bTask = buildTask(MAJOR_KEYS.find((key) => key.id === "B"));
-assert.deepEqual(bTask.segments[1].notes, ["D♯", "B", "C♯", "D", "A", "F♯♯", "F♯", "E"]);
+assert.deepEqual(bTask.segments[1].notes, ["D♯", "B", "C♯", "D", "A", "G", "F♯", "E"]);
 
 const cPitchRows = cTask.segments.map((segment) => (
   segment.notes.map((note) => (note === REST_LABEL ? REST_LABEL : PITCH_CLASS[note]))
@@ -96,6 +82,12 @@ MAJOR_KEYS.forEach((key) => {
       segment.notes.filter((note) => note !== REST_LABEL && !(note in PITCH_CLASS)),
       [],
       `${task.key} ${segment.chord} has unsupported note spelling`,
+    );
+
+    assert.deepEqual(
+      segment.notes.filter((note) => /♯♯|♭♭/.test(note)),
+      [],
+      `${task.key} ${segment.chord} should not use double accidentals`,
     );
 
     assert.deepEqual(
@@ -119,6 +111,6 @@ deck.forEach((task) => {
 assert(fs.existsSync(path.join(__dirname, "../assets/licks/lick-2.jpg")));
 const lick2Html = fs.readFileSync(path.join(__dirname, "../licks/2/index.html"), "utf8");
 assert(lick2Html.includes("https://www.youtube.com/watch?v=HlAxgeO1WXI"));
-assert(lick2Html.includes("lick-2.js?v=20260708-lick-2-v7-line"));
+assert(lick2Html.includes("lick-2.js?v=20260713-lick-readable-notes"));
 
 console.log("Lick 2 validation passed");

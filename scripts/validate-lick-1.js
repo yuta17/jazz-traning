@@ -12,38 +12,24 @@ const {
 const PITCH_CLASS = {
   C: 0,
   "B♯": 0,
-  "D♭♭": 0,
   "C♯": 1,
-  "B♯♯": 1,
   "D♭": 1,
   D: 2,
-  "C♯♯": 2,
-  "E♭♭": 2,
   "D♯": 3,
   "E♭": 3,
-  "F♭♭": 3,
   E: 4,
-  "D♯♯": 4,
   "F♭": 4,
   F: 5,
   "E♯": 5,
-  "G♭♭": 5,
   "F♯": 6,
-  "E♯♯": 6,
   "G♭": 6,
   G: 7,
-  "F♯♯": 7,
-  "A♭♭": 7,
   "G♯": 8,
   "A♭": 8,
   A: 9,
-  "G♯♯": 9,
-  "B♭♭": 9,
   "A♯": 10,
   "B♭": 10,
-  "C♭♭": 10,
   B: 11,
-  "A♯♯": 11,
   "C♭": 11,
 };
 
@@ -75,11 +61,11 @@ assert.deepEqual(cTask.segments[2].notes, ["E"]);
 const dbTask = buildTask(MAJOR_KEYS.find((key) => key.id === "Db"));
 assert.equal(dbTask.progression, "E♭-7 → A♭7 → D♭maj");
 assert.deepEqual(dbTask.segments[0].notes, ["E♭", "G♭", "B♭", "D♭", "F", "D♭", "B♭", "D♭"]);
-assert.deepEqual(dbTask.segments[1].notes, ["C", "E♭", "G♭", "A♭", "B♭♭", "B", "B♭♭", "A♭", "G♭"]);
+assert.deepEqual(dbTask.segments[1].notes, ["C", "E♭", "G♭", "A♭", "A", "B", "A", "A♭", "G♭"]);
 assert.deepEqual(dbTask.segments[2].notes, ["F"]);
 
 const bTask = buildTask(MAJOR_KEYS.find((key) => key.id === "B"));
-assert.deepEqual(bTask.segments[1].notes, ["A♯", "C♯", "E", "F♯", "G", "G♯♯", "G", "F♯", "E"]);
+assert.deepEqual(bTask.segments[1].notes, ["A♯", "C♯", "E", "F♯", "G", "A", "G", "F♯", "E"]);
 
 const cPitchRows = cTask.segments.map((segment) => (
   segment.notes.map((note) => PITCH_CLASS[note])
@@ -92,6 +78,12 @@ MAJOR_KEYS.forEach((key) => {
       segment.notes.filter((note) => !(note in PITCH_CLASS)),
       [],
       `${task.key} ${segment.chord} has unsupported note spelling`,
+    );
+
+    assert.deepEqual(
+      segment.notes.filter((note) => /♯♯|♭♭/.test(note)),
+      [],
+      `${task.key} ${segment.chord} should not use double accidentals`,
     );
 
     assert.deepEqual(

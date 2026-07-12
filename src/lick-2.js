@@ -102,7 +102,7 @@
     const targetPitch = normalizePitch(root.pitchClass + interval);
     const delta = accidentalDelta(NATURAL_PITCH[letter], targetPitch);
 
-    if (Math.abs(delta) > 2) return pitchName(targetPitch);
+    if (Math.abs(delta) > 1) return pitchName(targetPitch);
 
     const accidental = delta > 0 ? "♯".repeat(delta) : delta < 0 ? "♭".repeat(Math.abs(delta)) : "";
     return `${letter}${accidental}`;
