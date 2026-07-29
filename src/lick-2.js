@@ -66,6 +66,7 @@
   const state = {
     deck: [],
     index: 0,
+    answerVisible: false,
     completed: false,
   };
 
@@ -161,6 +162,7 @@
       startButton: document.querySelector("#lick-start-button"),
       progressCount: document.querySelector("#lick-progress-count"),
       questionPanel: document.querySelector("#lick-question-panel"),
+      answerButton: document.querySelector("#lick-answer-button"),
       hitButton: document.querySelector("#lick-hit-button"),
     };
   }
@@ -205,19 +207,28 @@
         <div class="lick-key-block">
           <span>キー</span>
           <strong>${task.key}</strong>
-          <p>${task.progression}</p>
         </div>
-        <div class="lick-degree-grid">
-          ${task.segments.map((segment) => `
-            <div class="lick-degree-card">
-              <div class="lick-degree-header">
-                <span>${segment.degree}</span>
-                <strong>${segment.chord}</strong>
+        <button
+          id="lick-answer-button"
+          class="button primary wide lick-answer-button"
+          type="button"
+          aria-expanded="${state.answerVisible ? "true" : "false"}"
+        >
+          答え
+        </button>
+        ${state.answerVisible ? `
+          <div class="lick-degree-grid">
+            ${task.segments.map((segment) => `
+              <div class="lick-degree-card">
+                <div class="lick-degree-header">
+                  <span>${segment.degree}</span>
+                  <strong>${segment.chord}</strong>
+                </div>
+                <div class="lick-note-pairs">${renderNotePairs(segment)}</div>
               </div>
-              <div class="lick-note-pairs">${renderNotePairs(segment)}</div>
-            </div>
-          `).join("")}
-        </div>
+            `).join("")}
+          </div>
+        ` : ""}
       </div>
     `;
   }
@@ -233,7 +244,8 @@
     const dom = elements();
     const hasTask = Boolean(currentTask()) && !state.completed;
     dom.startButton.textContent = state.deck.length ? "再スタート" : "スタート";
-    dom.hitButton.disabled = !hasTask;
+    if (dom.answerButton) dom.answerButton.disabled = !hasTask;
+    dom.hitButton.disabled = !hasTask || !state.answerVisible;
 
     if (state.completed) {
       dom.startButton.textContent = "もう一周";
@@ -244,6 +256,12 @@
     renderQuestion();
     renderProgress();
     renderControls();
+  }
+
+  function revealAnswer() {
+    if (!currentTask() || state.completed) return;
+    state.answerVisible = true;
+    render();
   }
 
   function scrollPracticeIntoView() {
@@ -262,6 +280,7 @@
   function startCycle() {
     state.deck = createDeck();
     state.index = 0;
+    state.answerVisible = false;
     state.completed = false;
     render();
     scrollPracticeIntoView();
@@ -275,6 +294,7 @@
       global.JazzDailyProgress?.mark(TRAINING_ID);
     } else {
       state.index += 1;
+      state.answerVisible = false;
     }
 
     render();
@@ -283,6 +303,9 @@
   function boot() {
     const dom = elements();
     dom.startButton.addEventListener("click", startCycle);
+    dom.questionPanel.addEventListener("click", (event) => {
+      if (event.target.closest("#lick-answer-button")) revealAnswer();
+    });
     dom.hitButton.addEventListener("click", markDone);
     render();
   }

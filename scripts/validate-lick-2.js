@@ -110,7 +110,10 @@ deck.forEach((task) => {
 
 assert(fs.existsSync(path.join(__dirname, "../assets/licks/lick-2.jpg")));
 const lick2Html = fs.readFileSync(path.join(__dirname, "../licks/2/index.html"), "utf8");
+const lick2Source = fs.readFileSync(path.join(__dirname, "../src/lick-2.js"), "utf8");
 assert(lick2Html.includes("https://www.youtube.com/watch?v=HlAxgeO1WXI"));
-assert(lick2Html.includes("lick-2.js?v=20260713-lick-readable-notes"));
+assert(lick2Html.includes("lick-2.js?v=20260730-lick-answer-reveal"));
+assert(lick2Source.includes("lick-answer-button"));
+assert(!lick2Source.includes("<p>${task.progression}</p>"));
 
 console.log("Lick 2 validation passed");
