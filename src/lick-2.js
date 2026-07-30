@@ -208,14 +208,6 @@
           <span>キー</span>
           <strong>${task.key}</strong>
         </div>
-        <button
-          id="lick-answer-button"
-          class="button primary wide lick-answer-button"
-          type="button"
-          aria-expanded="${state.answerVisible ? "true" : "false"}"
-        >
-          答え
-        </button>
         ${state.answerVisible ? `
           <div class="lick-degree-grid">
             ${task.segments.map((segment) => `
@@ -228,7 +220,16 @@
               </div>
             `).join("")}
           </div>
-        ` : ""}
+        ` : `
+          <button
+            id="lick-answer-button"
+            class="button primary wide lick-answer-button"
+            type="button"
+            aria-expanded="false"
+          >
+            答え
+          </button>
+        `}
       </div>
     `;
   }
