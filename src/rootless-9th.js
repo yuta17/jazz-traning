@@ -48,8 +48,8 @@
     const task = currentTask(); const dom = elements();
     if (state.completed) dom.questionPanel.innerHTML = '<div class="complete-state"><strong>完了</strong></div>';
     else if (!task) dom.questionPanel.innerHTML = '<div class="ready-state"><strong>待機中</strong></div>';
-    else if (!state.revealed) dom.questionPanel.innerHTML = `<div class="rootless-question-state"><span class="rootless-voicing-label">${task.voicing.label}</span><span class="rootless-key-label">Code</span><strong class="question-key chord-symbol">${task.code}</strong></div>`;
-    else dom.questionPanel.innerHTML = `<div class="rootless-question-state"><span class="rootless-voicing-label">${task.voicing.label}</span><p class="answer-title"><strong>Code ${task.code}</strong></p><div class="rootless-answer-notes" aria-label="回答">${task.notes.map(({ degree, note }) => `<span class="rootless-answer-note"><small>${degree}</small><strong>${note}</strong></span>`).join("")}</div></div>`;
+    else if (!state.revealed) dom.questionPanel.innerHTML = `<div class="rootless-question-state"><span class="rootless-voicing-label">${task.voicing.label}</span><strong class="question-key chord-symbol">${task.code}</strong></div>`;
+    else dom.questionPanel.innerHTML = `<div class="rootless-question-state"><span class="rootless-voicing-label">${task.voicing.label}</span><p class="answer-title"><strong>${task.code}</strong></p><div class="rootless-answer-notes" aria-label="回答">${task.notes.map(({ degree, note }) => `<span class="rootless-answer-note"><small>${degree}</small><strong>${note}</strong></span>`).join("")}</div></div>`;
   }
 
   function render() {
