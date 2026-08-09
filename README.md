@@ -39,6 +39,7 @@ node scripts/validate-chord-flash.js
 node scripts/validate-degree-note.js
 node scripts/validate-lick-1.js
 node scripts/validate-rootless-9th.js
+node scripts/validate-rootless-251.js
 node scripts/validate-lick-2.js
 node scripts/validate-key-signature.js
 node scripts/validate-oscar-peterson.js

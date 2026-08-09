@@ -847,6 +847,43 @@ input {
   white-space: nowrap;
 }
 
+.rootless-251-panel {
+  min-height: 380px;
+}
+
+.rootless-251-answer {
+  display: grid;
+  gap: 14px;
+  width: 100%;
+}
+
+.rootless-251-chord {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr);
+  gap: 10px;
+  align-items: stretch;
+}
+
+.rootless-251-chord-label {
+  display: grid;
+  place-items: center;
+  padding: 8px;
+  border-radius: 8px;
+  background: #f1f3f7;
+  color: #4b5563;
+  font-size: 1.05rem;
+  font-weight: 900;
+}
+
+.rootless-251-chord .rootless-answer-notes {
+  gap: 7px;
+}
+
+.rootless-251-chord .rootless-answer-note {
+  min-height: 76px;
+  padding: 10px 3px;
+}
+
 .lick-shell {
   width: min(100%, 760px);
 }
@@ -1538,6 +1575,22 @@ td {
 
   .rootless-answer-notes {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .rootless-251-chord {
+    grid-template-columns: 58px minmax(0, 1fr);
+  }
+
+  .rootless-251-chord .rootless-answer-notes {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .rootless-251-chord .rootless-answer-note small {
+    font-size: 0.8rem;
+  }
+
+  .rootless-251-chord .rootless-answer-note strong {
+    font-size: 1.08rem;
   }
 
   .question-panel {
