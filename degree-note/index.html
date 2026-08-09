@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="キーと度数から、対応する音名を答えるトレーニング"
+    />
+    <title>度数音名</title>
+    <link rel="stylesheet" href="../styles.css?v=20260804-degree-note" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="hero">
+        <nav class="hero-links" aria-label="ページ">
+          <a href="../">ホーム</a>
+        </nav>
+        <h1>度数音名</h1>
+        <p>キーと数字から音を答える</p>
+      </header>
+
+      <section class="settings degree-start" aria-label="開始">
+        <button id="degree-start-button" class="button primary" type="button">
+          スタート
+        </button>
+      </section>
+
+      <section class="practice" aria-label="出題">
+        <div class="progress-row progress-count-only">
+          <strong id="degree-progress-count">0 / 12</strong>
+        </div>
+
+        <div
+          id="degree-question-panel"
+          class="question-panel degree-panel"
+          aria-live="polite"
+        >
+          <div class="ready-state">
+            <strong>待機中</strong>
+          </div>
+        </div>
+
+        <div class="practice-actions degree-actions">
+          <div
+            id="degree-choice-grid"
+            class="degree-choice-grid"
+            aria-label="回答"
+          ></div>
+          <button
+            id="degree-next-button"
+            class="button primary wide"
+            type="button"
+            hidden
+          >
+            次へ
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <script src="../src/daily-progress.js?v=20260804-degree-note"></script>
+    <script src="../src/degree-note.js?v=20260804-degree-note"></script>
+  </body>
+</html>

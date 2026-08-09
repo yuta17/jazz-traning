@@ -9,6 +9,7 @@
     "lick-1",
     "lick-2",
     "chord-flash",
+    "degree-note",
     "key-signature",
     "two-five-one",
     "all-the-things-you-are",

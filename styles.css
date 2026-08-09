@@ -1101,6 +1101,147 @@ input {
   color: #bc4d13;
 }
 
+.degree-start {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.degree-panel {
+  min-height: 330px;
+}
+
+.degree-question-state {
+  display: grid;
+  justify-items: center;
+  width: 100%;
+  text-align: center;
+}
+
+.degree-key-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  margin-bottom: 14px;
+  padding: 0 18px;
+  border: 1px solid #e3e7ef;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: var(--primary-dark);
+  font-size: 1.1rem;
+  line-height: 1;
+  font-weight: 900;
+}
+
+.degree-number {
+  color: #172033;
+  font-size: clamp(5rem, 18vw, 7rem);
+  line-height: 0.92;
+  font-weight: 900;
+}
+
+.degree-result {
+  min-height: 28px;
+  margin: 20px 0 0;
+  color: var(--muted);
+  font-size: 1.1rem;
+  font-weight: 900;
+}
+
+.degree-scale-line {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.degree-scale-line span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1px solid #e3e7ef;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #4b5563;
+  font-size: 0.9rem;
+  line-height: 1;
+  font-weight: 900;
+}
+
+.degree-scale-line span.active {
+  border-color: rgba(24, 187, 131, 0.48);
+  background: #e9fbf4;
+  color: #0f8f66;
+}
+
+.degree-scale-line b {
+  margin-right: 4px;
+  color: var(--muted-light);
+}
+
+.degree-actions {
+  display: grid;
+  gap: 18px;
+}
+
+.degree-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.degree-choice {
+  display: grid;
+  place-items: center;
+  gap: 2px;
+  min-height: 64px;
+  border: 1px solid var(--answer-line);
+  border-radius: 8px;
+  background: var(--answer-bg);
+  color: #172033;
+  font-weight: 900;
+  line-height: 1.1;
+  cursor: pointer;
+}
+
+.degree-choice span {
+  font-size: 1.18rem;
+}
+
+.degree-choice small {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+.degree-choice:disabled {
+  cursor: default;
+}
+
+.degree-choice.correct {
+  border-color: rgba(24, 187, 131, 0.55);
+  background: #e9fbf4;
+  color: #0f8f66;
+}
+
+.degree-choice.correct small {
+  color: #0f8f66;
+}
+
+.degree-choice.wrong {
+  border-color: rgba(220, 85, 55, 0.48);
+  background: #fff0eb;
+  color: #bc4d13;
+}
+
+.degree-choice.wrong small {
+  color: #bc4d13;
+}
+
 .answer-state {
   width: 100%;
 }
@@ -1398,6 +1539,30 @@ td {
 
   .signature-mark {
     font-size: clamp(3.6rem, 17vw, 5.4rem);
+  }
+
+  .degree-panel {
+    min-height: 320px;
+  }
+
+  .degree-number {
+    font-size: clamp(4.2rem, 20vw, 5.8rem);
+  }
+
+  .degree-choice-grid {
+    gap: 8px;
+  }
+
+  .degree-choice {
+    min-height: 56px;
+  }
+
+  .degree-choice span {
+    font-size: 1.02rem;
+  }
+
+  .degree-choice small {
+    font-size: 0.68rem;
   }
 
   .home-card {
