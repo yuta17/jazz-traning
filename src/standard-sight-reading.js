@@ -1,99 +1,144 @@
 (function attachStandardSightReading(global) {
   "use strict";
 
-  const TRAINING_ID = "standard-sight-reading";
-  const RESET_HOUR = 6;
+  const HISTORY_KEY = "jazz-standard-random-history";
+  const HISTORY_LIMIT = 10;
+  const EXCLUSION_LIMIT = 5;
+  const CATEGORY_LABELS = {
+    priority31: "最優先31曲",
+    next47: "次の47曲",
+    fourHit76: "4 hitの76曲",
+  };
 
-  function pad(value) {
-    return String(value).padStart(2, "0");
+  let activeCategory = null;
+  let history = [];
+
+  function randomSong(songs, excludedTitles = [], random = Math.random) {
+    if (!songs.length) return null;
+
+    const excluded = new Set(excludedTitles);
+    const available = songs.filter((song) => !excluded.has(song));
+    const pool = available.length ? available : songs;
+    return pool[Math.floor(random() * pool.length)];
   }
 
-  function fallbackTrainingDayKey(date = new Date()) {
-    const shifted = new Date(date.getTime() - RESET_HOUR * 60 * 60 * 1000);
-    return `${shifted.getFullYear()}-${pad(shifted.getMonth() + 1)}-${pad(shifted.getDate())}`;
+  function recentTitlesForCategory(category, sourceHistory = history) {
+    return sourceHistory
+      .filter((item) => item.category === category)
+      .slice(0, EXCLUSION_LIMIT)
+      .map((item) => item.title);
   }
 
-  function trainingDayKey(date = new Date()) {
-    return global.JazzDailyProgress?.trainingDayKey(date) || fallbackTrainingDayKey(date);
-  }
-
-  function hashString(value) {
-    let hash = 2166136261;
-    for (let index = 0; index < value.length; index += 1) {
-      hash ^= value.charCodeAt(index);
-      hash = Math.imul(hash, 16777619);
+  function loadHistory(storage = global.localStorage) {
+    try {
+      const stored = JSON.parse(storage?.getItem(HISTORY_KEY) || "[]");
+      if (!Array.isArray(stored)) return [];
+      return stored
+        .filter((item) => item && CATEGORY_LABELS[item.category] && typeof item.title === "string")
+        .slice(0, HISTORY_LIMIT);
+    } catch (_error) {
+      return [];
     }
-    return hash >>> 0;
   }
 
-  function songs() {
-    return global.JazzStandardSongs?.STANDARD_SONGS || [];
-  }
-
-  function songForDay(date = new Date()) {
-    const source = songs();
-    if (!source.length) return null;
-
-    const seed = hashString(`standard-sight-reading:${trainingDayKey(date)}`);
-    return {
-      ...source[seed % source.length],
-      index: seed % source.length,
-      day: trainingDayKey(date),
-      total: source.length,
-    };
+  function saveHistory(storage = global.localStorage) {
+    try {
+      storage?.setItem(HISTORY_KEY, JSON.stringify(history));
+    } catch (_error) {
+      // The picker still works when storage is unavailable or full.
+    }
   }
 
   function elements() {
     return {
+      categoryButtons: [...document.querySelectorAll("[data-category]")],
       panel: document.querySelector("#standard-song-panel"),
-      doneButton: document.querySelector("#standard-done-button"),
+      title: document.querySelector("#standard-song-title"),
+      category: document.querySelector("#standard-song-category"),
+      redrawButton: document.querySelector("#standard-redraw-button"),
+      historyList: document.querySelector("#standard-history-list"),
     };
   }
 
-  function render() {
-    const dom = elements();
-    const song = songForDay();
-    const completed = global.JazzDailyProgress?.isComplete(TRAINING_ID);
+  function renderHistory() {
+    const list = elements().historyList;
+    list.replaceChildren();
 
-    if (!song) {
-      dom.panel.innerHTML = `
-        <div class="ready-state">
-          <strong>未読込</strong>
-        </div>
-      `;
-      dom.doneButton.disabled = true;
+    if (!history.length) {
+      const empty = document.createElement("li");
+      empty.className = "standard-history-empty";
+      empty.textContent = "まだ履歴はありません";
+      list.append(empty);
       return;
     }
 
-    dom.panel.innerHTML = `
-      <div class="standard-song">
-        <span class="standard-song-label">今日の1曲</span>
-        <strong>${song.title}</strong>
-        <p>${song.composer}</p>
-      </div>
-    `;
-
-    dom.doneButton.disabled = Boolean(completed);
-    dom.doneButton.textContent = completed ? "完了済み" : "弾いた";
+    history.forEach((item) => {
+      const entry = document.createElement("li");
+      const title = document.createElement("strong");
+      const category = document.createElement("span");
+      title.textContent = item.title;
+      category.textContent = CATEGORY_LABELS[item.category];
+      entry.append(title, category);
+      list.append(entry);
+    });
   }
 
-  function markDone() {
-    global.JazzDailyProgress?.mark(TRAINING_ID);
-    render();
+  function animatePanel(panel) {
+    panel.classList.remove("is-changing");
+    void panel.offsetWidth;
+    panel.classList.add("is-changing");
+  }
+
+  function draw(category = activeCategory, random = Math.random) {
+    const source = global.JazzStandards?.[category] || [];
+    if (!source.length) return null;
+
+    activeCategory = category;
+    const song = randomSong(source, recentTitlesForCategory(category), random);
+    history = [{ title: song, category }, ...history].slice(0, HISTORY_LIMIT);
+    saveHistory();
+
+    const dom = elements();
+    dom.title.textContent = song;
+    dom.category.textContent = CATEGORY_LABELS[category];
+    dom.redrawButton.disabled = false;
+    dom.categoryButtons.forEach((button) => {
+      const selected = button.dataset.category === category;
+      button.classList.toggle("is-active", selected);
+      button.setAttribute("aria-pressed", String(selected));
+    });
+    animatePanel(dom.panel);
+    renderHistory();
+    return song;
+  }
+
+  function handleShortcut(event) {
+    if (!activeCategory || ![" ", "Enter"].includes(event.key)) return;
+    if (event.target.closest("button, a, input, textarea, select")) return;
+    event.preventDefault();
+    draw();
   }
 
   function boot() {
+    history = loadHistory();
     const dom = elements();
-    dom.doneButton.addEventListener("click", markDone);
-    render();
+    dom.categoryButtons.forEach((button) => {
+      button.setAttribute("aria-pressed", "false");
+      button.addEventListener("click", () => draw(button.dataset.category));
+    });
+    dom.redrawButton.addEventListener("click", () => draw());
+    document.addEventListener("keydown", handleShortcut);
+    renderHistory();
   }
 
   const api = {
-    TRAINING_ID,
-    fallbackTrainingDayKey,
-    hashString,
-    songForDay,
-    trainingDayKey,
+    CATEGORY_LABELS,
+    EXCLUSION_LIMIT,
+    HISTORY_KEY,
+    HISTORY_LIMIT,
+    loadHistory,
+    randomSong,
+    recentTitlesForCategory,
   };
 
   if (typeof module !== "undefined" && module.exports) {

@@ -1,25 +1,38 @@
 const assert = require("node:assert/strict");
-const { STANDARD_SONGS } = require("../src/standard-songs.js");
+const { jazzStandards } = require("../src/jazz-standards.js");
 const {
-  fallbackTrainingDayKey,
-  hashString,
+  HISTORY_LIMIT,
+  loadHistory,
+  randomSong,
+  recentTitlesForCategory,
 } = require("../src/standard-sight-reading.js");
 
-assert.equal(STANDARD_SONGS.length, 1460);
-assert.equal(STANDARD_SONGS[0].title, "9.20 Special");
-assert.equal(STANDARD_SONGS[0].composer, "Warren Earl");
-assert.equal(STANDARD_SONGS.at(-1).title, "Zoltan");
-assert.equal(STANDARD_SONGS.at(-1).composer, "Shaw Woody");
-assert.equal(new Set(STANDARD_SONGS.map((song) => song.title.toLowerCase())).size, 1460);
+assert.equal(jazzStandards.priority31.length, 31);
+assert.equal(jazzStandards.next47.length, 47);
+assert.equal(jazzStandards.fourHit76.length, 76);
 
-STANDARD_SONGS.forEach((song) => {
-  assert(song.title);
-  assert(song.composer);
+Object.values(jazzStandards).forEach((songs) => {
+  assert.equal(new Set(songs).size, songs.length);
+  songs.forEach((song) => assert.equal(typeof song, "string"));
 });
 
-assert.equal(fallbackTrainingDayKey(new Date(2026, 5, 10, 5, 59)), "2026-06-09");
-assert.equal(fallbackTrainingDayKey(new Date(2026, 5, 10, 6, 0)), "2026-06-10");
-assert.equal(hashString("2026-06-10"), hashString("2026-06-10"));
-assert.notEqual(hashString("2026-06-10"), hashString("2026-06-11"));
+assert.equal(randomSong(["A", "B", "C"], [], () => 0), "A");
+assert.equal(randomSong(["A", "B", "C"], [], () => 0.999), "C");
+assert.equal(randomSong(["A", "B", "C"], ["A", "B"], () => 0), "C");
+assert.equal(randomSong(["A"], ["A"], () => 0), "A");
+
+const sampleHistory = [
+  { title: "One", category: "priority31" },
+  { title: "Other", category: "next47" },
+  { title: "Two", category: "priority31" },
+];
+assert.deepEqual(recentTitlesForCategory("priority31", sampleHistory), ["One", "Two"]);
+
+const validStoredHistory = Array.from({ length: 12 }, (_, index) => ({
+  title: `Song ${index}`,
+  category: "priority31",
+}));
+assert.equal(loadHistory({ getItem: () => JSON.stringify(validStoredHistory) }).length, HISTORY_LIMIT);
+assert.deepEqual(loadHistory({ getItem: () => "invalid json" }), []);
 
 console.log("Standard sight-reading validation passed");

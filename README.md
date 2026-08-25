@@ -18,7 +18,7 @@
 - `degree-note/` でキーと奇数度数1/3/5/7/9/11/13から音名を答える
 - `key-signature/` で♯/♭の数からメジャー / マイナーキーを答える1周12問の調号判定
 - `all-the-things-you-are/` で日替わりのキーに移調してAll the Things You Areを弾く
-- `standard-sight-reading/` でJazz 1460 Standardsから日替わりで1曲を表示
+- `standard-sight-reading/` で重要度別のジャズスタンダードからランダムに1曲を表示
 - HOMEでは朝6時区切りで当日の実施済みトレーニングにチェックを表示
 
 ## ローカル確認

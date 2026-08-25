@@ -5,38 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Jazz 1460 Standardsから日替わりで1曲を選ぶ初見練習"
+      content="重要度別のジャズスタンダードから、初見練習する1曲をランダム選曲"
     />
     <title>初見スタンダード</title>
-    <link rel="stylesheet" href="../styles.css?v=20260625-standard-sight-reading" />
+    <link rel="stylesheet" href="../styles.css?v=20260825-standard-random" />
   </head>
-  <body>
-    <main class="app-shell">
-      <header class="hero">
-        <nav class="hero-links" aria-label="ページ">
-          <a href="../">ホーム</a>
-        </nav>
+  <body class="standard-random-page">
+    <main class="app-shell standard-shell">
+      <header class="standard-hero">
+        <a class="standard-home-link" href="../">ホーム</a>
+        <p class="standard-kicker">SIGHT-READING SESSION</p>
         <h1>初見スタンダード</h1>
-        <p>I real Pro Jazz 1460 から今日の一曲</p>
+        <p class="standard-intro">カテゴリを選んで、今日のレパートリーを1曲。</p>
       </header>
 
-      <section class="practice" aria-label="今日の曲">
-        <div id="standard-song-panel" class="question-panel standard-panel" aria-live="polite">
-          <div class="ready-state">
-            <strong>読込中</strong>
-          </div>
-        </div>
-
-        <div class="practice-actions standard-actions">
-          <button id="standard-done-button" class="button success wide" type="button">
-            弾いた
+      <section class="standard-picker" aria-labelledby="category-heading">
+        <h2 id="category-heading">カテゴリを選ぶ</h2>
+        <div class="standard-category-grid">
+          <button class="standard-category-button priority" type="button" data-category="priority31">
+            <strong>最優先31曲</strong><span>6 lists hit</span>
+          </button>
+          <button class="standard-category-button next" type="button" data-category="next47">
+            <strong>次の47曲</strong><span>5 lists hit</span>
+          </button>
+          <button class="standard-category-button four-hit" type="button" data-category="fourHit76">
+            <strong>4 hitの76曲</strong><span>4 lists hit</span>
           </button>
         </div>
       </section>
+
+      <section class="standard-result" aria-labelledby="result-heading" aria-live="polite">
+        <p id="result-heading" class="standard-result-label">今日の1曲</p>
+        <div id="standard-song-panel" class="standard-song-display">
+          <strong id="standard-song-title">カテゴリを選んでください</strong>
+          <span id="standard-song-category">上のボタンから抽選できます</span>
+        </div>
+        <button id="standard-redraw-button" class="standard-redraw-button" type="button" disabled>もう一曲</button>
+        <p class="standard-key-hint">Space / Enter でもう一曲</p>
+      </section>
+
+      <section class="standard-history" aria-labelledby="history-heading">
+        <div class="standard-history-heading">
+          <h2 id="history-heading">最近出た曲</h2><span>直近10曲</span>
+        </div>
+        <ol id="standard-history-list" class="standard-history-list">
+          <li class="standard-history-empty">まだ履歴はありません</li>
+        </ol>
+      </section>
     </main>
 
-    <script src="../src/daily-progress.js?v=20260707-licks"></script>
-    <script src="../src/standard-songs.js?v=20260625-standard-sight-reading"></script>
-    <script src="../src/standard-sight-reading.js?v=20260625-standard-sight-reading"></script>
+    <script src="../src/jazz-standards.js?v=20260825-standard-random"></script>
+    <script src="../src/standard-sight-reading.js?v=20260825-standard-random"></script>
   </body>
 </html>

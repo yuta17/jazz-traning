@@ -1022,52 +1022,142 @@ input {
   gap: 16px;
 }
 
-.standard-panel {
-  min-height: 420px;
+.standard-random-page { background: #080a0c; color: #f2eee4; }
+
+.standard-shell {
+  width: min(100%, 880px);
+  background: #101316;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.46);
 }
 
-.standard-song {
-  display: grid;
-  justify-items: center;
-  gap: 12px;
-  width: 100%;
+.standard-hero {
+  position: relative;
+  padding: 34px 36px 24px;
+  border-bottom: 1px solid #292d31;
+  background: linear-gradient(145deg, #171a1d, #0e1012);
   text-align: center;
 }
 
-.standard-song-label {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 34px;
-  padding: 0 14px;
-  border: 1px solid #e3e7ef;
-  border-radius: 8px;
-  background: #f8fafc;
-  color: var(--primary-dark);
-  font-size: 0.92rem;
-  font-weight: 900;
+.standard-hero h1 {
+  margin: 4px 0 0;
+  color: #f7f3e9;
+  font-family: Georgia, "Yu Mincho", serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 600;
+  letter-spacing: 0.04em;
 }
 
-.standard-song strong {
-  color: #172033;
-  font-size: clamp(3rem, 12vw, 5.2rem);
-  line-height: 1.04;
-  font-weight: 900;
-  overflow-wrap: anywhere;
+.standard-kicker, .standard-intro { margin: 0; }
+.standard-kicker { color: #c6a969; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.22em; }
+.standard-intro { margin-top: 10px; color: #979b9f; font-size: 0.92rem; }
+
+.standard-home-link {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  min-height: 32px;
+  padding: 7px 11px;
+  border: 1px solid #383c40;
+  border-radius: 7px;
+  color: #b8bbbd;
+  font-size: 0.76rem;
+  font-weight: 800;
 }
 
-.standard-song p {
-  margin: 0;
-  color: #4b5563;
-  font-size: clamp(1.2rem, 4vw, 1.8rem);
-  line-height: 1.25;
-  font-weight: 900;
-  overflow-wrap: anywhere;
-}
+.standard-picker { padding: 22px 28px 20px; border-bottom: 1px solid #292d31; }
+.standard-picker h2, .standard-history h2 { margin: 0; color: #aeb1b3; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.08em; }
 
-.standard-actions {
+.standard-category-grid {
   display: grid;
-  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.standard-category-button {
+  display: grid;
+  gap: 5px;
+  min-height: 76px;
+  padding: 13px 12px;
+  border: 1px solid #34383c;
+  border-radius: 9px;
+  background: #1b1e21;
+  color: #f0ede5;
+  cursor: pointer;
+  transition: border-color 140ms ease, background-color 140ms ease, transform 140ms ease;
+}
+
+.standard-category-button:hover, .standard-category-button:focus-visible, .standard-category-button.is-active {
+  border-color: #b99a58;
+  background: #29251d;
+  outline: none;
+}
+
+.standard-category-button:active { transform: translateY(1px); }
+.standard-category-button strong { font-size: clamp(1rem, 2.4vw, 1.15rem); }
+.standard-category-button span { color: #85898d; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; }
+.standard-category-button.is-active span { color: #c6a969; }
+
+.standard-result {
+  display: grid;
+  justify-items: center;
+  padding: 24px 28px 26px;
+  border-bottom: 1px solid #292d31;
+  text-align: center;
+}
+
+.standard-result-label { margin: 0; color: #c6a969; font-size: 0.78rem; font-weight: 900; letter-spacing: 0.15em; }
+.standard-song-display { display: grid; place-content: center; gap: 12px; width: 100%; min-height: 180px; padding: 20px 0; }
+.standard-song-display.is-changing { animation: standard-song-fade 280ms ease both; }
+
+.standard-song-display strong {
+  color: #fffdf7;
+  font-family: Georgia, "Yu Mincho", serif;
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  line-height: 1.04;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.standard-song-display span { color: #aeb1b3; font-size: 0.92rem; font-weight: 800; }
+
+.standard-redraw-button {
+  min-width: 220px;
+  min-height: 52px;
+  padding: 0 30px;
+  border: 1px solid #c6a969;
+  border-radius: 9px;
+  background: #c6a969;
+  color: #15130f;
+  font-size: 1.05rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.standard-redraw-button:hover:not(:disabled), .standard-redraw-button:focus-visible { background: #d6bb7f; outline: 3px solid rgba(198, 169, 105, 0.22); }
+.standard-redraw-button:disabled { border-color: #35393d; background: #222528; color: #666a6d; cursor: not-allowed; }
+.standard-key-hint { margin: 9px 0 0; color: #666a6d; font-size: 0.72rem; }
+.standard-history { padding: 22px 28px 30px; background: #0d0f11; }
+.standard-history-heading { display: flex; align-items: center; justify-content: space-between; }
+.standard-history-heading span { color: #666a6d; font-size: 0.72rem; }
+
+.standard-history-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 24px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.standard-history-list li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid #222629; }
+.standard-history-list strong { color: #c8c5be; font-size: 0.82rem; line-height: 1.3; }
+.standard-history-list span { flex: 0 0 auto; color: #6f7376; font-size: 0.68rem; }
+.standard-history-list .standard-history-empty { display: block; grid-column: 1 / -1; color: #666a6d; font-size: 0.82rem; text-align: center; }
+
+@keyframes standard-song-fade {
+  from { opacity: 0.2; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .instagram-lick-panel {
@@ -1488,6 +1578,10 @@ td {
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .standard-song-display.is-changing { animation: none; }
+}
+
 @media (max-width: 460px) {
   .hero {
     padding: 34px 20px 28px;
@@ -1645,9 +1739,13 @@ td {
     font-size: 0.88rem;
   }
 
-  .standard-panel {
-    min-height: 370px;
-  }
+  .standard-hero { padding: 42px 20px 22px; }
+  .standard-home-link { top: 10px; right: 12px; }
+  .standard-picker, .standard-result, .standard-history { padding-left: 16px; padding-right: 16px; }
+  .standard-category-grid { gap: 8px; }
+  .standard-category-button { min-height: 72px; padding: 10px 6px; }
+  .standard-song-display { min-height: 190px; }
+  .standard-history-list { grid-template-columns: 1fr; }
 
   .signature-choice-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
