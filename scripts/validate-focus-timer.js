@@ -19,7 +19,7 @@ const timerSource = fs.readFileSync(path.join(root, "src/focus-timer.js"), "utf8
 
 assert(homeHtml.includes("href=\"./focus-timer/\""));
 assert(homeHtml.indexOf("5分間タイマー") < homeHtml.indexOf("ハノン"));
-assert(homeHtml.includes("styles.css?v=20260802-focus-timer"));
+assert(homeHtml.includes("styles.css?v=20260825-standard-random"));
 assert(homeHtml.includes("home-divider"));
 assert(timerHtml.includes("何に焦点を合わせるか"));
 assert(timerHtml.includes("次のタイマー"));

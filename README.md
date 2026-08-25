@@ -15,7 +15,6 @@
 - `oscar-peterson/` でJazz Exercise 1〜3の練習メモと日次完了ボタンを表示
 - `licks/1/` でii-V-Iリック1を譜例と度数で確認しながら12メジャーキーで練習
 - `chord-flash/` で基本コードとルートレス9thをRoot / 2nd混在の1周12問で瞬間判定
-- `degree-note/` でキーと奇数度数1/3/5/7/9/11/13から音名を答える
 - `key-signature/` で♯/♭の数からメジャー / マイナーキーを答える1周12問の調号判定
 - `all-the-things-you-are/` で日替わりのキーに移調してAll the Things You Areを弾く
 - `standard-sight-reading/` で重要度別のジャズスタンダードからランダムに1曲を表示
@@ -36,10 +35,7 @@ node scripts/validate-theory.js
 node scripts/validate-daily-progress.js
 node scripts/validate-hanon.js
 node scripts/validate-chord-flash.js
-node scripts/validate-degree-note.js
 node scripts/validate-lick-1.js
-node scripts/validate-rootless-9th.js
-node scripts/validate-rootless-251.js
 node scripts/validate-lick-2.js
 node scripts/validate-key-signature.js
 node scripts/validate-oscar-peterson.js

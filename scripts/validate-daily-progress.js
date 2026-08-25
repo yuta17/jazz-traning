@@ -8,12 +8,9 @@ const {
 assert.deepEqual(TRAINING_IDS, [
   "hanon",
   "oscar-peterson",
-  "rootless-9th",
-  "rootless-251",
   "lick-1",
   "lick-2",
   "chord-flash",
-  "degree-note",
   "key-signature",
   "two-five-one",
   "all-the-things-you-are",
