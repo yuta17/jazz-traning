@@ -154,7 +154,8 @@
       return;
     }
 
-    dom.choiceGrid.innerHTML = state.roundModes.flatMap((mode) => ANSWER_OPTIONS
+    const mode = task.mode;
+    dom.choiceGrid.innerHTML = ANSWER_OPTIONS
       .map((key) => {
         const answer = `${mode}:${key.id}`;
         const isSelected = state.answered === answer;
@@ -176,7 +177,7 @@
             ${answerLabel(mode, key.id)}
           </button>
         `;
-      }))
+      })
       .join("");
   }
 
@@ -228,7 +229,7 @@
   function answerQuestion(answer) {
     const task = currentTask();
     if (!task || state.completed || state.answered) return;
-    if (!state.roundModes.some((mode) => KEYS.some((key) => answer === `${mode}:${key.id}`))) return;
+    if (!KEYS.some((key) => answer === `${task.mode}:${key.id}`)) return;
 
     state.answered = answer;
     if (answer === task.answer) state.correct += 1;

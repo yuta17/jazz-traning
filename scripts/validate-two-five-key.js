@@ -46,7 +46,11 @@ for (const modes of [["major"], ["minor"], ["major", "minor"]]) {
     assert(task);
     assert.equal(chords.length, 2);
     assert(!panel.includes("signature-result"));
-    assert.equal((node("choice-grid").innerHTML.match(/data-answer=/g) || []).length, modes.length * 12);
+    assert.equal((node("choice-grid").innerHTML.match(/data-answer=/g) || []).length, 12);
+    const otherMode = task.mode === "major" ? "minor" : "major";
+    assert(!node("choice-grid").innerHTML.includes(`data-answer="${otherMode}:`));
+    answer(`${otherMode}:${task.keyId}`);
+    assert.equal(node("question-panel").innerHTML, panel);
     assert.equal(node("progress-count").textContent, `${i + 1} / 12`);
     node("next-button").click();
     assert.equal(node("question-panel").innerHTML, panel);
