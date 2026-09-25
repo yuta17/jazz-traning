@@ -1527,3 +1527,17 @@ td {
   border-radius: 12px;
   margin-bottom: 12px;
 }
+
+.two-five-key-chords {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: clamp(1.5rem, 6vw, 3rem);
+}
+
+.two-five-key-chords > span {
+  font-size: 0.65em;
+  color: var(--muted);
+}

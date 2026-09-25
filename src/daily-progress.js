@@ -11,6 +11,7 @@
     "chord-flash",
     "key-signature",
     "two-five-one",
+    "two-five-key",
     "all-the-things-you-are",
     "standard-sight-reading",
     "instagram-lick",
