@@ -6,9 +6,8 @@ const theory = require("../src/theory.js");
 const source = fs.readFileSync(path.join(__dirname, "../src/app.js"), "utf8");
 
 for (const quality of ["major", "minor"]) {
-  for (const [random, label] of [[0, "3から"], [0.5, "7から"], [0.99, ""]]) {
+  for (const [random, label] of [[0, "3から"], [0.49, "3から"], [0.5, "5から"], [0.99, "5から"]]) {
     for (const alt of [false, true]) {
-      let calls = 0;
       const settings = { major: [], minor: [], [quality]: ["R2R"] };
       const task = theory.buildDeck(settings).find((item) => item.keyId === "C");
       const nodes = new Map();
@@ -25,7 +24,7 @@ for (const quality of ["major", "minor"]) {
         matchMedia: () => ({ matches: true }),
       };
       vm.runInNewContext(source, {
-        window, document, Math: { ...Math, random: () => calls++ === 0 ? (alt ? 0.1 : 0.9) : random, floor: Math.floor },
+        window, document, Math: { ...Math, random: () => quality === "minor" ? random : (alt ? 0.1 : 0.9), floor: Math.floor },
         requestAnimationFrame() {},
         localStorage: { getItem: () => JSON.stringify({ settings }), setItem() {} },
       });
@@ -39,10 +38,11 @@ for (const quality of ["major", "minor"]) {
       if (expectedLabel) assert(panel.innerHTML.includes(`>${expectedLabel}</span>`));
       assert(!panel.innerHTML.includes("ラベルなし"));
       assert(!panel.innerHTML.includes("2nd"));
-      assert.equal(panel.innerHTML.includes('>alt</span>'), alt);
+      assert(!panel.innerHTML.includes("7から"));
+      assert.equal(panel.innerHTML.includes('>alt</span>'), quality === "minor" || alt);
       document.querySelector("#reveal-button").click();
       assert(panel.innerHTML.includes(task.chords[2].symbol));
-      assert.equal(panel.innerHTML.includes('>alt</span>'), alt);
+      assert.equal(panel.innerHTML.includes('>alt</span>'), quality === "minor" || alt);
       if (quality === "minor") {
         assert.equal(panel.innerHTML.includes('class="voicing-pill"'), Boolean(label));
         if (label) assert(panel.innerHTML.includes(`>${label}</span>`));

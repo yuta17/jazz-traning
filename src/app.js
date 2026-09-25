@@ -221,9 +221,9 @@
     state.settings = readSettingsFromForm();
     state.deck = buildDeck(state.settings).map((task) => ({
       ...task,
-      alt: Math.random() < 0.5,
+      alt: task.quality === "minor" || Math.random() < 0.5,
       voicingLabel: task.quality === "minor"
-        ? ["3から", "7から", ""][Math.floor(Math.random() * 3)]
+        ? ["3から", "5から"][Math.floor(Math.random() * 2)]
         : "",
     }));
     state.index = 0;
