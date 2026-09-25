@@ -4,6 +4,14 @@
   const TRAINING_ID = "hanon";
   const HANON_NUMBERS = [1, 2, 3, 4, 5];
 
+  const HANON_VIDEOS = {
+    1: "7eid_ywuSVE",
+    2: "i-dc3Ur6YEo",
+    3: "YDXzwhnF1Ck",
+    4: "goz5fFA3BOg",
+    5: "aDRS-08ckUM",
+  };
+
   function pickNumber(random = Math.random) {
     const index = Math.min(
       HANON_NUMBERS.length - 1,
@@ -14,6 +22,14 @@
 
   function render(number) {
     document.querySelector("#hanon-number").textContent = number;
+    const videoId = HANON_VIDEOS[number];
+    const player = document.querySelector("#hanon-video");
+    player.src = `https://www.youtube-nocookie.com/embed/${videoId}`;
+    player.title = `ハノン第${number}番の参考動画`;
+    const link = document.querySelector("#hanon-video-link");
+    link.href = `https://www.youtube.com/watch?v=${videoId}`;
+    link.textContent = `ハノン第${number}番をYouTubeで見る`;
+
   }
 
   function renderDoneButton() {
@@ -37,6 +53,7 @@
 
   const api = {
     HANON_NUMBERS,
+    HANON_VIDEOS,
     TRAINING_ID,
     pickNumber,
   };

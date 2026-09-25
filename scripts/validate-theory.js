@@ -5,8 +5,8 @@ const byId = new Map(theory.KEYS.map((key) => [key.id, key]));
 
 assert.equal(theory.KEYS.length, 12);
 assert.equal(theory.ROUND_SIZE, 12);
-assert.deepEqual(byId.get("Db").major, ["E♭m7", "A♭7", "D♭maj7"]);
-assert.deepEqual(byId.get("B").major, ["C♯m7", "F♯7", "Bmaj7"]);
+assert.deepEqual(byId.get("Db").major, ["E♭m7", "A♭7", "D♭△7"]);
+assert.deepEqual(byId.get("B").major, ["C♯m7", "F♯7", "B△7"]);
 assert.deepEqual(byId.get("C").minor, ["D-7(♭5)", "G7", "C-7"]);
 assert.deepEqual(byId.get("Bb").minor, ["C-7(♭5)", "F7", "B♭-7"]);
 

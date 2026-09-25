@@ -39,7 +39,7 @@ assert.equal(MAJOR_KEYS.length, 12);
 assert.equal(new Set(MAJOR_KEYS.map((key) => key.id)).size, 12);
 assert.deepEqual(
   LICK_SEGMENTS.map((segment) => segment.degree),
-  ["II-7", "V7", "Imaj7"],
+  ["II-7", "V7", "I△7"],
 );
 
 LICK_SEGMENTS.forEach((segment) => {
@@ -51,7 +51,7 @@ LICK_SEGMENTS.forEach((segment) => {
 
 const cTask = buildTask(MAJOR_KEYS.find((key) => key.id === "C"));
 assert.equal(cTask.key, "C");
-assert.equal(cTask.progression, "D-7 → G7 → Cmaj7");
+assert.equal(cTask.progression, "D-7 → G7 → C△7");
 assert.deepEqual(cTask.segments[0].degreeLabels, ["半", "半", "3", "休", "5", "半", "5"]);
 assert.deepEqual(cTask.segments[0].notes, ["G", "F♯", "F", "休", "A", "G♯", "A"]);
 assert.deepEqual(cTask.segments[1].degreeLabels, ["13", "11", "5", "♭13", "♯9", "♭9", "1", "7"]);
@@ -60,7 +60,7 @@ assert.deepEqual(cTask.segments[2].degreeLabels, ["3"]);
 assert.deepEqual(cTask.segments[2].notes, ["E"]);
 
 const gTask = buildTask(MAJOR_KEYS.find((key) => key.id === "G"));
-assert.equal(gTask.progression, "A-7 → D7 → Gmaj7");
+assert.equal(gTask.progression, "A-7 → D7 → G△7");
 assert.deepEqual(gTask.segments[0].notes, ["D", "C♯", "C", "休", "E", "D♯", "E"]);
 assert.deepEqual(gTask.segments[1].notes, ["B", "G", "A", "B♭", "F", "D♯", "D", "C"]);
 assert.deepEqual(gTask.segments[2].notes, ["B"]);
@@ -112,7 +112,7 @@ assert(fs.existsSync(path.join(__dirname, "../assets/licks/lick-2.jpg")));
 const lick2Html = fs.readFileSync(path.join(__dirname, "../licks/2/index.html"), "utf8");
 const lick2Source = fs.readFileSync(path.join(__dirname, "../src/lick-2.js"), "utf8");
 assert(lick2Html.includes("https://www.youtube.com/watch?v=HlAxgeO1WXI"));
-assert(lick2Html.includes("lick-2.js?v=20260730-lick-hide-answer-button"));
+assert(lick2Html.includes("lick-2.js?v=20260925-triangle7"));
 assert(lick2Source.includes("lick-answer-button"));
 assert(lick2Source.includes("state.answerVisible ? `"));
 assert(!lick2Source.includes("<p>${task.progression}</p>"));

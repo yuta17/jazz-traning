@@ -53,8 +53,8 @@
     },
     {
       id: "i",
-      degree: "Imaj7",
-      suffix: "maj7",
+      degree: "I△7",
+      suffix: "△7",
       rootOffset: 0,
       rootLetterOffset: 0,
       intervals: [4],

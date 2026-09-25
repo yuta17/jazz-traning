@@ -2,7 +2,7 @@
   "use strict";
 
   const LIMIT_SECONDS = 5;
-  const ROUND_SIZE = 12;
+  const ROUND_SIZE = 24;
   const STORAGE_KEY = "jazz-chord-flash-state-v1";
 
   const NATURAL_PITCH = {
@@ -53,8 +53,8 @@
   const CHORD_QUALITIES = [
     {
       id: "maj7",
-      label: "maj7",
-      suffix: "maj7",
+      label: "△7",
+      suffix: "△7",
       roots: ROOT_LABELS.flat,
       degrees: [0, 2, 4, 6],
       intervals: [0, 4, 7, 11],
@@ -150,8 +150,16 @@
     return form.id === "basic" || quality.id !== "dim7";
   }
 
-  function allowedVoicings(quality) {
-    return quality.id === "dim7" ? [VOICINGS[0]] : VOICINGS;
+  function allowedVoicings(quality, form = CHORD_FORMS[0]) {
+    if (quality.id === "dim7") return [VOICINGS[0]];
+    if (quality.id === "m7b5") {
+      return [
+        { id: "third", label: "3から", noteOrder: form.id === "rootless9" ? [0, 1, 2, 3] : [1, 2, 3, 0] },
+        { id: "seventh", label: "7から", noteOrder: form.id === "rootless9" ? [2, 3, 0, 1] : [3, 0, 1, 2] },
+        { id: "unlabeled", label: "", noteOrder: [0, 1, 2, 3] },
+      ];
+    }
+    return VOICINGS;
   }
 
   function chordFormsForQuality(quality) {
@@ -161,13 +169,9 @@
   function questionPlans() {
     return CHORD_QUALITIES.flatMap((quality) => (
       chordFormsForQuality(quality).flatMap((form) => (
-        allowedVoicings(quality).map((voicing) => ({ quality, form, voicing }))
+        allowedVoicings(quality, form).map((voicing) => ({ quality, form, voicing }))
       ))
     ));
-  }
-
-  function planKey(plan) {
-    return `${plan.quality.id}:${plan.form.id}:${plan.voicing.id}`;
   }
 
   function noteSetForQuality(quality, form) {
@@ -186,9 +190,10 @@
 
   function buildChord(rootLabel, quality, voicing = VOICINGS[0], form = CHORD_FORMS[0]) {
     const activeForm = supportsForm(quality, form) ? form : CHORD_FORMS[0];
-    const activeVoicing = allowedVoicings(quality).some((item) => item.id === voicing.id)
-      ? voicing
-      : VOICINGS[0];
+    const voicings = allowedVoicings(quality, activeForm);
+    const activeVoicing = voicings.find((item) => item.id === voicing.id)
+      || voicings.find((item) => item.id === "unlabeled")
+      || voicings[0];
     const root = parseRoot(rootLabel);
     const noteSet = noteSetForQuality(quality, activeForm);
     const rootPositionNotes = noteSet.intervals.map((interval, index) => (
@@ -215,39 +220,25 @@
     return CHORD_QUALITIES.flatMap((quality) => (
       quality.roots.flatMap((root) => (
         chordFormsForQuality(quality).flatMap((form) => (
-          allowedVoicings(quality).map((voicing) => buildChord(root, quality, voicing, form))
+          allowedVoicings(quality, form).map((voicing) => buildChord(root, quality, voicing, form))
         ))
       ))
     ));
   }
 
-  function createDeck() {
-    const allPlans = questionPlans();
-    const rootlessRoot = shuffle(
-      allPlans.filter((plan) => plan.form.id === "rootless9" && plan.voicing.id === "root"),
-    )[0];
-    const rootlessSecond = shuffle(
-      allPlans.filter((plan) => (
-        plan.form.id === "rootless9"
-        && plan.voicing.id === "second"
-        && plan.quality.id !== rootlessRoot.quality.id
-      )),
-    )[0];
-    const dimRoot = allPlans.find((plan) => plan.quality.id === "dim7");
-    const requiredPlans = [rootlessRoot, rootlessSecond, dimRoot].filter(Boolean);
-    const requiredKeys = new Set(requiredPlans.map(planKey));
-    const rest = shuffle(allPlans.filter((plan) => !requiredKeys.has(planKey(plan))))
-      .slice(0, ROUND_SIZE - requiredPlans.length);
-    const rootPools = new Map(CHORD_QUALITIES.map((quality) => [
-      quality.id,
-      shuffle(quality.roots),
-    ]));
-    const chords = shuffle([...requiredPlans, ...rest]).map(({ quality, form, voicing }) => {
-      const roots = rootPools.get(quality.id);
-      return buildChord(roots.pop(), quality, voicing, form);
-    });
-
-    return chords;
+  function createDeck(ninth = false) {
+    const form = CHORD_FORMS[ninth ? 1 : 0];
+    const qualities = CHORD_QUALITIES.filter((quality) => supportsForm(quality, form));
+    const pools = new Map(qualities.map((quality) => [quality.id, shuffle(quality.roots)]));
+    const chords = [];
+    while (chords.length < ROUND_SIZE) {
+      for (const quality of shuffle(qualities)) {
+        if (chords.length === ROUND_SIZE) break;
+        const voicing = shuffle(allowedVoicings(quality, form))[0];
+        chords.push(buildChord(pools.get(quality.id).pop(), quality, voicing, form));
+      }
+    }
+    return shuffle(chords);
   }
 
   function loadStats() {
@@ -285,6 +276,7 @@
 
   function elements() {
     return {
+      ninthCheckbox: document.querySelector("#chord-ninth-checkbox"),
       startButton: document.querySelector("#chord-start-button"),
       progressCount: document.querySelector("#chord-progress-count"),
       questionPanel: document.querySelector("#chord-question-panel"),
@@ -326,7 +318,7 @@
       dom.questionPanel.innerHTML = `
         <div class="question-state">
           <div class="voicing-labels">
-            <span class="voicing-pill">${task.voicingLabel}</span>
+            ${task.voicingLabel ? `<span class="voicing-pill">${task.voicingLabel}</span>` : ""}
             ${extensionLabel}
           </div>
           <strong class="question-key chord-symbol">${task.label}</strong>
@@ -426,7 +418,7 @@
 
   function startCycle() {
     stopTimer();
-    state.deck = createDeck();
+    state.deck = createDeck(elements().ninthCheckbox.checked);
     state.index = 0;
     state.revealed = false;
     state.completed = false;

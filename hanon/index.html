@@ -8,7 +8,7 @@
       content="ハノン1-5から開くたびにひとつ表示する"
     />
     <title>ハノン</title>
-    <link rel="stylesheet" href="../styles.css?v=20260708-hanon-button" />
+    <link rel="stylesheet" href="../styles.css?v=20260925-hanon-videos" />
   </head>
   <body>
     <main class="app-shell">
@@ -28,9 +28,21 @@
           練習した
         </button>
       </section>
+      <section class="hanon-reference" aria-labelledby="hanon-reference-title">
+        <h2 id="hanon-reference-title">参考動画</h2>
+        <iframe
+          id="hanon-video"
+          title="ハノンの参考動画"
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+        ></iframe>
+        <a id="hanon-video-link" target="_blank" rel="noopener">YouTubeで見る</a>
+      </section>
     </main>
 
-    <script src="../src/daily-progress.js?v=20260708-hanon-done"></script>
-    <script src="../src/hanon.js?v=20260708-hanon-done"></script>
+    <script src="../src/daily-progress.js?v=20260925-hanon-videos"></script>
+    <script src="../src/hanon.js?v=20260925-hanon-videos"></script>
   </body>
 </html>
