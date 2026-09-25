@@ -5,6 +5,15 @@ const path = require("node:path");
 const theory = require("../src/theory.js");
 const training = require("../src/two-five-key.js");
 
+assert.equal(training.keySignatureLabel("major", "G"), "♯1つ");
+assert.equal(training.keySignatureLabel("major", "F"), "♭1つ");
+assert.equal(training.keySignatureLabel("major", "C"), "♯・♭なし");
+assert.equal(training.keySignatureLabel("minor", "A"), "♯・♭なし");
+assert.equal(training.keySignatureLabel("minor", "C"), "♭3つ");
+assert.equal(training.keySignatureLabel("minor", "B"), "♯2つ");
+assert.equal(training.keySignatureLabel("minor", "Db"), "♯4つ／異名同音のC♯マイナー表記");
+assert.equal(training.keySignatureLabel("minor", "Gb"), "♯3つ／異名同音のF♯マイナー表記");
+assert.equal(training.keySignatureLabel("minor", "Ab"), "♯5つ／異名同音のG♯マイナー表記");
 assert.deepEqual(training.buildDeck([]), []);
 assert.deepEqual(training.buildDeck(["invalid"]), []);
 for (const modes of [["major"], ["minor"], ["major", "minor"]]) {
@@ -58,6 +67,7 @@ for (const modes of [["major"], ["minor"], ["major", "minor"]]) {
     answer(response);
     const result = node("question-panel").innerHTML;
     assert(result.includes(task.resolution));
+    assert(result.includes(training.keySignatureLabel(task.mode, task.keyId)));
     assert(result.includes(i === 0 ? "正解は" : "正解："));
     answer(task.answer);
     assert.equal(node("question-panel").innerHTML, result);

@@ -58,6 +58,18 @@
     return `${KEYS.find((key) => key.id === keyId).label} ${MODE_LABELS[mode]}`;
   }
 
+  function keySignatureLabel(mode, keyId) {
+    const signatures = {
+      major: { C: 0, F: -1, Bb: -2, Eb: -3, Ab: -4, Db: -5, Gb: -6, B: 5, E: 4, A: 3, D: 2, G: 1 },
+      minor: { C: -3, F: -4, Bb: -5, Eb: -6, Ab: 5, Db: 4, Gb: 3, B: 2, E: 1, A: 0, D: -1, G: -2 },
+    };
+    const count = signatures[mode][keyId];
+    const label = count === 0 ? "♯・♭なし" : `${count > 0 ? "♯" : "♭"}${Math.abs(count)}つ`;
+    const equivalentMinor = { Ab: "G♯", Db: "C♯", Gb: "F♯" };
+    const equivalent = mode === "minor" && equivalentMinor[keyId];
+    return equivalent ? `${label}／異名同音の${equivalent}マイナー表記` : label;
+  }
+
   function buildDeck(modes, random = Math.random) {
     const selected = sanitizeModes(modes);
     if (!selected.length) return [];
@@ -129,8 +141,8 @@
     const result = state.answered
       ? `<p class="signature-result">${
         state.answered === task.answer
-          ? `正解：${answerLabel(task.mode, task.keyId)}`
-          : `正解は ${answerLabel(task.mode, task.keyId)}`
+          ? `正解：${answerLabel(task.mode, task.keyId)}（${keySignatureLabel(task.mode, task.keyId)}）`
+          : `正解は ${answerLabel(task.mode, task.keyId)}（${keySignatureLabel(task.mode, task.keyId)}）`
       }</p>`
       : "";
 
@@ -279,6 +291,7 @@
     MODES,
     ROUND_SIZE,
     answerLabel,
+    keySignatureLabel,
     balancedModes,
     buildDeck,
     sanitizeModes,
