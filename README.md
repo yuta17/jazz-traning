@@ -10,7 +10,7 @@
 - メジャーのみ、またはマイナーのみは1周12問
 - メジャーとマイナーを含む場合も1周12問
 - 選択したバリエーションは1周内でできるだけ均等に割り当て
-- `two-five-one/` で2-5-1キー練習
+- `two-five-one/` でII・Vのコードを見て2-5-1を練習（マイナーは「3から」「7から」またはラベルなしをランダム表示）
 - `two-five-key/` でII–Vから解決先のキーを選ぶ1周12問のキー判定（メジャー / マイナーを選択可）
 - `hanon/` でハノン1-5から開くたびにひとつ表示し、番号に対応するYouTube参考動画を表示し、練習したボタンで完了
 - `oscar-peterson/` でJazz Exercise 1〜3の練習メモと日次完了ボタンを表示
@@ -33,6 +33,7 @@ python3 -m http.server 4173
 
 ```bash
 node scripts/validate-theory.js
+node scripts/validate-251-ui.js
 node scripts/validate-two-five-key.js
 node scripts/validate-daily-progress.js
 node scripts/validate-hanon.js

@@ -86,12 +86,6 @@
     return state.deck[state.index] || null;
   }
 
-  function displayKey(task) {
-    return task.quality === "minor"
-      ? `${task.keyLabel}<span class="minor-token">(-)</span>`
-      : `${task.keyLabel}<span class="major-token">maj</span>`;
-  }
-
   function plainKey(task) {
     return task.quality === "minor" ? `${task.keyLabel}(-)` : `${task.keyLabel}maj`;
   }
@@ -119,12 +113,13 @@
     }
 
     if (!state.revealed) {
+      const label = task.quality === "minor" ? task.voicingLabel : task.variation;
       elements.questionPanel.innerHTML = `
         <div class="question-state">
-          <strong class="question-key">
-            ${displayKey(task)}
-            <span class="variation-token">[${task.variation}]</span>
-          </strong>
+          ${label ? `<div class="voicing-labels"><span class="voicing-pill">${label}</span></div>` : ""}
+          <div class="two-five-key-chords">
+            ${task.chords.slice(0, 2).map((chord) => `<strong>${chord.symbol}</strong>`).join('<span aria-hidden="true">→</span>')}
+          </div>
         </div>
       `;
       return;
@@ -145,7 +140,9 @@
       <div class="answer-state">
         <p class="answer-title">
           <strong>${plainKey(task)}</strong>
-          <span>[${task.variation}]</span>
+          ${task.quality === "minor"
+            ? (task.voicingLabel ? `<span class="voicing-pill">${task.voicingLabel}</span>` : "")
+            : `<span>[${task.variation}]</span>`}
         </p>
         <div class="chord-list">${chords}</div>
       </div>
@@ -218,7 +215,12 @@
 
   function startCycle() {
     state.settings = readSettingsFromForm();
-    state.deck = buildDeck(state.settings);
+    state.deck = buildDeck(state.settings).map((task) => ({
+      ...task,
+      voicingLabel: task.quality === "minor"
+        ? ["3から", "7から", ""][Math.floor(Math.random() * 3)]
+        : "",
+    }));
     state.index = 0;
     state.revealed = false;
     state.completed = state.deck.length === 0;
