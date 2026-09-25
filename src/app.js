@@ -116,7 +116,10 @@
       const label = task.quality === "minor" ? task.voicingLabel : task.variation;
       elements.questionPanel.innerHTML = `
         <div class="question-state">
-          ${label ? `<div class="voicing-labels"><span class="voicing-pill">${label}</span></div>` : ""}
+          ${label || task.alt ? `<div class="voicing-labels">
+            ${label ? `<span class="voicing-pill">${label}</span>` : ""}
+            ${task.alt ? '<span class="voicing-pill voicing-pill-extension">alt</span>' : ""}
+          </div>` : ""}
           <div class="two-five-key-chords">
             ${task.chords.slice(0, 2).map((chord) => `<strong>${chord.symbol}</strong>`).join('<span aria-hidden="true">→</span>')}
           </div>
@@ -143,6 +146,7 @@
           ${task.quality === "minor"
             ? (task.voicingLabel ? `<span class="voicing-pill">${task.voicingLabel}</span>` : "")
             : `<span>[${task.variation}]</span>`}
+          ${task.alt ? '<span class="voicing-pill voicing-pill-extension">alt</span>' : ""}
         </p>
         <div class="chord-list">${chords}</div>
       </div>
@@ -217,6 +221,7 @@
     state.settings = readSettingsFromForm();
     state.deck = buildDeck(state.settings).map((task) => ({
       ...task,
+      alt: Math.random() < 0.5,
       voicingLabel: task.quality === "minor"
         ? ["3から", "7から", ""][Math.floor(Math.random() * 3)]
         : "",

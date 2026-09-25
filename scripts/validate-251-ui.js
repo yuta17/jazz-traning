@@ -7,41 +7,46 @@ const source = fs.readFileSync(path.join(__dirname, "../src/app.js"), "utf8");
 
 for (const quality of ["major", "minor"]) {
   for (const [random, label] of [[0, "3から"], [0.5, "7から"], [0.99, ""]]) {
-    const settings = { major: [], minor: [], [quality]: ["R2R"] };
-    const task = theory.buildDeck(settings).find((item) => item.keyId === "C");
-    const nodes = new Map();
-    const checkboxes = ["major", "minor"].flatMap((name) => theory.VARIATIONS.map((value) => ({ name, value, addEventListener() {} })));
-    const document = {
-      querySelectorAll: () => checkboxes,
-      querySelector(selector) {
-        if (!nodes.has(selector)) nodes.set(selector, { addEventListener(event, fn) { this[event] = fn; } });
-        return nodes.get(selector);
-      },
-    };
-    const window = {
-      JazzTheory: { ...theory, buildDeck: () => [task] },
-      matchMedia: () => ({ matches: true }),
-    };
-    vm.runInNewContext(source, {
-      window, document, Math: { ...Math, random: () => random, floor: Math.floor },
-      requestAnimationFrame() {},
-      localStorage: { getItem: () => JSON.stringify({ settings }), setItem() {} },
-    });
-    document.querySelector("#start-button").click();
-    const panel = document.querySelector("#question-panel");
-    assert(panel.innerHTML.includes(task.chords[0].symbol));
-    assert(panel.innerHTML.includes(task.chords[1].symbol));
-    assert(!panel.innerHTML.includes(task.chords[2].symbol));
-    const expectedLabel = quality === "minor" ? label : "R2R";
-    assert.equal(panel.innerHTML.includes('class="voicing-pill"'), Boolean(expectedLabel));
-    if (expectedLabel) assert(panel.innerHTML.includes(`>${expectedLabel}</span>`));
-    assert(!panel.innerHTML.includes("ラベルなし"));
-    assert(!panel.innerHTML.includes("2nd"));
-    document.querySelector("#reveal-button").click();
-    assert(panel.innerHTML.includes(task.chords[2].symbol));
-    if (quality === "minor") {
-      assert.equal(panel.innerHTML.includes('class="voicing-pill"'), Boolean(label));
-      if (label) assert(panel.innerHTML.includes(`>${label}</span>`));
+    for (const alt of [false, true]) {
+      let calls = 0;
+      const settings = { major: [], minor: [], [quality]: ["R2R"] };
+      const task = theory.buildDeck(settings).find((item) => item.keyId === "C");
+      const nodes = new Map();
+      const checkboxes = ["major", "minor"].flatMap((name) => theory.VARIATIONS.map((value) => ({ name, value, addEventListener() {} })));
+      const document = {
+        querySelectorAll: () => checkboxes,
+        querySelector(selector) {
+          if (!nodes.has(selector)) nodes.set(selector, { addEventListener(event, fn) { this[event] = fn; } });
+          return nodes.get(selector);
+        },
+      };
+      const window = {
+        JazzTheory: { ...theory, buildDeck: () => [task] },
+        matchMedia: () => ({ matches: true }),
+      };
+      vm.runInNewContext(source, {
+        window, document, Math: { ...Math, random: () => calls++ === 0 ? (alt ? 0.1 : 0.9) : random, floor: Math.floor },
+        requestAnimationFrame() {},
+        localStorage: { getItem: () => JSON.stringify({ settings }), setItem() {} },
+      });
+      document.querySelector("#start-button").click();
+      const panel = document.querySelector("#question-panel");
+      assert(panel.innerHTML.includes(task.chords[0].symbol));
+      assert(panel.innerHTML.includes(task.chords[1].symbol));
+      assert(!panel.innerHTML.includes(task.chords[2].symbol));
+      const expectedLabel = quality === "minor" ? label : "R2R";
+      assert.equal(panel.innerHTML.includes('class="voicing-pill"'), Boolean(expectedLabel));
+      if (expectedLabel) assert(panel.innerHTML.includes(`>${expectedLabel}</span>`));
+      assert(!panel.innerHTML.includes("ラベルなし"));
+      assert(!panel.innerHTML.includes("2nd"));
+      assert.equal(panel.innerHTML.includes('>alt</span>'), alt);
+      document.querySelector("#reveal-button").click();
+      assert(panel.innerHTML.includes(task.chords[2].symbol));
+      assert.equal(panel.innerHTML.includes('>alt</span>'), alt);
+      if (quality === "minor") {
+        assert.equal(panel.innerHTML.includes('class="voicing-pill"'), Boolean(label));
+        if (label) assert(panel.innerHTML.includes(`>${label}</span>`));
+      }
     }
   }
 }
