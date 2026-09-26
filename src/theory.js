@@ -3,6 +3,7 @@
 
   const VARIATIONS = ["RRR", "R2R", "2R2"];
   const ROUND_SIZE = 12;
+  const MINOR_KEY_IDS = ["D", "Bb", "C", "F", "G"];
 
   const KEYS = [
     {
@@ -92,9 +93,9 @@
         ? settings[quality]
         : [];
 
-      clean[quality] = VARIATIONS.filter((variation) =>
-        selected.includes(variation),
-      );
+      clean[quality] = quality === "minor"
+        ? (selected.some((value) => [...VARIATIONS, "minor"].includes(value)) ? ["minor"] : [])
+        : VARIATIONS.filter((variation) => selected.includes(variation));
     });
 
     return clean;
@@ -141,7 +142,7 @@
 
     if (qualities.length === 0) return deck;
 
-    const keyOrder = shuffle(KEYS, random);
+    const keyOrders = {};
     const qualityOrder = balancedQualities(qualities, ROUND_SIZE, random);
     const variationOrders = {};
     const variationIndexes = {};
@@ -153,11 +154,16 @@
         count,
         random,
       );
+      keyOrders[quality] = balancedVariations(
+        quality === "minor" ? KEYS.filter((key) => MINOR_KEY_IDS.includes(key.id)) : KEYS,
+        count,
+        random,
+      );
       variationIndexes[quality] = 0;
     });
 
-    keyOrder.forEach((key, index) => {
-      const quality = qualityOrder[index];
+    qualityOrder.forEach((quality) => {
+      const key = keyOrders[quality][variationIndexes[quality]];
       const variation = variationOrders[quality][variationIndexes[quality]];
       variationIndexes[quality] += 1;
 
@@ -187,6 +193,7 @@
 
   const api = {
     VARIATIONS,
+    MINOR_KEY_IDS,
     ROUND_SIZE,
     KEYS,
     ROMAN,

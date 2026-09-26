@@ -11,7 +11,7 @@ for (const quality of ["major", "minor"]) {
       const settings = { major: [], minor: [], [quality]: ["R2R"] };
       const task = theory.buildDeck(settings).find((item) => item.keyId === "C");
       const nodes = new Map();
-      const checkboxes = ["major", "minor"].flatMap((name) => theory.VARIATIONS.map((value) => ({ name, value, addEventListener() {} })));
+      const checkboxes = ["major", "minor"].flatMap((name) => (name === "minor" ? ["minor"] : theory.VARIATIONS).map((value) => ({ name, value, addEventListener() {} })));
       const document = {
         querySelectorAll: () => checkboxes,
         querySelector(selector) {
@@ -28,7 +28,13 @@ for (const quality of ["major", "minor"]) {
         requestAnimationFrame() {},
         localStorage: { getItem: () => JSON.stringify({ settings }), setItem() {} },
       });
+      assert.equal(checkboxes.find((item) => item.name === "minor").checked, quality === "minor");
       document.querySelector("#start-button").click();
+      const stats = document.querySelector("#stats-body").innerHTML;
+      if (quality === "minor") {
+        assert.equal((stats.match(/<tr>/g) || []).length, 5);
+        assert(!stats.includes('class="badge"'));
+      }
       const panel = document.querySelector("#question-panel");
       assert(panel.innerHTML.includes(task.chords[0].symbol));
       assert(panel.innerHTML.includes(task.chords[1].symbol));

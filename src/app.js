@@ -3,6 +3,8 @@
 
   const {
     KEYS,
+    MINOR_KEY_IDS,
+    VARIATIONS,
     sanitizeSettings,
     selectedQualities,
     cycleSize,
@@ -179,10 +181,17 @@
     const qualities = selectedQualities(state.settings);
 
     qualities.forEach((quality) => {
-      KEYS.forEach((key) => {
+      KEYS.filter((key) => quality !== "minor" || MINOR_KEY_IDS.includes(key.id)).forEach((key) => {
         state.settings[quality].forEach((variation) => {
           const keyId = statKey(quality, key.id, variation);
-          const row = state.stats[keyId] || { attempts: 0, correct: 0 };
+          const row = quality === "minor"
+            ? ["minor", ...VARIATIONS].reduce((total, variant) => {
+              const previous = state.stats[statKey(quality, key.id, variant)] || {};
+              total.attempts += previous.attempts || 0;
+              total.correct += previous.correct || 0;
+              return total;
+            }, { attempts: 0, correct: 0 })
+            : state.stats[keyId] || { attempts: 0, correct: 0 };
           const rate = row.attempts
             ? `${Math.round((row.correct / row.attempts) * 100)}%`
             : "-";
@@ -192,7 +201,7 @@
               <td>
                 <span class="key-label">
                   ${quality === "minor" ? `${key.label}(-)` : key.label}
-                  <span class="badge">${variation}</span>
+                  ${quality === "major" ? `<span class="badge">${variation}</span>` : ""}
                 </span>
               </td>
               <td>${row.attempts}</td>

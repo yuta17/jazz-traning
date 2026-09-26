@@ -23,7 +23,7 @@ const majorMinorDeck = theory.buildDeck({
   minor: ["2R2"],
 });
 assert.equal(majorMinorDeck.length, 12);
-assert.equal(new Set(majorMinorDeck.map((task) => task.keyId)).size, 12);
+
 assert.equal(
   majorMinorDeck.filter((task) => task.quality === "major").length,
   6,
@@ -43,4 +43,17 @@ const counts = variationDeck.reduce((acc, task) => {
 }, {});
 assert.deepEqual(counts, { RRR: 4, R2R: 4, "2R2": 4 });
 
+for (const minor of [["minor"], ["RRR"], ["R2R", "2R2"]]) {
+  assert.deepEqual(theory.sanitizeSettings({ minor }).minor, ["minor"]);
+  for (const major of [[], ["R2R"]]) {
+    const deck = theory.buildDeck({ major, minor });
+    assert.equal(deck.length, 12);
+    const minorTasks = deck.filter((task) => task.quality === "minor");
+    assert.deepEqual([...new Set(minorTasks.map((task) => task.keyId))].sort(), ["Bb", "C", "D", "F", "G"]);
+    const counts = theory.MINOR_KEY_IDS.map((id) => minorTasks.filter((task) => task.keyId === id).length);
+    assert(Math.max(...counts) - Math.min(...counts) <= 1);
+    assert(minorTasks.every((task) => task.variation === "minor"));
+  }
+}
+assert.equal(theory.buildDeck({ major: [], minor: [] }).length, 0);
 console.log("Theory validation passed");
