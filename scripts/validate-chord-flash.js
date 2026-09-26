@@ -14,7 +14,7 @@ const {
   questionPlans,
 } = require("../src/chord-flash.js");
 
-assert.equal(LIMIT_SECONDS, 5);
+assert.equal(LIMIT_SECONDS, 3);
 assert.equal(ROUND_SIZE, 24);
 assert.equal(CHORD_QUALITIES.length, 5);
 assert.deepEqual(
@@ -118,7 +118,7 @@ assert.deepEqual(buildChord("F♯", quality("m7b5"), VOICINGS[0], CHORD_FORMS[1]
 
 const html = fs.readFileSync(path.join(__dirname, "../chord-flash/index.html"), "utf8");
 assert(html.includes("styles.css?v=20260925-chord-options"));
-assert(html.includes("chord-flash.js?v=20260925-chord-options"));
+assert(html.includes("chord-flash.js?v=20260926-three-seconds"));
 
 // Exercise the start checkbox, rendered labels, and completion through the UI handlers.
 const vm = require("node:vm");
