@@ -6,7 +6,7 @@ const theory = require("../src/theory.js");
 const source = fs.readFileSync(path.join(__dirname, "../src/app.js"), "utf8");
 
 for (const quality of ["major", "minor"]) {
-  for (const [random, label] of [[0, "3から"], [0.49, "3から"], [0.5, "5から"], [0.99, "5から"]]) {
+  for (const [random, label] of [[0, "3から"], [0.49, "3から"], [0.5, "7から"], [0.99, "7から"]]) {
     for (const alt of [false, true]) {
       const settings = { major: [], minor: [], [quality]: ["R2R"] };
       const task = theory.buildDeck(settings).find((item) => item.keyId === "C");
@@ -44,7 +44,7 @@ for (const quality of ["major", "minor"]) {
       if (expectedLabel) assert(panel.innerHTML.includes(`>${expectedLabel}</span>`));
       assert(!panel.innerHTML.includes("ラベルなし"));
       assert(!panel.innerHTML.includes("2nd"));
-      assert(!panel.innerHTML.includes("7から"));
+      assert(!panel.innerHTML.includes("5から"));
       assert.equal(panel.innerHTML.includes('>alt</span>'), quality === "minor" || alt);
       document.querySelector("#reveal-button").click();
       assert(panel.innerHTML.includes(task.chords[2].symbol));

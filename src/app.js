@@ -232,7 +232,7 @@
       ...task,
       alt: task.quality === "minor" || Math.random() < 0.5,
       voicingLabel: task.quality === "minor"
-        ? ["3から", "5から"][Math.floor(Math.random() * 2)]
+        ? ["3から", "7から"][Math.floor(Math.random() * 2)]
         : "",
     }));
     state.index = 0;

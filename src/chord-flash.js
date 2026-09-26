@@ -208,7 +208,7 @@
       notes,
       root: root.label,
       formId: activeForm.id,
-      extensionLabel: activeForm.extensionLabel,
+      extensionLabel: quality.id === "m7b5" ? "" : activeForm.extensionLabel,
       qualityId: quality.id,
       qualityLabel: quality.label,
       voicingId: activeVoicing.id,

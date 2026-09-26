@@ -58,7 +58,7 @@ for (const ninth of [false, true]) {
     assert.equal(deck.some((chord) => chord.qualityId === "dim7"), !ninth);
     for (const chord of deck) {
       assert.equal(chord.formId, ninth ? "rootless9" : "basic");
-      assert.equal(chord.extensionLabel, ninth ? "9th" : "");
+      assert.equal(chord.extensionLabel, ninth && chord.qualityId !== "m7b5" ? "9th" : "");
       assert.equal(chord.notes.length, 4);
       if (chord.qualityId === "m7b5") {
         assert(["3から", "7から", ""].includes(chord.voicingLabel));
@@ -118,7 +118,7 @@ assert.deepEqual(buildChord("F♯", quality("m7b5"), VOICINGS[0], CHORD_FORMS[1]
 
 const html = fs.readFileSync(path.join(__dirname, "../chord-flash/index.html"), "utf8");
 assert(html.includes("styles.css?v=20260925-chord-options"));
-assert(html.includes("chord-flash.js?v=20260926-three-seconds"));
+assert(html.includes("chord-flash.js?v=20260927-flat-five-labels"));
 
 // Exercise the start checkbox, rendered labels, and completion through the UI handlers.
 const vm = require("node:vm");
@@ -146,7 +146,7 @@ for (const ninth of [false, true]) {
   for (let i = 0; i < 24; i += 1) {
     assert.equal(node("progress-count").textContent, `${i + 1} / 24`);
     const question = node("question-panel").innerHTML;
-    assert.equal(question.includes(">9th</span>"), ninth);
+    assert.equal(question.includes(">9th</span>"), ninth && !question.includes("m7♭5"));
     assert(!question.includes('<span class="voicing-pill"></span>'));
     if (question.includes("m7♭5")) assert(!question.includes("2nd"));
     node("reveal-button").click();
