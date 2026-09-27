@@ -11,9 +11,13 @@ assert.equal(training.keySignatureLabel("major", "C"), "♯・♭なし");
 assert.equal(training.keySignatureLabel("minor", "A"), "♯・♭なし");
 assert.equal(training.keySignatureLabel("minor", "C"), "♭3つ");
 assert.equal(training.keySignatureLabel("minor", "B"), "♯2つ");
-assert.equal(training.keySignatureLabel("minor", "Db"), "♯4つ／異名同音のC♯マイナー表記");
-assert.equal(training.keySignatureLabel("minor", "Gb"), "♯3つ／異名同音のF♯マイナー表記");
+assert.equal(training.keySignatureLabel("minor", "Db"), "♯4つ");
+assert.equal(training.keySignatureLabel("minor", "Gb"), "♯3つ");
 assert.equal(training.keySignatureLabel("minor", "Ab"), "♯5つ／異名同音のG♯マイナー表記");
+assert.equal(training.answerLabel("minor", "Db"), "C♯ マイナー");
+assert.equal(training.answerLabel("minor", "Gb"), "F♯ マイナー");
+assert.equal(training.answerLabel("major", "Db"), "D♭ メジャー");
+assert.equal(training.answerLabel("major", "Gb"), "G♭ メジャー");
 assert.deepEqual(training.buildDeck([]), []);
 assert.deepEqual(training.buildDeck(["invalid"]), []);
 for (const modes of [["major"], ["minor"], ["major", "minor"]]) {

@@ -55,7 +55,10 @@
   }
 
   function answerLabel(mode, keyId) {
-    return `${KEYS.find((key) => key.id === keyId).label} ${MODE_LABELS[mode]}`;
+    const minorLabels = { Db: "C♯", Gb: "F♯" };
+    const label = (mode === "minor" && minorLabels[keyId])
+      || KEYS.find((key) => key.id === keyId).label;
+    return `${label} ${MODE_LABELS[mode]}`;
   }
 
   function keySignatureLabel(mode, keyId) {
@@ -65,7 +68,7 @@
     };
     const count = signatures[mode][keyId];
     const label = count === 0 ? "♯・♭なし" : `${count > 0 ? "♯" : "♭"}${Math.abs(count)}つ`;
-    const equivalentMinor = { Ab: "G♯", Db: "C♯", Gb: "F♯" };
+    const equivalentMinor = { Ab: "G♯" };
     const equivalent = mode === "minor" && equivalentMinor[keyId];
     return equivalent ? `${label}／異名同音の${equivalent}マイナー表記` : label;
   }
