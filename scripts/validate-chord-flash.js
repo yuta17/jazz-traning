@@ -117,7 +117,7 @@ assert.deepEqual(buildChord("B♭", quality("m7"), VOICINGS[0], CHORD_FORMS[1]).
 assert.deepEqual(buildChord("F♯", quality("m7b5"), VOICINGS[0], CHORD_FORMS[1]).notes, ["A", "C", "E", "G♯"]);
 
 const html = fs.readFileSync(path.join(__dirname, "../chord-flash/index.html"), "utf8");
-assert(html.includes("styles.css?v=20260925-chord-options"));
+assert(html.includes("styles.css?v=20260927-tablet-fullscreen"));
 assert(html.includes("chord-flash.js?v=20260927-one-second-32"));
 
 // Exercise the start checkbox, rendered labels, and completion through the UI handlers.

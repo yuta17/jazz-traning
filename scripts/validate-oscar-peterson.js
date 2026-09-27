@@ -47,7 +47,7 @@ const html = fs.readFileSync(path.join(__dirname, "../oscar-peterson/index.html"
   "少しテンポを上げて5回弾く。",
   "元のテンポで通して弾く。",
   "ノーミスを目指して繰り返す（3〜10回連続成功を目標）。",
-  "styles.css?v=20260708-daily-exercise",
+  "styles.css?v=20260927-tablet-fullscreen",
   "oscar-peterson.js?v=20260708-daily-exercise-number",
 ].forEach((text) => {
   assert(html.includes(text), `Missing text: ${text}`);

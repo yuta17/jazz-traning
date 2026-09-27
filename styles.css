@@ -1541,3 +1541,34 @@ td {
   font-size: 0.65em;
   color: var(--muted);
 }
+
+/* Use the full tablet viewport in either orientation, including split view. */
+@media (any-pointer: coarse) {
+  body {
+    padding: 0;
+  }
+
+  .app-shell,
+  .home-shell {
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .hero {
+    border-radius: 0;
+  }
+
+  .focus-shell {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .focus-shell .focus-timer-stage {
+    flex: 1;
+    align-content: center;
+  }
+}
