@@ -14,7 +14,7 @@ const {
   questionPlans,
 } = require("../src/chord-flash.js");
 
-assert.equal(LIMIT_SECONDS, 1);
+assert.equal(LIMIT_SECONDS, 2);
 assert.equal(ROUND_SIZE, 32);
 assert.equal(CHORD_QUALITIES.length, 5);
 assert.deepEqual(
@@ -118,7 +118,7 @@ assert.deepEqual(buildChord("F♯", quality("m7b5"), VOICINGS[0], CHORD_FORMS[1]
 
 const html = fs.readFileSync(path.join(__dirname, "../chord-flash/index.html"), "utf8");
 assert(html.includes("styles.css?v=20260927-tablet-fullscreen"));
-assert(html.includes("chord-flash.js?v=20260927-one-second-32"));
+assert(html.includes("chord-flash.js?v=20260927-two-seconds-32"));
 
 // Exercise the start checkbox, rendered labels, and completion through the UI handlers.
 const vm = require("node:vm");
@@ -139,7 +139,7 @@ vm.runInNewContext(fs.readFileSync(path.join(__dirname, "../src/chord-flash.js")
 });
 const node = (id) => document.querySelector(`#chord-${id}`);
 assert.equal(node("progress-count").textContent, "0 / 32");
-assert.equal(node("time-left").textContent, "1.0");
+assert.equal(node("time-left").textContent, "2.0");
 for (const ninth of [false, true]) {
   node("ninth-checkbox").checked = ninth;
   node("start-button").click();

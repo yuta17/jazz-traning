@@ -1,7 +1,7 @@
 (function attachChordFlash(global) {
   "use strict";
 
-  const LIMIT_SECONDS = 1;
+  const LIMIT_SECONDS = 2;
   const ROUND_SIZE = 32;
   const STORAGE_KEY = "jazz-chord-flash-state-v1";
 
