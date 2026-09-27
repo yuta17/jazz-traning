@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="焦点をひとつ決めて5分だけ練習するタイマー"
+      content="焦点をひとつ決めて練習する、ページ移動後も継続する5分間タイマー"
     />
     <title>5分間タイマー</title>
     <link rel="stylesheet" href="../styles.css?v=20260802-focus-timer" />
@@ -40,12 +40,16 @@
           </button>
         </form>
 
+        <p>ページを移動しても継続します。5分を過ぎると超過時間を表示します。</p>
+        <button id="focus-stop-button" class="button soft wide" type="button" hidden>
+          停止
+        </button>
         <button id="focus-next-button" class="button primary wide" type="button" hidden>
           次のタイマー
         </button>
       </section>
     </main>
 
-    <script src="../src/focus-timer.js?v=20260802-focus-timer"></script>
+    <script src="../src/focus-timer.js?v=20260927-persistent"></script>
   </body>
 </html>
