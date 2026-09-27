@@ -3,6 +3,7 @@
 
   const {
     KEYS,
+    ROUND_SIZE,
     MINOR_KEY_IDS,
     VARIATIONS,
     sanitizeSettings,
@@ -156,8 +157,8 @@
   }
 
   function renderProgress() {
-    const total = state.deck.length || cycleSize(state.settings) || 12;
-    const current = state.deck.length && !state.completed ? state.index + 1 : 0;
+    const total = state.deck.length || cycleSize(state.settings) || ROUND_SIZE;
+    const current = state.completed ? total : state.deck.length ? state.index + 1 : 0;
     elements.progressCount.textContent = `${current} / ${total}`;
   }
 
