@@ -48,11 +48,24 @@ for (const modes of [["major"], ["minor"], ["major", "minor"]]) {
     },
   };
   const marks = [];
-  vm.runInNewContext(source, { document, JazzTheory: theory, JazzDailyProgress: { mark: (id) => marks.push(id) } });
+  let now = 10000;
+  let nextInterval = 0;
+  const timers = new Map();
+  vm.runInNewContext(source, {
+    document, JazzTheory: theory, JazzDailyProgress: { mark: (id) => marks.push(id) },
+    Date: { now: () => now },
+    setInterval(fn) { timers.set(++nextInterval, fn); return nextInterval; },
+    clearInterval(id) { timers.delete(id); },
+  });
   const node = (id) => document.querySelector(`#two-five-key-${id}`);
   const answer = (value) => node("choice-grid").click({ target: { closest: () => ({ dataset: { answer: value } }) } });
   node("start-button").click();
   for (let i = 0; i < 12; i += 1) {
+    assert.equal(node("time-left").textContent, "3.0");
+    assert.equal(timers.size, 1);
+    now += i === 0 ? 4000 : 1000;
+    timers.forEach((fn) => fn());
+    assert.equal(node("time-left").textContent, i === 0 ? "0.0（時間切れ）" : "2.0");
     const panel = node("question-panel").innerHTML;
     const chords = [...panel.matchAll(/<strong>(.*?)<\/strong>/g)].map((match) => match[1]);
     const task = modes.flatMap((mode) => training.buildDeck([mode])).find((item) => item.chords.join() === chords.join());
@@ -69,6 +82,7 @@ for (const modes of [["major"], ["minor"], ["major", "minor"]]) {
     assert.equal(node("question-panel").innerHTML, panel);
     const response = i === 0 ? `${task.mode}:${task.keyId === "C" ? "D" : "C"}` : task.answer;
     answer(response);
+    assert.equal(timers.size, 0);
     const result = node("question-panel").innerHTML;
     assert(result.includes(task.resolution));
     assert(result.includes(training.keySignatureLabel(task.mode, task.keyId)));
@@ -79,10 +93,14 @@ for (const modes of [["major"], ["minor"], ["major", "minor"]]) {
   }
   assert(node("question-panel").innerHTML.includes("正解 11 / 12"));
   assert.deepEqual(marks, ["two-five-key"]);
+  assert.equal(timers.size, 0);
   node("next-button").click();
   assert.equal(marks.length, 1);
   node("start-button").click();
   assert.equal(node("progress-count").textContent, "1 / 12");
+  node("start-button").click();
+  assert.equal(timers.size, 1);
+  assert.equal(node("time-left").textContent, "3.0");
   checkboxes.forEach((checkbox) => { checkbox.checked = false; checkbox.change(); });
   assert(node("start-button").disabled);
 }

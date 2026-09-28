@@ -2,6 +2,7 @@
   "use strict";
 
   const ROUND_SIZE = 12;
+  const LIMIT_SECONDS = 3;
   const MODES = ["major", "minor"];
   const MODE_LABELS = {
     major: "メジャー",
@@ -25,6 +26,9 @@
     answered: null,
     correct: 0,
     completed: false,
+    timeLeft: LIMIT_SECONDS,
+    deadline: 0,
+    timerId: null,
   };
 
   function shuffle(items, random = Math.random) {
@@ -97,6 +101,7 @@
       progressCount: document.querySelector("#two-five-key-progress-count"),
       questionPanel: document.querySelector("#two-five-key-question-panel"),
       choiceGrid: document.querySelector("#two-five-key-choice-grid"),
+      timeLeft: document.querySelector("#two-five-key-time-left"),
       nextButton: document.querySelector("#two-five-key-next-button"),
     };
   }
@@ -209,7 +214,33 @@
     }
   }
 
+  function renderTimer() {
+    elements().timeLeft.textContent = state.timeLeft > 0
+      ? state.timeLeft.toFixed(1)
+      : "0.0（時間切れ）";
+  }
+
+  function stopTimer() {
+    if (state.timerId !== null) global.clearInterval(state.timerId);
+    state.timerId = null;
+  }
+
+  function updateTimer() {
+    state.timeLeft = Math.max(0, (state.deadline - Date.now()) / 1000);
+    renderTimer();
+    if (state.timeLeft === 0) stopTimer();
+  }
+
+  function startTimer() {
+    stopTimer();
+    state.timeLeft = LIMIT_SECONDS;
+    state.deadline = Date.now() + LIMIT_SECONDS * 1000;
+    renderTimer();
+    state.timerId = global.setInterval(updateTimer, 80);
+  }
+
   function render() {
+    renderTimer();
     renderProgress();
     renderQuestion();
     renderChoices();
@@ -230,6 +261,8 @@
   }
 
   function startCycle() {
+    stopTimer();
+    state.timeLeft = LIMIT_SECONDS;
     state.modes = readModes();
     state.roundModes = state.modes.slice();
     state.deck = buildDeck(state.roundModes);
@@ -238,6 +271,7 @@
     state.correct = 0;
     state.completed = state.deck.length === 0;
     render();
+    if (!state.completed) startTimer();
     scrollPracticeIntoView();
   }
 
@@ -246,6 +280,8 @@
     if (!task || state.completed || state.answered) return;
     if (!KEYS.some((key) => answer === `${task.mode}:${key.id}`)) return;
 
+    updateTimer();
+    stopTimer();
     state.answered = answer;
     if (answer === task.answer) state.correct += 1;
     render();
@@ -263,6 +299,7 @@
     }
 
     render();
+    if (!state.completed) startTimer();
   }
 
   function updateModes() {
@@ -293,6 +330,7 @@
     MODE_LABELS,
     MODES,
     ROUND_SIZE,
+    LIMIT_SECONDS,
     answerLabel,
     keySignatureLabel,
     balancedModes,
