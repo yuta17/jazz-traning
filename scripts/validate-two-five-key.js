@@ -22,15 +22,20 @@ assert.deepEqual(training.buildDeck([]), []);
 assert.deepEqual(training.buildDeck(["invalid"]), []);
 for (const modes of [["major"], ["minor"], ["major", "minor"]]) {
   const deck = training.buildDeck(modes);
-  assert.equal(deck.length, 12);
+  assert.equal(deck.length, 24);
   assert.equal(new Set(deck.map((task) => task.keyId)).size, 12);
+  for (const key of theory.KEYS) {
+    const tasks = deck.filter((task) => task.keyId === key.id);
+    assert.equal(tasks.length, 2);
+    if (modes.length === 2) assert.deepEqual(tasks.map((task) => task.mode).sort(), ["major", "minor"]);
+  }
   for (const task of deck) {
     const key = theory.KEYS.find((item) => item.id === task.keyId);
     assert.deepEqual(task.chords, key[task.mode].slice(0, 2));
     assert.equal(task.resolution, key[task.mode][2]);
     assert.equal(task.answer, `${task.mode}:${key.id}`);
   }
-  if (modes.length === 2) assert.equal(deck.filter((task) => task.mode === "major").length, 6);
+  if (modes.length === 2) assert.equal(deck.filter((task) => task.mode === "major").length, 12);
 }
 assert.deepEqual(training.buildDeck(["major"]).find((task) => task.keyId === "C").chords, ["Dm7", "G7"]);
 assert.deepEqual(training.buildDeck(["minor"]).find((task) => task.keyId === "C").chords, ["D-7(♭5)", "G7"]);
@@ -60,7 +65,7 @@ for (const modes of [["major"], ["minor"], ["major", "minor"]]) {
   const node = (id) => document.querySelector(`#two-five-key-${id}`);
   const answer = (value) => node("choice-grid").click({ target: { closest: () => ({ dataset: { answer: value } }) } });
   node("start-button").click();
-  for (let i = 0; i < 12; i += 1) {
+  for (let i = 0; i < 24; i += 1) {
     assert.equal(node("time-left").textContent, "3.0");
     assert.equal(timers.size, 1);
     now += i === 0 ? 4000 : 1000;
@@ -77,7 +82,7 @@ for (const modes of [["major"], ["minor"], ["major", "minor"]]) {
     assert(!node("choice-grid").innerHTML.includes(`data-answer="${otherMode}:`));
     answer(`${otherMode}:${task.keyId}`);
     assert.equal(node("question-panel").innerHTML, panel);
-    assert.equal(node("progress-count").textContent, `${i + 1} / 12`);
+    assert.equal(node("progress-count").textContent, `${i + 1} / 24`);
     node("next-button").click();
     assert.equal(node("question-panel").innerHTML, panel);
     const response = i === 0 ? `${task.mode}:${task.keyId === "C" ? "D" : "C"}` : task.answer;
@@ -91,13 +96,13 @@ for (const modes of [["major"], ["minor"], ["major", "minor"]]) {
     assert.equal(node("question-panel").innerHTML, result);
     node("next-button").click();
   }
-  assert(node("question-panel").innerHTML.includes("正解 11 / 12"));
+  assert(node("question-panel").innerHTML.includes("正解 23 / 24"));
   assert.deepEqual(marks, ["two-five-key"]);
   assert.equal(timers.size, 0);
   node("next-button").click();
   assert.equal(marks.length, 1);
   node("start-button").click();
-  assert.equal(node("progress-count").textContent, "1 / 12");
+  assert.equal(node("progress-count").textContent, "1 / 24");
   node("start-button").click();
   assert.equal(timers.size, 1);
   assert.equal(node("time-left").textContent, "3.0");
