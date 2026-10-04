@@ -77,8 +77,8 @@
     },
     {
       id: "m7b5",
-      label: "m7♭5",
-      suffix: "m7♭5",
+      label: "m7(♭5)",
+      suffix: "m7(♭5)",
       roots: ROOT_LABELS.minor,
       degrees: [0, 2, 4, 6],
       intervals: [0, 3, 6, 10],

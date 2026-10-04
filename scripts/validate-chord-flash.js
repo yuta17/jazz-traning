@@ -121,7 +121,7 @@ assert.deepEqual(buildChord("F♯", quality("m7b5"), VOICINGS[0], CHORD_FORMS[1]
 
 const html = fs.readFileSync(path.join(__dirname, "../chord-flash/index.html"), "utf8");
 assert(html.includes("styles.css?v=20260927-tablet-fullscreen"));
-assert(html.includes("chord-flash.js?v=20261004-dim-flat-five"));
+assert(html.includes("chord-flash.js?v=20261004-flat-five-parentheses"));
 
 // Exercise the start checkbox, rendered labels, and completion through the UI handlers.
 const vm = require("node:vm");
@@ -150,9 +150,9 @@ for (const ninth of [false, true]) {
   for (let i = 0; i < 32; i += 1) {
     assert.equal(node("progress-count").textContent, `${i + 1} / 32`);
     const question = node("question-panel").innerHTML;
-    assert.equal(question.includes(">9th</span>"), ninth && !question.includes("m7♭5") && !question.includes("dim7"));
+    assert.equal(question.includes(">9th</span>"), ninth && !question.includes("m7(♭5)") && !question.includes("dim7"));
     assert(!question.includes('<span class="voicing-pill"></span>'));
-    if (question.includes("m7♭5")) {
+    if (question.includes("m7(♭5)")) {
       assert(!question.includes("2nd"));
       assert(question.includes(">3から</span>") || question.includes(">7から</span>"));
     }
