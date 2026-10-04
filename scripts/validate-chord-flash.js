@@ -37,8 +37,8 @@ CHORD_QUALITIES.forEach((quality) => {
 });
 
 const plans = questionPlans();
-assert.equal(plans.length, 19);
-assert.equal(plans.filter((plan) => plan.form.id === "rootless9").length, 9);
+assert.equal(plans.length, 17);
+assert.equal(plans.filter((plan) => plan.form.id === "rootless9").length, 8);
 assert.equal(plans.filter((plan) => plan.quality.id === "dim7").length, 1);
 assert.deepEqual(
   plans.filter((plan) => plan.quality.id === "dim7").map((plan) => `${plan.form.id}:${plan.voicing.id}`),
@@ -46,8 +46,8 @@ assert.deepEqual(
 );
 
 const fullDeck = createFullDeck();
-assert.equal(fullDeck.length, 228);
-assert.equal(new Set(fullDeck.map((chord) => chord.id)).size, 228);
+assert.equal(fullDeck.length, 204);
+assert.equal(new Set(fullDeck.map((chord) => chord.id)).size, 204);
 
 for (const ninth of [false, true]) {
   const flatLabels = new Set();
@@ -55,14 +55,17 @@ for (const ninth of [false, true]) {
     const deck = createDeck(ninth);
     assert.equal(deck.length, 32);
     assert.equal(new Set(deck.map((chord) => chord.id)).size, 32);
-    assert.equal(deck.some((chord) => chord.qualityId === "dim7"), !ninth);
+    assert.equal(deck.some((chord) => chord.qualityId === "dim7"), true);
     for (const chord of deck) {
-      assert.equal(chord.formId, ninth ? "rootless9" : "basic");
-      assert.equal(chord.extensionLabel, ninth && chord.qualityId !== "m7b5" ? "9th" : "");
+      assert.equal(chord.formId, ninth && chord.qualityId !== "dim7" ? "rootless9" : "basic");
+      assert.equal(chord.extensionLabel, ninth && !["m7b5", "dim7"].includes(chord.qualityId) ? "9th" : "");
       assert.equal(chord.notes.length, 4);
       if (chord.qualityId === "m7b5") {
-        assert(["3から", "7から", ""].includes(chord.voicingLabel));
+        assert(["3から", "7から"].includes(chord.voicingLabel));
         flatLabels.add(chord.voicingLabel);
+      } else if (chord.qualityId === "dim7") {
+        assert.equal(chord.voicingLabel, "");
+        assert.equal(chord.extensionLabel, "");
       } else {
         assert(["Root", "2nd"].includes(chord.voicingLabel));
       }
@@ -72,7 +75,7 @@ for (const ninth of [false, true]) {
       }
     }
   }
-  assert.equal(flatLabels.size, 3);
+  assert.equal(flatLabels.size, 2);
 }
 
 for (const form of CHORD_FORMS) {
@@ -80,7 +83,7 @@ for (const form of CHORD_FORMS) {
   const voicings = allowedVoicings(flatQuality, form);
   assert.equal(buildChord("C", flatQuality, voicings[0], form).notes[0], "E♭");
   assert.equal(buildChord("C", flatQuality, voicings[1], form).notes[0], "B♭");
-  assert.equal(buildChord("C", flatQuality, VOICINGS[1], form).voicingLabel, "");
+  assert.equal(buildChord("C", flatQuality, VOICINGS[1], form).voicingLabel, "3から");
 }
 
 function quality(id) {
@@ -104,7 +107,7 @@ assert.deepEqual(
 );
 
 assert.deepEqual(buildChord("B♭", quality("maj7"), VOICINGS[1]).notes, ["F", "A", "B♭", "D"]);
-assert.deepEqual(buildChord("F♯", quality("m7b5")).notes, ["F♯", "A", "C", "E"]);
+assert.deepEqual(buildChord("F♯", quality("m7b5")).notes, ["A", "C", "E", "F♯"]);
 assert.deepEqual(buildChord("G", quality("7")).notes, ["G", "B", "D", "F"]);
 assert.deepEqual(buildChord("C♯", quality("dim7")).notes, ["C♯", "E", "G", "B♭"]);
 assert.deepEqual(buildChord("A", quality("m7")).notes, ["A", "C", "E", "G"]);
@@ -118,7 +121,7 @@ assert.deepEqual(buildChord("F♯", quality("m7b5"), VOICINGS[0], CHORD_FORMS[1]
 
 const html = fs.readFileSync(path.join(__dirname, "../chord-flash/index.html"), "utf8");
 assert(html.includes("styles.css?v=20260927-tablet-fullscreen"));
-assert(html.includes("chord-flash.js?v=20260927-two-seconds-32"));
+assert(html.includes("chord-flash.js?v=20261004-dim-flat-five"));
 
 // Exercise the start checkbox, rendered labels, and completion through the UI handlers.
 const vm = require("node:vm");
@@ -147,9 +150,13 @@ for (const ninth of [false, true]) {
   for (let i = 0; i < 32; i += 1) {
     assert.equal(node("progress-count").textContent, `${i + 1} / 32`);
     const question = node("question-panel").innerHTML;
-    assert.equal(question.includes(">9th</span>"), ninth && !question.includes("m7♭5"));
+    assert.equal(question.includes(">9th</span>"), ninth && !question.includes("m7♭5") && !question.includes("dim7"));
     assert(!question.includes('<span class="voicing-pill"></span>'));
-    if (question.includes("m7♭5")) assert(!question.includes("2nd"));
+    if (question.includes("m7♭5")) {
+      assert(!question.includes("2nd"));
+      assert(question.includes(">3から</span>") || question.includes(">7から</span>"));
+    }
+    if (question.includes("dim7")) assert(!question.includes('class="voicing-pill'));
     node("reveal-button").click();
     assert(node("question-panel").innerHTML.includes("chord-note-list"));
     node("hit-button").click();

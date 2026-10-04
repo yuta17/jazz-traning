@@ -151,12 +151,11 @@
   }
 
   function allowedVoicings(quality, form = CHORD_FORMS[0]) {
-    if (quality.id === "dim7") return [VOICINGS[0]];
+    if (quality.id === "dim7") return [{ ...VOICINGS[0], label: "" }];
     if (quality.id === "m7b5") {
       return [
         { id: "third", label: "3から", noteOrder: form.id === "rootless9" ? [0, 1, 2, 3] : [1, 2, 3, 0] },
         { id: "seventh", label: "7から", noteOrder: form.id === "rootless9" ? [2, 3, 0, 1] : [3, 0, 1, 2] },
-        { id: "unlabeled", label: "", noteOrder: [0, 1, 2, 3] },
       ];
     }
     return VOICINGS;
@@ -192,7 +191,6 @@
     const activeForm = supportsForm(quality, form) ? form : CHORD_FORMS[0];
     const voicings = allowedVoicings(quality, activeForm);
     const activeVoicing = voicings.find((item) => item.id === voicing.id)
-      || voicings.find((item) => item.id === "unlabeled")
       || voicings[0];
     const root = parseRoot(rootLabel);
     const noteSet = noteSetForQuality(quality, activeForm);
@@ -228,7 +226,7 @@
 
   function createDeck(ninth = false) {
     const form = CHORD_FORMS[ninth ? 1 : 0];
-    const qualities = CHORD_QUALITIES.filter((quality) => supportsForm(quality, form));
+    const qualities = CHORD_QUALITIES;
     const pools = new Map(qualities.map((quality) => [quality.id, shuffle(quality.roots)]));
     const chords = [];
     while (chords.length < ROUND_SIZE) {
