@@ -87,7 +87,7 @@
       id: "dim7",
       label: "dim7",
       suffix: "dim7",
-      roots: ROOT_LABELS.minor,
+      roots: ROOT_LABELS.flat,
       degrees: [0, 2, 4, 6],
       intervals: [0, 3, 6, 9],
     },
@@ -228,14 +228,16 @@
     const form = CHORD_FORMS[ninth ? 1 : 0];
     const qualities = CHORD_QUALITIES;
     const pools = new Map(qualities.map((quality) => [quality.id, shuffle(quality.roots)]));
-    const chords = [];
-    while (chords.length < ROUND_SIZE) {
-      for (const quality of shuffle(qualities)) {
-        if (chords.length === ROUND_SIZE) break;
-        const voicing = shuffle(allowedVoicings(quality, form))[0];
-        chords.push(buildChord(pools.get(quality.id).pop(), quality, voicing, form));
-      }
+    const dim = qualities.find((quality) => quality.id === "dim7");
+    const regularQualities = qualities.filter((quality) => quality.id !== "dim7");
+    const plans = [dim, dim];
+    while (plans.length < ROUND_SIZE) {
+      plans.push(...shuffle(regularQualities).slice(0, ROUND_SIZE - plans.length));
     }
+    const chords = plans.map((quality) => {
+      const voicing = shuffle(allowedVoicings(quality, form))[0];
+      return buildChord(pools.get(quality.id).pop(), quality, voicing, form);
+    });
     return shuffle(chords);
   }
 
@@ -319,7 +321,7 @@
             ${task.voicingLabel ? `<span class="voicing-pill">${task.voicingLabel}</span>` : ""}
             ${extensionLabel}
           </div>
-          <strong class="question-key chord-symbol">${task.label}</strong>
+          <span class="question-key chord-symbol chord-flash-symbol">${task.label}</span>
         </div>
       `;
       return;
@@ -328,7 +330,7 @@
     dom.questionPanel.innerHTML = `
       <div class="answer-state">
         <p class="answer-title">
-          <strong>${task.label}</strong>
+          <span class="chord-flash-symbol">${task.label}</span>
         </p>
         <div class="chord-note-list">
           ${task.notes.map((note) => `<span class="chord-note">${note}</span>`).join("")}

@@ -55,7 +55,8 @@ for (const ninth of [false, true]) {
     const deck = createDeck(ninth);
     assert.equal(deck.length, 32);
     assert.equal(new Set(deck.map((chord) => chord.id)).size, 32);
-    assert.equal(deck.some((chord) => chord.qualityId === "dim7"), true);
+    assert.equal(deck.filter((chord) => chord.qualityId === "dim7").length, 2);
+    assert(deck.filter((chord) => chord.qualityId === "dim7").every((chord) => !["C♯", "F♯"].includes(chord.root)));
     for (const chord of deck) {
       assert.equal(chord.formId, ninth && chord.qualityId !== "dim7" ? "rootless9" : "basic");
       assert.equal(chord.extensionLabel, ninth && !["m7b5", "dim7"].includes(chord.qualityId) ? "9th" : "");
@@ -85,6 +86,9 @@ for (const form of CHORD_FORMS) {
   assert.equal(buildChord("C", flatQuality, voicings[1], form).notes[0], "B♭");
   assert.equal(buildChord("C", flatQuality, VOICINGS[1], form).voicingLabel, "3から");
 }
+
+assert(fullDeck.some((chord) => chord.label === "D♭dim7"));
+assert(fullDeck.some((chord) => chord.label === "G♭dim7"));
 
 function quality(id) {
   return CHORD_QUALITIES.find((item) => item.id === id);
@@ -120,8 +124,8 @@ assert.deepEqual(buildChord("B♭", quality("m7"), VOICINGS[0], CHORD_FORMS[1]).
 assert.deepEqual(buildChord("F♯", quality("m7b5"), VOICINGS[0], CHORD_FORMS[1]).notes, ["A", "C", "E", "G♯"]);
 
 const html = fs.readFileSync(path.join(__dirname, "../chord-flash/index.html"), "utf8");
-assert(html.includes("styles.css?v=20260927-tablet-fullscreen"));
-assert(html.includes("chord-flash.js?v=20261004-flat-five-parentheses"));
+assert(html.includes("styles.css?v=20261005-chord-display"));
+assert(html.includes("chord-flash.js?v=20261005-chord-display"));
 
 // Exercise the start checkbox, rendered labels, and completion through the UI handlers.
 const vm = require("node:vm");

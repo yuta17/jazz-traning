@@ -1572,3 +1572,11 @@ td {
     align-content: center;
   }
 }
+
+#chord-question-panel .chord-flash-symbol {
+  font-weight: 400;
+}
+
+#chord-question-panel .question-key.chord-flash-symbol {
+  font-size: clamp(3.5rem, 13.5vw, 6rem);
+}
