@@ -1,7 +1,7 @@
 (function attachTwoFiveKey(global) {
   "use strict";
 
-  const ROUND_SIZE = 24;
+  const ROUND_SIZE = 12;
   const LIMIT_SECONDS = 3;
   const MODES = ["major", "minor"];
   const MODE_LABELS = {
@@ -80,18 +80,18 @@
   function buildDeck(modes, random = Math.random) {
     const selected = sanitizeModes(modes);
     if (!selected.length) return [];
-    const deck = KEYS.flatMap((key) => {
-      const modeOrder = balancedModes(selected, ROUND_SIZE / KEYS.length, random);
-      return modeOrder.map((mode, index) => ({
-        id: `${mode}:${key.id}:${index}`,
+    const modeOrder = balancedModes(selected, ROUND_SIZE, random);
+    return shuffle(KEYS, random).map((key, index) => {
+      const mode = modeOrder[index];
+      return {
+        id: `${mode}:${key.id}`,
         keyId: key.id,
         mode,
         answer: `${mode}:${key.id}`,
         chords: key[mode].slice(0, 2),
         resolution: key[mode][2],
-      }));
+      };
     });
-    return shuffle(deck, random);
   }
 
   function elements() {

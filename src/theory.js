@@ -2,7 +2,7 @@
   "use strict";
 
   const VARIATIONS = ["RRR", "R2R", "2R2"];
-  const ROUND_SIZE = 24;
+  const ROUND_SIZE = 12;
   const MINOR_KEY_IDS = ["D", "Bb", "C", "F", "G"];
 
   const KEYS = [

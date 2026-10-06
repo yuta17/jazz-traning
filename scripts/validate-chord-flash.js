@@ -15,7 +15,7 @@ const {
 } = require("../src/chord-flash.js");
 
 assert.equal(LIMIT_SECONDS, 2);
-assert.equal(ROUND_SIZE, 32);
+assert.equal(ROUND_SIZE, 24);
 assert.equal(CHORD_QUALITIES.length, 5);
 assert.deepEqual(
   VOICINGS.map((voicing) => voicing.id),
@@ -53,8 +53,8 @@ for (const ninth of [false, true]) {
   const flatLabels = new Set();
   for (let run = 0; run < 100; run += 1) {
     const deck = createDeck(ninth);
-    assert.equal(deck.length, 32);
-    assert.equal(new Set(deck.map((chord) => chord.id)).size, 32);
+    assert.equal(deck.length, 24);
+    assert.equal(new Set(deck.map((chord) => chord.id)).size, 24);
     assert.equal(deck.filter((chord) => chord.qualityId === "dim7").length, 2);
     assert(deck.filter((chord) => chord.qualityId === "dim7").every((chord) => !["C♯", "F♯"].includes(chord.root)));
     for (const chord of deck) {
@@ -125,7 +125,7 @@ assert.deepEqual(buildChord("F♯", quality("m7b5"), VOICINGS[0], CHORD_FORMS[1]
 
 const html = fs.readFileSync(path.join(__dirname, "../chord-flash/index.html"), "utf8");
 assert(html.includes("styles.css?v=20261005-chord-bold"));
-assert(html.includes("chord-flash.js?v=20261005-chord-display"));
+assert(html.includes("chord-flash.js?v=20261007-round-size"));
 
 // Exercise the start checkbox, rendered labels, and completion through the UI handlers.
 const vm = require("node:vm");
@@ -145,14 +145,14 @@ vm.runInNewContext(fs.readFileSync(path.join(__dirname, "../src/chord-flash.js")
   JazzDailyProgress: { mark() { completed += 1; } },
 });
 const node = (id) => document.querySelector(`#chord-${id}`);
-assert.equal(node("progress-count").textContent, "0 / 32");
+assert.equal(node("progress-count").textContent, "0 / 24");
 assert.equal(node("time-left").textContent, "2.0");
 for (const ninth of [false, true]) {
   node("ninth-checkbox").checked = ninth;
   node("start-button").click();
   node("ninth-checkbox").checked = !ninth;
-  for (let i = 0; i < 32; i += 1) {
-    assert.equal(node("progress-count").textContent, `${i + 1} / 32`);
+  for (let i = 0; i < 24; i += 1) {
+    assert.equal(node("progress-count").textContent, `${i + 1} / 24`);
     const question = node("question-panel").innerHTML;
     assert.equal(question.includes(">9th</span>"), ninth && !question.includes("m7(♭5)") && !question.includes("dim7"));
     assert(!question.includes('<span class="voicing-pill"></span>'));
@@ -166,7 +166,7 @@ for (const ninth of [false, true]) {
     node("hit-button").click();
   }
   assert(node("question-panel").innerHTML.includes("完了"));
-  assert.equal(node("progress-count").textContent, "32 / 32");
+  assert.equal(node("progress-count").textContent, "24 / 24");
 }
 assert.equal(completed, 2);
 console.log("Chord flash validation passed");
