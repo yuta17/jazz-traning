@@ -4,6 +4,8 @@
 
 ## 仕様
 
+- `settings/` でコード瞬間判定・調号判定・2-5キー判定・2-5-1の1周の出題数を1〜100問に設定。localStorageで同じブラウザに保存し、次の開始から反映（下記の問数は初期値）
+
 - `focus-timer/` は開始時刻を保存してページ移動・再読み込み後も継続し、5分経過後は停止するまで超過時間を表示
 
 - メジャー: `IIm7 -> V7 -> I△7`
@@ -34,6 +36,7 @@ python3 -m http.server 4173
 ## 検証
 
 ```bash
+node scripts/validate-training-settings.js
 node scripts/validate-theory.js
 node scripts/validate-251-ui.js
 node scripts/validate-two-five-key.js

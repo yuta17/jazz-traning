@@ -2,6 +2,7 @@
   "use strict";
 
   const ROUND_SIZE = 12;
+  function roundSize() { return global.TrainingSettings?.getCount("key-signature") || ROUND_SIZE; }
   const MODES = ["major", "minor"];
   const MODE_LABELS = {
     major: "メジャー",
@@ -91,8 +92,9 @@
     const selected = sanitizeModes(modes);
     if (selected.length === 0) return [];
 
-    const signatures = shuffle(KEY_SIGNATURES, random);
-    const modeOrder = balancedModes(selected, ROUND_SIZE, random);
+    const signatures = [];
+    while (signatures.length < roundSize()) signatures.push(...shuffle(KEY_SIGNATURES, random).slice(0, roundSize() - signatures.length));
+    const modeOrder = balancedModes(selected, roundSize(), random);
 
     return signatures.map((item, index) => {
       const mode = modeOrder[index];
@@ -128,7 +130,7 @@
 
   function renderProgress() {
     const dom = elements();
-    const total = state.deck.length || ROUND_SIZE;
+    const total = state.deck.length || roundSize();
     const current = state.completed ? total : state.deck.length ? state.index + 1 : 0;
     dom.progressCount.textContent = `${current} / ${total}`;
   }
@@ -140,7 +142,7 @@
     if (state.completed) {
       dom.questionPanel.innerHTML = `
         <div class="complete-state">
-          <p>正解 ${state.correct} / ${ROUND_SIZE}</p>
+          <p>正解 ${state.correct} / ${state.deck.length}</p>
           <strong>完了</strong>
         </div>
       `;

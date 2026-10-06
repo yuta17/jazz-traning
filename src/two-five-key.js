@@ -2,6 +2,7 @@
   "use strict";
 
   const ROUND_SIZE = 12;
+  function roundSize() { return global.TrainingSettings?.getCount("two-five-key") || ROUND_SIZE; }
   const LIMIT_SECONDS = 3;
   const MODES = ["major", "minor"];
   const MODE_LABELS = {
@@ -80,8 +81,10 @@
   function buildDeck(modes, random = Math.random) {
     const selected = sanitizeModes(modes);
     if (!selected.length) return [];
-    const modeOrder = balancedModes(selected, ROUND_SIZE, random);
-    return shuffle(KEYS, random).map((key, index) => {
+    const modeOrder = balancedModes(selected, roundSize(), random);
+    const keys = [];
+    while (keys.length < modeOrder.length) keys.push(...shuffle(KEYS, random).slice(0, modeOrder.length - keys.length));
+    return keys.map((key, index) => {
       const mode = modeOrder[index];
       return {
         id: `${mode}:${key.id}`,
@@ -118,7 +121,7 @@
 
   function renderProgress() {
     const dom = elements();
-    const total = state.deck.length || ROUND_SIZE;
+    const total = state.deck.length || roundSize();
     const current = state.completed ? total : state.deck.length ? state.index + 1 : 0;
     dom.progressCount.textContent = `${current} / ${total}`;
   }
@@ -130,7 +133,7 @@
     if (state.completed) {
       dom.questionPanel.innerHTML = `
         <div class="complete-state">
-          <p>正解 ${state.correct} / ${ROUND_SIZE}</p>
+          <p>正解 ${state.correct} / ${state.deck.length}</p>
           <strong>完了</strong>
         </div>
       `;

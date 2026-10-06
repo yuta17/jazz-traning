@@ -1580,3 +1580,7 @@ td {
 #chord-question-panel .question-key.chord-flash-symbol {
   font-size: clamp(3.5rem, 13.5vw, 6rem);
 }
+
+.round-settings-form { display: grid; gap: 12px; margin-top: 24px; }
+.round-settings-form label { font-weight: 700; }
+.round-settings-form input { width: 100%; min-height: 48px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; }

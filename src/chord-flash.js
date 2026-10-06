@@ -3,6 +3,7 @@
 
   const LIMIT_SECONDS = 2;
   const ROUND_SIZE = 24;
+  function roundSize() { return global.TrainingSettings?.getCount("chord-flash") || ROUND_SIZE; }
   const STORAGE_KEY = "jazz-chord-flash-state-v1";
 
   const NATURAL_PITCH = {
@@ -230,13 +231,16 @@
     const pools = new Map(qualities.map((quality) => [quality.id, shuffle(quality.roots)]));
     const dim = qualities.find((quality) => quality.id === "dim7");
     const regularQualities = qualities.filter((quality) => quality.id !== "dim7");
-    const plans = [dim, dim];
-    while (plans.length < ROUND_SIZE) {
-      plans.push(...shuffle(regularQualities).slice(0, ROUND_SIZE - plans.length));
+    const count = roundSize();
+    const plans = Array(Math.min(count, Math.max(1, Math.round(count / 12)))).fill(dim);
+    while (plans.length < count) {
+      plans.push(...shuffle(regularQualities).slice(0, count - plans.length));
     }
     const chords = plans.map((quality) => {
       const voicing = shuffle(allowedVoicings(quality, form))[0];
-      return buildChord(pools.get(quality.id).pop(), quality, voicing, form);
+      const roots = pools.get(quality.id);
+      if (!roots.length) roots.push(...shuffle(quality.roots));
+      return buildChord(roots.pop(), quality, voicing, form);
     });
     return shuffle(chords);
   }
@@ -341,7 +345,7 @@
 
   function renderProgress() {
     const dom = elements();
-    const total = state.deck.length || ROUND_SIZE;
+    const total = state.deck.length || roundSize();
     const current = state.completed ? total : state.deck.length ? state.index + 1 : 0;
     dom.progressCount.textContent = `${current} / ${total}`;
   }

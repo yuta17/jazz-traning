@@ -157,7 +157,7 @@
   }
 
   function renderProgress() {
-    const total = state.deck.length || cycleSize(state.settings) || ROUND_SIZE;
+    const total = state.deck.length || cycleSize(state.settings) || window.TrainingSettings?.getCount("two-five-one") || ROUND_SIZE;
     const current = state.completed ? total : state.deck.length ? state.index + 1 : 0;
     elements.progressCount.textContent = `${current} / ${total}`;
   }

@@ -3,6 +3,7 @@
 
   const VARIATIONS = ["RRR", "R2R", "2R2"];
   const ROUND_SIZE = 12;
+  function roundSize() { return global.TrainingSettings?.getCount("two-five-one") || ROUND_SIZE; }
   const MINOR_KEY_IDS = ["D", "Bb", "C", "F", "G"];
 
   const KEYS = [
@@ -107,7 +108,7 @@
   }
 
   function cycleSize(settings) {
-    return selectedQualities(settings).length > 0 ? ROUND_SIZE : 0;
+    return selectedQualities(settings).length > 0 ? roundSize() : 0;
   }
 
   function shuffle(items, random) {
@@ -143,7 +144,7 @@
     if (qualities.length === 0) return deck;
 
     const keyOrders = {};
-    const qualityOrder = balancedQualities(qualities, ROUND_SIZE, random);
+    const qualityOrder = balancedQualities(qualities, roundSize(), random);
     const variationOrders = {};
     const variationIndexes = {};
 
