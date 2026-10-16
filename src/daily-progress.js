@@ -9,6 +9,7 @@
     "lick-1",
     "lick-2",
     "chord-flash",
+    "altered-scale",
     "key-signature",
     "two-five-one",
     "two-five-key",
