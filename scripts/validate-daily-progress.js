@@ -10,6 +10,7 @@ assert.deepEqual(TRAINING_IDS, [
   "oscar-peterson",
   "lick-1",
   "lick-2",
+    "lick-3",
   "chord-flash",
   "altered-scale",
   "key-signature",
