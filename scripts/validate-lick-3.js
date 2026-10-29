@@ -1,16 +1,18 @@
 const assert = require('node:assert/strict');
 const lick = require('../src/lick-3.js');
 const task = lick.buildTask(lick.MAJOR_KEYS.find(key => key.id === 'C'));
-assert.equal(task.progression, 'Dm7 → G7 → C△7');
+assert.equal(task.progression, 'Dm7 → G7 → G7 → C△7');
 assert.deepEqual(task.segments.map(s => s.notes), [
   ['休', 'D', 'E', 'F', 'A', 'C', 'E'],
   ['G', 'F♯', 'F', 'A', 'G♯', 'A', 'E', 'D'],
-  ['E', 'B', 'B♭', 'A♭', 'G'],
+  ['E♭', 'B', 'B♭', 'A♭'],
+  ['E'],
 ]);
 assert.deepEqual(task.segments.map(s => s.degreeLabels), [
   ['休', '1', '9', '3', '5', '7', '9'],
-  ['1', '半', '7', '9', '半', '9', '13', '5'],
-  ['3', '半', '♭7', '半', '5'],
+  ['半', '半', '7', '9', '半', '9', '13', '5'],
+  ['♭13', '3', '♯9', '♭9'],
+  ['3'],
 ]);
 const deck = lick.createDeck();
 assert.equal(deck.length, 12);

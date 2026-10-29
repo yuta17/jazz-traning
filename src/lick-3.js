@@ -41,14 +41,19 @@
       id: "v", degree: "V7", suffix: "7", rootOffset: 7, rootLetterOffset: 4,
       intervals: [12, 11, 10, 2, 1, 2, 9, 7],
       noteLetterOffsets: [0, 6, 6, 1, 0, 1, 5, 4],
-      degreeLabels: ["1", "半", "7", "9", "半", "9", "13", "5"],
+      degreeLabels: ["半", "半", "7", "9", "半", "9", "13", "5"],
+    },
+    {
+      id: "v-altered", degree: "V7 altered", suffix: "7", rootOffset: 7, rootLetterOffset: 4,
+      intervals: [8, 4, 3, 1],
+      noteLetterOffsets: [5, 2, 2, 1],
+      degreeLabels: ["♭13", "3", "♯9", "♭9"],
     },
     {
       id: "i", degree: "I△7", suffix: "△7", rootOffset: 0, rootLetterOffset: 0,
-      // The user confirmed E natural (3), overriding the printed flat.
-      intervals: [4, 11, 10, 8, 7],
-      noteLetterOffsets: [2, 6, 6, 5, 4],
-      degreeLabels: ["3", "半", "♭7", "半", "5"],
+      intervals: [4],
+      noteLetterOffsets: [2],
+      degreeLabels: ["3"],
     },
   ];
 
