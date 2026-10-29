@@ -6,13 +6,13 @@ assert.deepEqual(task.segments.map(s => s.notes), [
   ['休', 'D', 'E', 'F', 'A', 'C', 'E'],
   ['G', 'F♯', 'F', 'A', 'G♯', 'A', 'E', 'D'],
   ['E♭', 'B', 'B♭', 'A♭'],
-  ['E'],
+  ['G'],
 ]);
 assert.deepEqual(task.segments.map(s => s.degreeLabels), [
   ['休', '1', '9', '3', '5', '7', '9'],
-  ['半', '半', '7', '9', '半', '9', '13', '5'],
+  ['半', '半', '7', '9', '半', '9', '半', '半'],
   ['♭13', '3', '♯9', '♭9'],
-  ['3'],
+  ['5'],
 ]);
 const deck = lick.createDeck();
 assert.equal(deck.length, 12);
@@ -25,7 +25,9 @@ for (const t of deck) {
       if (s.intervals[i] === null) { assert.equal(note, '休'); return; }
       assert.equal(lick.parseRoot(note).pitchClass, (tonic + s.rootOffset + s.intervals[i]) % 12);
       if (s.degreeLabels[i] === '半') {
-        const next = lick.parseRoot(s.notes[i + 1]).pitchClass;
+        // E and D enclose the next segment's E-flat, rather than each other.
+        const target = s.id === 'v' && i >= 6 ? t.segments[2].notes[0] : s.notes[i + 1];
+        const next = lick.parseRoot(target).pitchClass;
         assert([1, 11].includes((next - lick.parseRoot(note).pitchClass + 12) % 12));
       }
     });
