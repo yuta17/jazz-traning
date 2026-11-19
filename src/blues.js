@@ -1,334 +1,275 @@
 (function (global) {
   "use strict";
-  // Durations are in eighth-note units; null is a written and silent rest.
+  // Durations and positions use eighth-note units. null is a written rest.
   const note = (pitch, duration = 1) => ({ pitch, duration });
-  const hold = (pitch, duration) => ({ ...note(pitch, duration), tie: true });
   const accent = (pitch, duration = 1) => ({ ...note(pitch, duration), accent: true });
   const clip = (pitch, duration = 1) => ({ ...note(pitch, duration), staccato: true });
-  // Original blues riffs, developed through repetition, displacement, and register changes.
-  const PATTERNS = {
-    "one": { label: "裏拍のブルース・リフ", bars: 1, explanation: "5度→♭7度→5度を短い言葉として歌います。Responseは1拍遅れてその5度を受け、ブルーノートを通って♭3度を伸ばします。高い音を足すより、アクセントの位置を聴き取ります。", phrases: [
+  const hold = (pitch, duration) => ({ ...note(pitch, duration), tie: true });
+  const LESSONS = {
+    one: { bars: 1, call: [
       [note(null), accent(7), note(10), note(7), clip(5, 2), note(null, 2)],
-      [note(null, 2), note(7), note(6), note(5), accent(3, 2), note(null)],
+    ], responses: [
+      { label: "リズムを残して、音を変える", hint: "Callと同じリズムで、少し低い音へ。音の長さとアクセントを残して答えます。", phrase: [
+        [note(null), accent(5), note(7), note(5), clip(3, 2), note(null, 2)],
+      ] },
+      { label: "音を残して、リズムを変える", hint: "5度・♭7度・5度・4度の順はそのまま。頭から長めに入り、間とアクセントの位置を変えます。", phrase: [
+        [note(7, 2), note(null), accent(10), note(7), note(5, 2), note(null)],
+      ] },
+      { label: "最後の着地点を変える", hint: "Callの入口はそのまま引用し、最後だけ4度からルートへ変えて収めます。", phrase: [
+        [note(null), accent(7), note(10), note(7), clip(0, 2), note(null, 2)],
+      ] },
+      { label: "音数を減らして、間を作る", hint: "5度とルートの2音だけで答えます。休符の間も拍を感じ、次の音を急がず待ちます。", phrase: [
+        [note(null, 2), accent(7), note(0, 2), note(null, 3)],
+      ] },
+      { label: "一部を引用して、続きを作る", hint: "5度→♭7度を借りて、高いルートへ展開。Callのリフを別の続きに育てます。", phrase: [
+        [note(null), note(7), accent(10), note(12), note(10), note(7, 2), note(null)],
+      ] },
     ] },
-    "one-turn": { label: "下降を高いルートで切り返す", bars: 1, explanation: "Callの♭7度と4度の間を広く取ります。Responseは低い♭3度から跳び、裏拍の5度を押して高いルートへ。Callの下降に対して、違う音域の答えを返します。", phrases: [
-      [note(10), clip(7), note(5, 3), note(7), note(null, 2)],
-      [note(null), note(3), note(5), accent(7), note(10), note(12, 2), note(null)],
-    ] },
-    "one-repeat": { label: "同音のパンチをほどく", bars: 1, explanation: "5度の短い反復と、裏拍のアクセントでCallを作ります。Responseは最初の5度を長く受け、♭3度を押して低いルートへ。反復の勢いを滑らかな結びに変えます。", phrases: [
-      [clip(7), accent(7), note(null), clip(7), accent(10, 2), note(null, 2)],
-      [note(7, 2), note(6), note(5), accent(3), note(0, 2), note(null)],
-    ] },
-    "one-register": { label: "高いリフに低く答える", bars: 1, explanation: "Callは高いルートとその上の♭3度で、歌うような短いリフ。Responseは5度まで音域を下げて受け、同じ跳躍の響きを残しながら低い♭3度へ落ち着きます。", phrases: [
-      [note(null), accent(12), note(15), note(12), clip(10, 2), note(null, 2)],
-      [note(7, 2), note(10), note(7), note(5), accent(3, 2), note(null)],
-    ] },
-    "one-held": { label: "伸ばす音と裏拍の返し", bars: 1, explanation: "Callは♭7度を付点4分で伸ばし、5度を短く切って♭7度へ戻ります。Responseはその2音を裏拍から組み替え、4度へ結びます。伸びと短い音の差がポイントです。", phrases: [
-      [accent(10, 3), clip(7), note(10, 2), note(null, 2)],
-      [note(null), note(10), note(7), note(10), note(7), accent(5, 2), note(null)],
-    ] },
-    "one-compress": { label: "高音のひと言に低く短く", bars: 1, explanation: "Callは5度・♭7度から高い♭3度まで跳び、ルートへ折り返します。Responseは♭7度と5度を短く受け、4度を長めに置く3音の答え。余白を残して言い切ります。", phrases: [
-      [note(null), note(7), note(10), note(12), accent(15), note(12), note(null, 2)],
-      [clip(10), note(7), accent(5, 3), note(null, 3)],
-    ] },
-    "one-expand": { label: "2音のフックを膨らませる", bars: 1, explanation: "Callは短い5度と、裏拍から伸ばす♭7度だけ。Responseはその2音を引用し、ブルーノートから5度へ戻る折り返しを加えます。音数が増えても同じ話題を保ちます。", phrases: [
-      [clip(7), accent(10, 3), note(null, 4)],
-      [note(null), note(7), note(10), note(7), note(6), accent(7, 2), note(null)],
-    ] },
-    "one-fragment": { label: "途切れるリフをつなぎ直す", bars: 1, explanation: "Callの5度→♭7度と5度→4度の間を1拍空けます。Responseは同じ5度を裏拍から受け、4度に重みを置いて低いルートへつなぎます。", phrases: [
-      [note(7), accent(10), note(null, 2), note(7), clip(5), note(null, 2)],
-      [note(null), note(7), note(6), accent(5), note(3), note(0, 2), note(null)],
-    ] },
-    "one-leap": { label: "跳躍を別の音域で返す", bars: 1, explanation: "Callは低いルートから5度・♭7度へ跳びます。Responseは高い♭3度から下がり、裏拍の5度を押して高いルートへ。跳躍の勢いを音域を変えて返します。", phrases: [
-      [note(0), clip(7), accent(10, 2), note(7, 2), note(null, 2)],
-      [note(15, 2), note(12), clip(10), accent(7), note(12, 2), note(null)],
-    ] },
-    "one-blue-up": { label: "ブルーノートの小さな引っかかり", bars: 1, explanation: "Callの4度→ブルーノート→5度は軽く、到達した5度を押します。Responseは1拍待って♭7度から入り、同じブルーノートを挟んで5度に戻ります。", phrases: [
-      [note(5), note(6), accent(7, 2), clip(10, 2), note(null, 2)],
-      [note(null, 2), note(10), note(7), note(6), accent(7, 2), note(null)],
-    ] },
-    "one-blue-down": { label: "♭3度のブルース・フック", bars: 1, explanation: "Callはブルーノートを通って4度へ、最後の♭3度は短く。Responseはその♭3度を受けて4度との折り返しを作り、ルートをかすめて♭3度を伸ばします。", phrases: [
-      [note(7), note(6), accent(5, 2), clip(3, 2), note(null, 2)],
-      [note(null), note(3), note(5), accent(3), note(0), note(3, 2), note(null)],
-    ] },
-    "one-late": { label: "遅い問いに頭のアクセント", bars: 1, explanation: "Callは2拍目の裏から入り、♭7度にアクセントを置く短い言葉。Responseは次の小節頭でその♭7度を受け、5度との往復を4度へ収めます。", phrases: [
-      [note(null, 3), note(7), accent(10), note(7), clip(5), note(null)],
-      [accent(10, 2), note(7), note(10), clip(7), accent(5, 2), note(null)],
-    ] },
-    "one-early": { label: "オクターブの問いと短い落ち", bars: 1, explanation: "Callは裏拍の5度から高いルートへ跳び、♭7度を伸ばします。Responseは5度→♭3度→低いルートの3音に圧縮。後半2拍の沈黙まで含めて答えます。", phrases: [
-      [note(null), note(7), accent(12), note(10, 3), note(null, 2)],
-      [accent(7), clip(3), note(0, 2), note(null, 4)],
-    ] },
-    "one-low-high": { label: "低いフックを上へ持ち上げる", bars: 1, explanation: "Callは低いルートと♭3度の小さなリフ。Responseは同じ2音の響きを1オクターブ上へ移し、♭7度を挟んで高いルートへ戻ります。リズムも変えて歌い直します。", phrases: [
-      [clip(0), accent(3), note(0, 2), note(3, 2), note(null, 2)],
-      [note(null), note(12), note(15), accent(12), note(10), note(12, 2), note(null)],
-    ] },
-    "one-high-root": { label: "高い♭3度からの返答", bars: 1, explanation: "Callは高い♭3度を短く、高いルートを押して5度へ下がります。Responseは1拍待ってCallの♭7度・5度を拾い、高いルートを裏拍から長く伸ばします。", phrases: [
-      [clip(15), accent(12), note(10, 2), note(7, 2), note(null, 2)],
-      [note(null, 2), note(10), note(7), accent(12, 3), note(null)],
-    ] },
-    "two": { label: "裏拍のリフを育てる", bars: 2, explanation: "Callは5度→♭7度→5度を繰り返し、小節末のリフから次の高いルートへつなぎます。Responseは同じ入口から高い♭3度へ展開し、後半だけ低く結びます。アクセントを置く音と、短く抜く音を分けます。", phrases: [
+    two: { bars: 2, call: [
       [note(null), note(7), accent(10), note(7), clip(5), note(null), note(7), accent(10)],
       [note(12, 2), clip(10), note(7), accent(10, 2), note(null, 2)],
-      [note(null, 2), note(7), accent(10), note(12, 2), note(15), accent(12)],
-      [note(10), note(7), clip(5), accent(3), note(0, 2), note(null, 2)],
+    ], responses: [
+      { label: "リズムを残して、音を変える", hint: "Callのリズムと短い音を残して、少し低い音域へ。2小節目末の♭3度まで、ひと息で答えます。", phrase: [
+        [note(null), note(5), accent(7), note(5), clip(3), note(null), note(5), accent(7)],
+        [note(10, 2), clip(7), note(5), accent(3, 2), note(null, 2)],
+      ] },
+      { label: "音を残して、リズムを変える", hint: "音の順を変えず、頭から入って長さと間を変えます。小節線を越える高いルートを長めに伸ばします。", phrase: [
+        [note(7, 2), note(null), accent(10), note(7), note(5), note(7), accent(10)],
+        [note(12, 3), clip(10), note(7), accent(10), note(null, 2)],
+      ] },
+      { label: "最後の着地点を変える", hint: "Callのリフを引き継ぎ、最後の♭7度だけルートへ置き換えます。同じ話の終わり方を変えて聴き比べます。", phrase: [
+        [note(null), note(7), accent(10), note(7), clip(5), note(null), note(7), accent(10)],
+        [note(12, 2), clip(10), note(7), accent(0, 2), note(null, 2)],
+      ] },
+      { label: "音数を減らして、間を作る", hint: "5度・♭7度・ルートに絞ります。♭7度はタイで次の小節まで伸ばし、最後の2拍は空けて答えます。", phrase: [
+        [note(null), accent(7, 2), note(null), hold(10, 4)],
+        [note(10, 2), note(0, 2), note(null, 4)],
+      ] },
+      { label: "一部を引用して、続きを作る", hint: "Call前半のリフを引用し、途中から高いルート・♭3度へ広げます。最後は5度で結び、別の続きにします。", phrase: [
+        [note(null), note(7), accent(10), note(7), clip(5), note(null), note(7), accent(12)],
+        [note(15, 2), note(12), note(10), accent(7, 2), note(null, 2)],
+      ] },
     ] },
-    "two-space": { label: "伸ばす問いを高く広げる", bars: 2, explanation: "Callは5度と♭7度のリフを、タイで小節線の先へ伸ばして4度へ。Responseは同じ5度から高い♭3度まで音域を広げ、最後は低い♭3度を伸ばして答えます。長い音の途中で重みを失わないように歌います。", phrases: [
-      [note(7, 2), note(null), clip(7), note(10, 2), hold(7, 2)],
-      [note(7, 2), accent(10), note(7), note(5, 2), note(null, 2)],
-      [note(null), note(7), note(10), note(12), accent(15, 2), note(12), note(10)],
-      [accent(7, 3), clip(5), note(3, 2), note(null, 2)],
-    ] },
-    "two-turn": { label: "高い下降を上へ切り返す", bars: 2, explanation: "Callは高い♭3度から下がり、小節末でルートをもう一度目指して4度へ留まります。Responseは4度からブルーノートを押し上げ、高いルートをタイで持ち越します。結びは♭7度へ置き換えます。", phrases: [
-      [note(null), note(15, 2), accent(12), note(10, 2), note(7), note(10)],
-      [note(12, 2), note(10), note(7), accent(5, 2), note(null, 2)],
-      [note(null), note(5), note(6), accent(7), note(10, 2), hold(12, 2)],
-      [note(12, 2), note(15), note(12), accent(10, 2), note(null, 2)],
-    ] },
-    "two-pickup": { label: "遅いフックを短く返す", bars: 2, explanation: "Callは2拍目の裏から5度・♭7度を行き来し、次の小節で高い♭3度へ。Responseは1拍待って同じ2音のリフを受け、低いルートと♭3度だけに圧縮して締めます。", phrases: [
-      [note(null, 3), note(7), accent(10), note(7), note(10), accent(12)],
-      [note(15, 2), note(12), clip(10), note(7, 2), note(null, 2)],
-      [note(null, 2), note(7), accent(10), note(7, 2), note(5), note(3)],
-      [note(0, 3), clip(3), note(0, 2), note(null, 2)],
-    ] },
-    "two-register": { label: "高い言葉を低い声で返す", bars: 2, explanation: "Callは高い♭3度とルートを軸にしたリフ。Responseは低い5度・ルート・♭7度で、同じ跳躍の感じを別の声に移します。低音域の♭3度を押し、最後はルートで閉じます。", phrases: [
-      [note(15, 2), note(null), accent(12), note(10), note(12), note(10), note(7)],
-      [note(10, 2), note(7), clip(5), accent(7, 2), note(null, 2)],
-      [clip(-5), accent(0), note(-2), note(0), note(null), note(3), note(0), note(-2)],
-      [note(-5), note(0), accent(3, 2), note(0, 2), note(null, 2)],
-    ] },
-    "two-punctuate": { label: "短い音と長い答え", bars: 2, explanation: "Callは短い5度とアクセント付きの♭7度を組み合わせ、後半で音を伸ばします。Responseはそのリフを引用し、途中の短い息継ぎから低い♭3度を長く伸ばす答えへ。休符の前も急いで切り上げません。", phrases: [
-      [clip(7), accent(10), note(null), clip(7), note(10, 2), note(7), accent(10)],
-      [clip(12), accent(10), note(7, 2), note(10, 2), note(null, 2)],
-      [note(null), note(7), accent(10), note(12), clip(10), note(null), note(7), note(5)],
-      [accent(3, 3), clip(0), note(3, 2), note(null, 2)],
-    ] },
-    "two-sequence": { label: "跳躍のリフを繰り上げる", bars: 2, explanation: "Callは♭3度→5度→4度を、4度→♭7度→5度へ少し高く展開し、次の小節で高いルートへ。Responseは高いルートから5度へのリフで受け、後半で低いルートへ着地します。", phrases: [
-      [clip(3), accent(7), note(5, 2), note(null), note(5), accent(10), note(7)],
-      [note(7, 2), note(10), accent(12), note(10, 2), note(null, 2)],
-      [note(null), note(12), note(10), accent(7), note(10, 2), note(7), note(5)],
-      [clip(3), note(5), accent(7, 2), note(0, 2), note(null, 2)],
-    ] },
-    "two-neighbor": { label: "5度の周りを揺らす", bars: 2, explanation: "Callは5度をブルーノートで揺らし、♭7度を短く切って5度をタイで持ち越します。Responseは4度と5度の小さな折り返しに変え、最後は♭7度から4度へ。上下のスケールより、同じ音の周りの動きを歌います。", phrases: [
-      [note(7), note(6), accent(7, 2), note(null), clip(10), hold(7, 2)],
-      [note(7, 2), note(10), clip(7), accent(5, 2), note(null, 2)],
-      [note(null), note(5), note(6), accent(7), note(5, 2), note(6), note(7)],
-      [accent(10, 3), clip(7), note(5, 2), note(null, 2)],
-    ] },
-    "two-dense-sparse": { label: "高い言葉を少ない音で受ける", bars: 2, explanation: "Callは5度・♭7度・ルート・高い♭3度のリフを折り返します。Responseは高いルート、♭7度、5度へ音数を減らし、タイで次の小節へ。最後は♭7度を長く置いて言い切ります。", phrases: [
-      [note(null), note(7), note(10), accent(12), note(15), note(12), note(10), note(7)],
-      [note(10), note(7), clip(5), accent(7), note(10, 2), note(null, 2)],
-      [accent(12, 2), note(null), note(10, 3), hold(7, 2)],
-      [note(7, 2), accent(10, 3), note(null, 3)],
-    ] },
-    "two-sparse-dense": { label: "3音の問いを跳ねるリフへ", bars: 2, explanation: "Callはルート・♭3度・5度を少ない音で置き、5度をタイで次へ渡します。Responseはその5度を出発点に、♭7度と高いルートを行き来するリフへ広げます。最後の♭3度だけ押して、低いルートへ。", phrases: [
-      [clip(0, 2), note(null), accent(3, 3), hold(7, 2)],
-      [note(7, 2), clip(10, 2), accent(7, 2), note(null, 2)],
-      [note(null), note(7), note(10), accent(12), note(10, 2), note(7), note(10)],
-      [note(12), note(10), clip(7), accent(3), note(0, 2), note(null, 2)],
-    ] },
-    "two-repeat": { label: "同音のパンチに滑らかに答える", bars: 2, explanation: "Callは5度の短い反復を小節線の先まで展開し、4度へ留まります。Responseはその5度をブルーノートで揺らし、高いルートをタイでつなぎます。最後も高いルートへ戻り、音域と音の長さを変えて答えます。", phrases: [
-      [clip(7), accent(7), note(null), clip(7), note(10, 2), note(7), accent(7)],
-      [note(10, 2), clip(7), note(7), accent(5, 2), note(null, 2)],
-      [note(null), note(7), note(6), accent(7), note(10, 2), hold(12, 2)],
-      [note(12, 2), clip(10), note(7), accent(12, 2), note(null, 2)],
-    ] },
-    "two-displace": { label: "同じフックを1拍ずらす", bars: 2, explanation: "Callの5度→♭7度→5度は1拍目の裏から始まり、次の小節の高いルートへ。Responseは同じ入口を2拍目から受け、4度を長く伸ばして低いルートへ収めます。拍をずらしても同じ話題と感じるように弾きます。", phrases: [
-      [note(null), note(7), accent(10), note(7), note(10, 2), note(7), accent(10)],
-      [note(12, 3), clip(10), note(7, 2), note(null, 2)],
-      [note(null, 2), note(7), accent(10), note(7, 2), note(10), note(7)],
-      [accent(5, 3), clip(3), note(0, 2), note(null, 2)],
-    ] },
-    "two-high-ending": { label: "低いフックに高い5度で返す", bars: 2, explanation: "Callは低いルートと♭3度のフックを、5度のタイから4度へ展開します。Responseは同じ跳躍を高い音域で受け、高いルートの周りを動いてからさらに上の5度へ。最後まで高い声で答えます。", phrases: [
-      [clip(0), accent(3), note(0, 2), note(null), note(3), hold(7, 2)],
-      [note(7, 2), note(10), clip(7), accent(5, 2), note(null, 2)],
-      [note(null), note(7), accent(12), note(10), note(12, 2), note(15), accent(12)],
-      [note(10, 2), note(7), note(10), accent(19, 2), note(null, 2)],
-    ] },
-    "two-early-close": { label: "高く返して低く言い切る", bars: 2, explanation: "Callは5度・♭7度・高いルートのリフを2小節に展開します。Responseは高い♭3度まで持ち上げて受け、5度をタイで次へ渡します。そこから低いルートへ短く落とし、2拍の沈黙を残します。", phrases: [
-      [note(null), note(7), accent(10), note(12), note(10, 2), note(7), note(10)],
-      [note(12), note(10), clip(7), accent(5), note(7, 2), note(null, 2)],
-      [accent(15, 2), note(null), note(12), note(10, 2), hold(7, 2)],
-      [note(7), clip(3), accent(0, 2), note(null, 4)],
-    ] },
-    "two-breath": { label: "息継ぎの位置でリフを変える", bars: 2, explanation: "Callは4度→5度→♭7度と、ブルーノートから5度への短い返しを組み合わせます。Responseは5度・♭7度のリフを、違う位置の息継ぎで受けます。最後は低い♭3度を長く置いてルートに答えます。", phrases: [
-      [clip(5), accent(7), note(10, 2), note(null), note(7), note(6), accent(7)],
-      [note(10), note(7), clip(5), accent(7), note(5, 2), note(null, 2)],
-      [note(null), note(7), accent(10), note(7), note(null), note(5), note(3), note(0)],
-      [accent(3, 3), clip(0), note(0, 2), note(null, 2)],
-    ] },
+  };
+  const KEYS = {
+    C: { root: 60, scale: "C · E♭ · F · G♭ · G · B♭", abc: {0:"C",3:"_E",5:"F",6:"_G",7:"=G",10:"_B",12:"c",15:"_e"} },
+    F: { root: 65, scale: "F · A♭ · B♭ · C♭ · C · E♭", abc: {0:"F",3:"_A",5:"_B",6:"_c",7:"=c",10:"_e",12:"f",15:"_a"} },
   };
   function swing(eighths) {
     return Math.floor(eighths / 2) + (eighths % 2 ? 2 / 3 : 0);
   }
-  function events(pattern) {
+  function events(phrase) {
     const timeline = [];
     let position = 0;
-    pattern.phrases.flat().forEach(event => {
+    phrase.flat().forEach(event => {
       const previous = timeline.at(-1);
       if (previous?.tie) {
         previous.duration += event.duration;
-        previous.sustained = true;
         if (event.tie) previous.tie = true;
         else delete previous.tie;
-      } else {
-        timeline.push({ ...event, position });
-      }
+      } else timeline.push({ ...event, position });
       position += event.duration;
     });
     return timeline;
   }
-  const KEYS = {
-    C: { root: 60, scale: "C · E♭ · F · G♭ · G · B♭", abc: {[-5]:"G,",[-2]:"_B,",0:"C",3:"_E",5:"F",6:"_G",7:"=G",10:"_B",12:"c",15:"_e",19:"=g"} },
-    F: { root: 65, scale: "F · A♭ · B♭ · C♭ · C · E♭", abc: {[-5]:"C",[-2]:"_E",0:"F",3:"_A",5:"_B",6:"_c",7:"=c",10:"_e",12:"f",15:"_a",19:"=c'"} },
-  };
-  function score(key, part, patternId = "two") {
-    const pattern = PATTERNS[patternId];
-    const phrase = pattern.phrases.slice(part * pattern.bars, (part + 1) * pattern.bars);
+  function createPlan(lesson, mode, responseIndex = 0) {
+    const beats = lesson.bars * 4;
+    const call = { kind: "call", part: 0, start: 0, notes: events(lesson.call) };
+    const response = { kind: "response", part: 1, start: 0, notes: events(lesson.responses[responseIndex].phrase) };
+    if (mode === "call") return { beats, segments: [call] };
+    if (mode === "response") return { beats, segments: [response] };
+    if (mode === "compare") return { beats: beats * 2, segments: [call, { ...response, start: beats }] };
+    if (mode === "sing" || mode === "play") {
+      return { beats: beats * 2, segments: [call, { kind: mode, part: null, start: beats, notes: [] }] };
+    }
+    throw new Error(`Unknown playback mode: ${mode}`);
+  }
+  function score(key, part, lessonId = "one", responseIndex = 0) {
+    const lesson = LESSONS[lessonId];
+    const phrase = part ? lesson.responses[responseIndex].phrase : lesson.call;
     const flat = phrase.flat();
-    const firstNote = flat.findIndex(event => event.pitch !== null);
-    const lastNote = flat.findLastIndex(event => event.pitch !== null);
+    const first = flat.findIndex(event => event.pitch !== null);
+    const last = flat.findLastIndex(event => event.pitch !== null);
     let index = 0;
     const bars = phrase.map(bar => {
       let position = 0;
       return bar.map(event => {
         const gap = position % 2 === 0 || event.duration !== 1 ? " " : "";
         position += event.duration;
-        const open = pattern.bars === 2 && index === firstNote ? "(" : "";
-        const close = pattern.bars === 2 && index === lastNote ? ")" : "";
+        const open = lesson.bars === 2 && index === first ? "(" : "";
+        const close = lesson.bars === 2 && index === last ? ")" : "";
         index++;
-        return gap + open + (event.accent ? "!accent!" : "") + (event.staccato ? "." : "") + (event.pitch === null ? "z" : KEYS[key].abc[event.pitch])
+        return gap + open + (event.accent ? "!accent!" : "") + (event.staccato ? "." : "")
+          + (event.pitch === null ? "z" : KEYS[key].abc[event.pitch])
           + (event.duration === 1 ? "" : event.duration) + (event.tie ? "-" : "") + close;
       }).join("").trim();
     });
-    return `X:1\nT:${part ? "Response" : "Call"} · ${pattern.bars}小節\nM:4/4\nL:1/8\nK:C\n${bars.join(" | ")} |]`;
+    return `X:1\nT:${part ? "Response" : "Call"} · ${lesson.bars}小節\nM:4/4\nL:1/8\nK:C\n${bars.join(" | ")} |]`;
   }
-  const api = { PATTERNS, KEYS, score, swing, events };
+  const api = { LESSONS, KEYS, events, swing, createPlan, score };
   if (typeof module !== "undefined") module.exports = api;
   global.Blues = api;
   if (typeof document === "undefined") return;
   const $ = id => document.getElementById(`blues-${id}`);
+  const steps = ["listen", "sing", "play", "example"];
+  let step = "listen", responseIndex = 0, scoreVisible = false;
   let context, timer, frame, playing = false, generation = 0, visuals = [];
   let nodes = [];
-  const selectedExamples = { two: "two", one: "one" };
-  function currentPatternId() { return $("example").value; }
-  function populateExamples() {
-    const length = $("pattern").value;
-    const bars = length === "two" ? 2 : 1;
-    $("example").replaceChildren(...Object.entries(PATTERNS)
-      .filter(([, pattern]) => pattern.bars === bars)
-      .map(([id, pattern], index) => new Option(`${index + 1}. ${pattern.label}`, id)));
-    $("example").value = selectedExamples[length];
-  }
-  function render() {
-    const pattern = PATTERNS[currentPatternId()];
-    const bars = pattern.bars;
-    $("conversation").textContent = pattern.explanation;
-    $("phrasing").hidden = bars !== 2;
-    $("example-count").textContent = `${$("example").selectedIndex + 1} / ${$("example").options.length} 譜例（全30種類）`;
-    $("description").textContent = `${bars}小節の問いかけに、${bars}小節で答える`;
-    ["call", "response"].forEach((id, part) => $(id).setAttribute("aria-label", `${part ? "Response" : "Call"}の${bars}小節の五線譜`));
-    $("scale").textContent = `${$("key").value} マイナーブルーススケール：${KEYS[$("key").value].scale}`;
-    visuals = ["call", "response"].map((id, part) => global.ABCJS.renderAbc(`blues-${id}`, score($("key").value, part, currentPatternId()), { staffwidth: 850, paddingtop: 10, paddingleft: 20, paddingright: 20, add_classes: true })[0]);
+  const lesson = () => LESSONS[$("length").value];
+  function renderScores() {
+    if (!scoreVisible) return;
+    visuals = ["call", "response"].map((id, part) => global.ABCJS.renderAbc(`blues-${id}`, score($("key").value, part, $("length").value, responseIndex), {
+      staffwidth: lesson().bars === 1 ? 480 : 850, paddingtop: 10, paddingleft: 20, paddingright: 20, add_classes: true,
+    })[0]);
     visuals.forEach(visual => visual.setTiming(120, 0));
     document.querySelectorAll(".blues-score svg").forEach(svg => {
       svg.setAttribute("viewBox", `0 0 ${svg.getAttribute("width")} ${svg.getAttribute("height")}`);
     });
+    $("scores").classList.toggle("single-bar", lesson().bars === 1);
   }
-  function tone(freq, when, duration, volume, click = false) {
-    const osc = context.createOscillator(), gain = context.createGain();
-    osc.type = click ? "sine" : "triangle";
-    osc.frequency.value = freq;
-    gain.gain.setValueAtTime(0, when);
-    const attack = Math.min(0.005, duration / 4);
-    gain.gain.linearRampToValueAtTime(volume, when + attack);
-    if (!click) {
-      // Keep the long triplet subdivision audible until just before the next note.
-      const release = Math.min(0.012, duration / 8);
-      gain.gain.exponentialRampToValueAtTime(volume * 0.75, when + duration - release);
-    }
-    gain.gain.exponentialRampToValueAtTime(0.001, when + duration);
-    osc.connect(gain); gain.connect(context.destination);
-    osc.start(when); osc.stop(when + duration);
-    nodes.push(osc);
-    osc.onended = () => { osc.disconnect(); gain.disconnect(); nodes = nodes.filter(node => node !== osc); };
+  function populateChoices() {
+    $("choices").replaceChildren(...lesson().responses.map((response, index) => {
+      const label = document.createElement("label");
+      label.className = "blues-choice";
+      const radio = document.createElement("input");
+      radio.type = "radio"; radio.name = "response"; radio.value = index;
+      radio.checked = responseIndex === index;
+      const text = document.createElement("span");
+      text.textContent = response.label;
+      label.append(radio, text);
+      return label;
+    }));
+  }
+  function render() {
+    steps.forEach(id => {
+      const active = step === id;
+      $(id + "-panel").hidden = !active;
+      const tab = $("step-" + id);
+      if (active) tab.setAttribute("aria-current", "step");
+      else tab.removeAttribute("aria-current");
+    });
+    $("scale").textContent = `${$("key").value}：${KEYS[$("key").value].scale}`;
+    $("length-label").textContent = `Call ${lesson().bars}小節 → 自分のResponse ${lesson().bars}小節`;
+    $("choices").querySelectorAll("input").forEach(radio => { radio.checked = Number(radio.value) === responseIndex; });
+    $("hint").textContent = lesson().responses[responseIndex].hint;
+    $("scores").hidden = !scoreVisible;
+    $("score-toggle").textContent = scoreVisible ? "譜面を隠す" : "譜面を見る";
+    $("score-toggle").setAttribute("aria-expanded", String(scoreVisible));
+    renderScores();
   }
   function highlight(part, position) {
     document.querySelectorAll(".is-current").forEach(n => n.classList.remove("is-current"));
-    ["call", "response"].forEach((id, p) => $(id).classList.toggle("is-playing", part === p));
-    if (part < 0) return;
-    const note = visuals[part]?.noteTimings?.find(n => n.type === "event" && Math.abs(n.milliseconds - position * 250) < 1);
-    note?.elements?.flat().forEach(n => n?.classList?.add("is-current"));
+    ["call", "response"].forEach((id, index) => $(id).classList.toggle("is-playing", part === index));
+    if (part === null || !scoreVisible) return;
+    const event = visuals[part]?.noteTimings?.find(n => n.type === "event" && Math.abs(n.milliseconds - position * 250) < 1);
+    event?.elements?.flat().forEach(n => n?.classList?.add("is-current"));
   }
   function stop(message = "停止しました。") {
     generation++; playing = false;
     clearTimeout(timer); cancelAnimationFrame(frame);
     nodes.slice().forEach(node => { try { node.stop(); } catch {} });
-    highlight(-1); $("play").disabled = false; $("stop").disabled = true;
-    $("status").textContent = message;
+    highlight(null); $("stop").disabled = true;
+    $("status").textContent = message; $("beat").textContent = "";
   }
-  function cycle(start, beat, countIn) {
+  function setStep(next) {
+    stop(""); step = next;
+    // Returning to practice puts the reference away again.
+    if (next !== "example") scoreVisible = false;
+    render();
+  }
+  function tone(freq, when, duration, volume, click = false) {
+    const osc = context.createOscillator(), gain = context.createGain();
+    osc.type = click ? "sine" : "triangle"; osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0, when);
+    gain.gain.linearRampToValueAtTime(volume, when + Math.min(0.005, duration / 4));
+    if (!click) gain.gain.exponentialRampToValueAtTime(volume * 0.75, when + duration - Math.min(0.012, duration / 8));
+    gain.gain.exponentialRampToValueAtTime(0.001, when + duration);
+    osc.connect(gain); gain.connect(context.destination);
+    osc.start(when); osc.stop(when + duration);
+    nodes.push(osc);
+    osc.onended = () => { osc.disconnect(); gain.disconnect(); nodes = nodes.filter(n => n !== osc); };
+  }
+  function cycle(mode, start, beat, countIn) {
+    const plan = createPlan(lesson(), mode, responseIndex);
     const melodyStart = start + (countIn ? 4 * beat : 0);
-    const pattern = PATTERNS[currentPatternId()];
-    const phraseEvents = events(pattern);
-    const totalBeats = pattern.bars * 8;
-    const end = melodyStart + totalBeats * beat;
-    const practice = !$("response-audio").checked;
+    const end = melodyStart + plan.beats * beat;
     const root = KEYS[$("key").value].root;
-    for (let i = 0; i < (totalBeats + (countIn ? 4 : 0)); i++) tone(i % 4 === 0 ? 1400 : 1000, start + i * beat, 0.045, 0.055, true);
-    phraseEvents.forEach(event => {
-      if (event.pitch === null || (practice && event.position >= pattern.bars * 8)) return;
-      const onset = swing(event.position);
-      const duration = swing(event.position + event.duration) - onset;
-      tone(440 * 2 ** ((root + event.pitch - 69) / 12), melodyStart + onset * beat, duration * beat * (event.staccato ? 0.5 : 1), event.accent ? 0.2 : 0.14);
-    });
+    for (let i = 0; i < plan.beats + (countIn ? 4 : 0); i++) tone(i % 4 ? 1000 : 1400, start + i * beat, 0.045, 0.055, true);
+    plan.segments.forEach(segment => segment.notes.forEach(event => {
+      if (event.pitch === null) return;
+      const onset = segment.start + swing(event.position);
+      const duration = (swing(event.position + event.duration) - swing(event.position)) * beat;
+      tone(440 * 2 ** ((root + event.pitch - 69) / 12), melodyStart + onset * beat,
+        duration * (event.staccato ? 0.5 : 1), event.accent ? 0.2 : 0.14);
+    }));
     function animate() {
       if (!playing) return;
       const elapsed = (context.currentTime - melodyStart) / beat;
       if (elapsed < 0) {
-        highlight(-1); $("status").textContent = `カウント ${Math.max(1, Math.floor(elapsed + 4) + 1)} / 4`;
-      } else if (elapsed < totalBeats) {
-        const part = elapsed < pattern.bars * 4 ? 0 : 1;
-        const local = elapsed % (pattern.bars * 4);
-        const current = phraseEvents.find(event => elapsed >= swing(event.position) && elapsed < swing(event.position + event.duration));
-        highlight(part, current?.pitch === null ? -1 : (current?.position ?? -1) - part * pattern.bars * 8);
-        $("status").textContent = `${part ? (practice ? "Response：自分で弾く" : "Response：お手本") : "Call：聴いて覚える"} · ${Math.floor(local / 4) + 1} / ${pattern.bars}小節 · ${Math.floor(local % 4) + 1}拍${current?.pitch === null ? " · 休符" : ""}`;
+        highlight(null); $("status").textContent = "カウント";
+        $("beat").textContent = `${Math.max(1, Math.floor(elapsed + 4) + 1)} / 4`;
+      } else if (elapsed < plan.beats) {
+        const segment = plan.segments.findLast(s => elapsed >= s.start);
+        const local = elapsed - segment.start;
+        const event = segment.notes.find(n => local >= swing(n.position) && local < swing(n.position + n.duration));
+        highlight(segment.part, event?.pitch === null ? -1 : event?.position ?? -1);
+        $("status").textContent = { call: "Call：聴いて覚える", sing: "あなたの番：歌う", play: "あなたの番：鍵盤で弾く", response: "Response：お手本" }[segment.kind];
+        $("beat").textContent = `${Math.floor(local / 4) + 1} / ${lesson().bars}小節 · ${Math.floor(local % 4) + 1}拍`;
       }
-      frame = requestAnimationFrame(animate);
+      frame = global.requestAnimationFrame(animate);
     }
     animate();
-    timer = setTimeout(() => {
+    timer = global.setTimeout(() => {
       cancelAnimationFrame(frame);
-      if ($("loop").checked && playing) cycle(Math.max(end, context.currentTime + 0.03), beat, false);
-      else stop(`${pattern.bars * 2}小節が終わりました。もう一度聴いたり、一緒に弾いたりしてみましょう。`);
+      if ((mode === "sing" || mode === "play") && $("loop").checked && playing) cycle(mode, Math.max(end, context.currentTime + 0.03), beat, false);
+      else {
+        stop(mode === "sing" ? "歌った答えを、次は鍵盤で探してみましょう。" : mode === "play" ? "自分の答えを弾けましたか？ 必要ならお手本を確認できます。" : "再生が終わりました。");
+        if (mode === "call" && step === "listen") {
+          step = "sing"; render();
+          $("status").textContent = "同じCallに、まずは2〜3音で歌って答えてみましょう。";
+        }
+      }
     }, Math.max(0, (end - context.currentTime) * 1000));
   }
-  $("play").addEventListener("click", async () => {
+  async function play(mode) {
+    stop("");
     const tempo = Number($("tempo").value);
     if (!Number.isFinite(tempo) || tempo < 40 || tempo > 240) { $("status").textContent = "テンポは40〜240 BPMで指定できます。"; return; }
-    const token = ++generation;
-    $("play").disabled = true; $("stop").disabled = false;
+    const token = generation;
+    $("stop").disabled = false;
     try {
       context ||= new (global.AudioContext || global.webkitAudioContext)();
       await context.resume();
       if (token !== generation) return;
-      playing = true;
-      cycle(context.currentTime + 0.1, 60 / tempo, true);
+      playing = true; cycle(mode, context.currentTime + 0.1, 60 / tempo, true);
     } catch { stop("音声を開始できませんでした。ブラウザの音声設定を確認して再生をお試しください。"); }
-  });
+  }
+  document.querySelectorAll("[data-step]").forEach(button => button.addEventListener("click", () => setStep(button.dataset.step)));
+  document.querySelectorAll("[data-play]").forEach(button => button.addEventListener("click", () => play(button.dataset.play)));
   $("stop").addEventListener("click", () => stop());
-  ["key", "tempo", "response-audio", "pattern", "example"].forEach(id => $(id).addEventListener("change", () => {
-    stop("設定を変更しました。再生すると最初から始まります。");
-    if (id === "pattern") populateExamples();
-    if (id === "example") selectedExamples[$("pattern").value] = currentPatternId();
-    if (["key", "pattern", "example"].includes(id)) render();
+  $("choices").addEventListener("change", event => {
+    if (event.target.name !== "response") return;
+    stop(""); responseIndex = Number(event.target.value); render();
+  });
+  $("score-toggle").addEventListener("click", () => {
+    scoreVisible = !scoreVisible; render();
+  });
+  ["length", "key"].forEach(id => $(id).addEventListener("change", () => {
+    stop("設定を変更しました。同じCallを聴くところから始めましょう。");
+    step = "listen"; responseIndex = 0; scoreVisible = false; visuals = []; populateChoices(); render();
   }));
+  $("tempo").addEventListener("change", () => stop("テンポを変更しました。"));
   $("done").addEventListener("click", () => {
+    stop("");
     try { global.JazzDailyProgress?.mark("blues"); } catch {}
     $("status").textContent = "今日のBlues練習を記録しました。";
   });
   global.addEventListener("pagehide", () => stop());
-  if (!global.ABCJS) { $("status").textContent = "譜面を読み込めませんでした。ページを再読み込みしてください。"; $("play").disabled = true; return; }
-  populateExamples();
+  if (!global.ABCJS) {
+    $("status").textContent = "譜面の読み込みに失敗しました。ページを再読み込みすると確認できます。";
+    document.querySelectorAll("[data-play]").forEach(button => { button.disabled = true; });
+    return;
+  }
+  populateChoices();
   render();
 })(typeof window !== "undefined" ? window : globalThis);

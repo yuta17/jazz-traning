@@ -5,45 +5,75 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Blues | ジャズトレーニング</title>
   <link rel="stylesheet" href="../styles.css" />
-  <link rel="stylesheet" href="./style.css?v=20261119-blues-riffs" />
+  <link rel="stylesheet" href="./style.css?v=20261120-ear-first" />
 </head>
 <body>
 <main class="app-shell blues-shell">
   <header class="hero">
     <nav class="hero-links" aria-label="ページ"><a href="../">ホーム</a></nav>
-    <h1>Blues</h1><p id="blues-description">2小節の問いかけに、2小節で答える</p>
+    <h1>Blues</h1><p>同じCallに、自分の音で答える</p>
   </header>
   <section class="practice blues-practice" aria-label="Call & response 練習">
     <div class="blues-controls">
-      <label>長さ <select id="blues-pattern"><option value="two">2小節</option><option value="one">1小節</option></select></label>
-      <label>譜例 <select id="blues-example" aria-label="会話の譜例"></select></label>
+      <label>長さ <select id="blues-length"><option value="one">1小節</option><option value="two">2小節</option></select></label>
       <label>キー <select id="blues-key"><option value="C">C</option><option value="F">F</option></select></label>
       <label>テンポ <input id="blues-tempo" type="number" min="40" max="240" value="120" step="5" /> BPM</label>
-      <label><input id="blues-response-audio" type="checkbox" checked /> Responseも再生</label>
-      <label><input id="blues-loop" type="checkbox" /> 繰り返す</label>
     </div>
-    <p id="blues-example-count" class="blues-example-count"></p>
     <p id="blues-scale" class="blues-scale"></p>
-    <p>4/4 · Swing 8ths（三連符の1つ目と3つ目・2:1） · 1小節カウント後に開始</p>
-    <div class="blues-score-wrap"><div id="blues-call" class="blues-score" aria-label="Callの2小節の五線譜"></div></div>
-    <div class="blues-score-wrap"><div id="blues-response" class="blues-score" aria-label="Responseの2小節の五線譜"></div></div>
-    <div class="practice-actions">
-      <button id="blues-play" class="button primary" type="button">再生</button>
+    <p id="blues-length-label"></p>
+    <nav class="blues-steps" aria-label="練習の順番">
+      <button id="blues-step-listen" type="button" data-step="listen">1. 聴く</button>
+      <button id="blues-step-sing" type="button" data-step="sing">2. 歌う</button>
+      <button id="blues-step-play" type="button" data-step="play">3. 弾く</button>
+      <button id="blues-step-example" type="button" data-step="example">4. お手本</button>
+    </nav>
+    <section id="blues-listen-panel" class="blues-stage" aria-labelledby="listen-title">
+      <h2 id="listen-title">Callを聴く</h2>
+      <p>まずは音だけで、短いリフを覚えます。</p>
+      <button class="button primary" type="button" data-play="call">Callを聴く</button>
+    </section>
+    <section id="blues-sing-panel" class="blues-stage" aria-labelledby="sing-title" hidden>
+      <h2 id="sing-title">自分のResponseを歌う</h2>
+      <p>Callのあとに空く時間で、まずは2〜3音で答えてみましょう。</p>
+      <div class="blues-actions">
+        <button class="button primary" type="button" data-play="sing">Callに続けて歌う</button>
+        <button class="button" type="button" data-step="play">歌った答えを弾く</button>
+      </div>
+    </section>
+    <section id="blues-play-panel" class="blues-stage" aria-labelledby="play-title" hidden>
+      <h2 id="play-title">歌った音を鍵盤で探す</h2>
+      <p>同じCallのあとに、さっき歌ったResponseを弾いてみましょう。</p>
+      <div class="blues-actions">
+        <button class="button primary" type="button" data-play="play">Callに続けて弾く</button>
+        <button class="button" type="button" data-step="example">必要ならお手本を確認</button>
+      </div>
+    </section>
+    <section id="blues-example-panel" class="blues-stage" aria-labelledby="example-title" hidden>
+      <h2 id="example-title">同じCallへの5つの返し方</h2>
+      <fieldset class="blues-examples"><legend>聴き比べるお手本</legend><div id="blues-choices"></div></fieldset>
+      <p id="blues-hint" class="blues-tip"></p>
+      <div class="blues-actions">
+        <button class="button primary" type="button" data-play="response">Responseだけ聴く</button>
+        <button class="button" type="button" data-play="compare">Callと続けて聴く</button>
+        <button id="blues-score-toggle" class="button" type="button" aria-expanded="false" aria-controls="blues-scores">譜面を見る</button>
+      </div>
+      <div id="blues-scores" hidden>
+        <div class="blues-score-wrap"><div id="blues-call" class="blues-score" aria-label="Callの五線譜"></div></div>
+        <div class="blues-score-wrap"><div id="blues-response" class="blues-score" aria-label="選んだResponseの五線譜"></div></div>
+      </div>
+      <button class="button" type="button" data-step="sing">お手本を閉じて、自分で答える</button>
+    </section>
+    <div class="blues-transport">
+      <label><input id="blues-loop" type="checkbox" /> 歌う・弾く練習を繰り返す</label>
       <button id="blues-stop" class="button" type="button" disabled>停止</button>
-      <button id="blues-done" class="button success" type="button">練習した</button>
     </div>
-    <p id="blues-status" role="status">CallとResponseを続けて再生します。「Responseも再生」を外すと、自分で答える練習ができます。</p>
-    <p id="blues-phrasing" class="blues-tip" hidden>弧線は2小節のまとまりです。1小節目は通過点として、2小節目の結びまで歌います。タイでつないだ同じ高さの音は弾き直さず、小節線を越えて伸ばします。</p>
-    <p id="blues-conversation" class="blues-tip"></p>
-    <p class="blues-tip">休符は息継ぎの間。Callの終わりに余白を作り、responseでリズムや音型を引き継ぐと、会話らしく聞こえます。結びはルートだけでなく、♭3度・4度・5度・♭7度も使います。譜面のアクセントを手掛かりに歌ってから弾いてみましょう。「Responseも再生」を外すとresponseのメロディーが休みになり、クリックだけが続きます。</p>
-    <details class="blues-tip"><summary>フレーズ作りの参考</summary>
-      <p>短いアイデアを反復・変形する考え方と、リズムを軸にしたブルースの表現を参考に作曲しています。</p>
-      <p><a href="https://www.jazzadvice.com/lessons/how-to-play-the-blues-like-a-pro-a-lesson-with-wynton-kelly/">Wynton Kellyの演奏分析（Jazzadvice）</a> · <a href="https://www.bluenote.com/spotlight/horace-silver-blowin-the-blues-away/">Horace Silverの音楽（Blue Note）</a></p>
-    </details>
+    <div class="blues-feedback"><p id="blues-status" role="status">Callを聴くところから始めましょう。</p><span id="blues-beat" aria-hidden="true"></span></div>
+    <p class="blues-meta">4/4 · Swing 8ths（2:1） · 再生前に1小節カウント</p>
+    <button id="blues-done" class="button success" type="button">練習した</button>
   </section>
 </main>
 <script src="../assets/vendor/abcjs-basic-min.js"></script>
-<script src="../src/daily-progress.js?v=20261119-blues-riffs"></script>
-<script src="../src/blues.js?v=20261119-blues-riffs"></script>
+<script src="../src/daily-progress.js?v=20261120-ear-first"></script>
+<script src="../src/blues.js?v=20261120-ear-first"></script>
 </body>
 </html>
