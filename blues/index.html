@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Blues | ジャズトレーニング</title>
   <link rel="stylesheet" href="../styles.css" />
-  <link rel="stylesheet" href="./style.css?v=20261119-blues" />
+  <link rel="stylesheet" href="./style.css?v=20261119-blues-phrasing" />
 </head>
 <body>
 <main class="app-shell blues-shell">
@@ -33,12 +33,13 @@
       <button id="blues-done" class="button success" type="button">練習した</button>
     </div>
     <p id="blues-status" role="status">お手本を聴いてから、練習モードで答えてみましょう。</p>
+    <p id="blues-phrasing" class="blues-tip" hidden>弧線は2小節のまとまりです。1小節目は通過点として、2小節目の結びまで歌います。タイでつないだ同じ高さの音は弾き直さず、小節線を越えて伸ばします。</p>
     <p id="blues-conversation" class="blues-tip"></p>
     <p class="blues-tip">休符は息継ぎの間。Callの終わりに余白を作り、responseでリズムや音型を引き継ぐと、会話らしく聞こえます。お手本は最後にルートへ戻ります。裏拍に軽くアクセントを置いて弾きます。練習モードではresponseのメロディーが休みになり、クリックだけが続きます。</p>
   </section>
 </main>
 <script src="../assets/vendor/abcjs-basic-min.js"></script>
-<script src="../src/daily-progress.js?v=20261119-blues"></script>
-<script src="../src/blues.js?v=20261119-blues"></script>
+<script src="../src/daily-progress.js?v=20261119-blues-phrasing"></script>
+<script src="../src/blues.js?v=20261119-blues-phrasing"></script>
 </body>
 </html>

@@ -2,35 +2,14 @@
   "use strict";
   // Durations are in eighth-note units; null is a written and silent rest.
   const note = (pitch, duration = 1) => ({ pitch, duration });
+  const hold = (pitch, duration) => ({ ...note(pitch, duration), tie: true });
   const PATTERNS = {
-    two: { label: "上昇に下降で答える", bars: 2, explanation: "Callは5度から上がり、4度で問いを残します。Responseは♭7度から下降し、後半でブルーノートを挟んで裏拍のルートに着地。音の向きとリズムを変えて答えます。", phrases: [
-      [note(null, 1), note(7), note(10), note(12), note(10, 2), note(null, 2)],
-      [note(7), note(6), note(5), note(3), note(5, 2), note(null, 2)],
-      [note(10, 2), note(7), note(6), note(5, 2), note(null, 2)],
-      [note(null, 1), note(5), note(6), note(7), note(3), note(0, 2), note(null, 1)],
-    ] },
     one: { label: "1拍待って答える", bars: 1, explanation: "Callの5度・4度の響きを受けて、Responseは1拍待って4度から入ります。4度→ブルーノート→♭3度と形を変え、裏拍から伸ばすルートで答えます。", phrases: [
       [note(null, 1), note(7), note(10), note(7), note(5, 2), note(null, 2)],
       [note(null, 2), note(5), note(6), note(3), note(0, 2), note(null, 1)],
     ] },
   };
   Object.assign(PATTERNS, {
-    "two-space": { label: "短い問いに長めの答え", bars: 2,
-      explanation: "Callは同じ5度を繰り返してから短く下がり、間を空けます。Responseはその5度を受け取り、音域を上へ広げてから下降。最後はルートを長めに伸ばして締めます。",
-      phrases: [
-        [note(7), note(7), note(10, 2), note(null, 4)],
-        [note(null, 2), note(7), note(5), note(3, 2), note(null, 2)],
-        [note(null, 1), note(7), note(10), note(12), note(10), note(7), note(null, 2)],
-        [note(6), note(5), note(3), note(0, 3), note(null, 2)],
-      ] },
-    "two-turn": { label: "下降の問いを折り返す", bars: 2,
-      explanation: "Callは高いルートから下がり、ブルーノートで引っかかりを作ります。Responseは低い♭3度から上がって向きを反転。Callの下降を短く引用して、ルートへ戻ります。",
-      phrases: [
-        [note(null, 2), note(12), note(10), note(7, 2), note(null, 2)],
-        [note(7), note(6), note(5, 2), note(6, 2), note(null, 2)],
-        [note(null, 1), note(3), note(5), note(7), note(10, 2), note(null, 2)],
-        [note(7, 2), note(6), note(5), note(3), note(0, 2), note(null, 1)],
-      ] },
     "one-turn": { label: "下降に上昇で答える", bars: 1,
       explanation: "Callは♭7度から4度へ下降。Responseは低い♭3度から5度へ上がり、音の向きを反転させます。共通の4度・5度でつなぎ、ルートへ着地します。",
       phrases: [
@@ -117,115 +96,149 @@
         [note(12, 2), note(10), note(7), note(5, 2), note(null, 2)],
         [note(null, 2), note(3), note(5), note(7), note(12, 2), note(null, 1)],
       ] },
-    "two-pickup": { label: "遅い入りをゆったり返す", bars: 2,
-      explanation: "Callは2拍目の裏から上がり、次の小節で5度へ戻ります。Responseは♭7度から下降し、最後は1拍待ってルートを長めに置きます。",
+  });
+  // Two-bar phrases: the first bar leads onward; only the second bar closes.
+  Object.assign(PATTERNS, {
+    two: { label: "上昇に下降で答える", bars: 2,
+      explanation: "Callは♭3度から上がり、1小節目末の5度→♭7度を足掛かりに、2小節目の高いルートまで進みます。Responseはその♭7度を受け、低いルートまで2小節かけて下降します。途中の息継ぎより、2小節目末の間を大きく取ります。",
       phrases: [
-        [note(null, 3), note(3), note(5), note(6), note(7), note(null, 1)],
-        [note(10, 2), note(7), note(5), note(7, 2), note(null, 2)],
-        [note(null, 1), note(10), note(7), note(6), note(5, 2), note(null, 2)],
-        [note(null, 2), note(5), note(3), note(0, 3), note(null, 1)],
+        [note(null), note(3), note(5), note(7), note(10, 2), note(7), note(10)],
+        [note(12, 2), note(10), note(7), note(6), note(7), note(null, 2)],
+        [note(10, 2), note(null), note(7), note(6), note(5), note(3), note(5)],
+        [note(7), note(6), note(5), note(3), note(0, 2), note(null, 2)],
+      ] },
+    "two-space": { label: "伸ばした問いを広げて返す", bars: 2,
+      explanation: "Callの5度をタイで小節線の先まで伸ばし、2小節目で4度へ問いかけます。Responseは5度を裏拍から受け、音域を広げてから下降。1小節目末のブルーノートを次の4度へつなぎ、最後にルートへ着地します。",
+      phrases: [
+        [note(7, 2), note(null), note(7), note(10, 2), hold(7, 2)],
+        [note(7, 2), note(5), note(3), note(5, 2), note(null, 2)],
+        [note(null), note(7), note(10), note(12), note(10, 2), note(7), note(6)],
+        [note(5, 2), note(3), note(5), note(0, 2), note(null, 2)],
+      ] },
+    "two-turn": { label: "下降の問いを折り返す", bars: 2,
+      explanation: "Callは高いルートから下降し、小節線を越えた♭3度で折り返して5度に留まります。Responseはその低い♭3度から上向きに展開。途中の5度をタイでつなぎ、最後だけルートに落ち着きます。",
+      phrases: [
+        [note(null), note(12, 2), note(10), note(7, 2), note(6), note(5)],
+        [note(3, 2), note(5), note(6), note(7, 2), note(null, 2)],
+        [note(null), note(3), note(5), note(7), note(10, 2), hold(7, 2)],
+        [note(7), note(6), note(5), note(3), note(0, 2), note(null, 2)],
+      ] },
+    "two-pickup": { label: "遅い入りをゆったり返す", bars: 2,
+      explanation: "Callは2拍目の裏から上がり、その勢いを2小節目の高いルートまで運びます。Responseは1拍待って♭7度から下降し、小節線をまたぐ折り返しを経てルートへ。入りの遅さを途中の終わりと混同せず、2小節先へ歌います。",
+      phrases: [
+        [note(null, 3), note(3), note(5), note(6), note(7), note(10)],
+        [note(12, 2), note(10), note(7), note(10, 2), note(null, 2)],
+        [note(null, 2), note(10), note(7), note(6), note(5), note(3), note(5)],
+        [note(7, 2), note(5), note(3), note(0, 2), note(null, 2)],
       ] },
     "two-register": { label: "高音の問いを低音へ移す", bars: 2,
-      explanation: "Callは高いルートから♭3度へ下がります。Responseは低いルートから上がって音域を入れ替え、後半はCallの下降を短くまとめます。",
+      explanation: "Callは高音域から下降し、1小節目末のブルーノートを次の4度へ進めます。Responseは低いルートから上昇し、高いルートを2小節目の下降の出発点にします。音域を入れ替えつつ、結びは4小節目まで残します。",
       phrases: [
-        [note(12), note(10), note(7, 2), note(10, 2), note(null, 2)],
-        [note(7, 2), note(6), note(5), note(3, 2), note(null, 2)],
-        [note(0), note(3), note(5, 2), note(7, 2), note(null, 2)],
+        [note(12, 2), note(null), note(10), note(7), note(10), note(7), note(6)],
+        [note(5, 2), note(3), note(5), note(7, 2), note(null, 2)],
+        [note(0, 2), note(3), note(5), note(null), note(7), note(10), note(12)],
         [note(10), note(7), note(6), note(5), note(0, 2), note(null, 2)],
       ] },
-    "two-punctuate": { label: "区切った問いを一息で返す", bars: 2,
-      explanation: "Callは5度を休符で区切り、短い下降で話を止めます。Responseは低い♭3度から高いルートまで8分音符でつなぎ、下降して低いルートへ着地します。",
+    "two-punctuate": { label: "短い息継ぎを一息で返す", bars: 2,
+      explanation: "Callは途中に半拍の息継ぎを入れ、4度→ブルーノート→5度から次の♭7度へつなぎます。ResponseはCallの着地点の♭3度を受け、上昇と下降を一息で展開。両方とも2小節目末で初めて1拍空けます。",
       phrases: [
-        [note(7, 2), note(null, 2), note(7), note(10), note(null, 2)],
-        [note(7), note(5), note(3, 2), note(null, 4)],
-        [note(null, 1), note(3), note(5), note(7), note(10), note(12), note(null, 2)],
-        [note(10), note(7), note(5), note(3), note(0, 2), note(null, 2)],
+        [note(7), note(10), note(null), note(7), note(5, 2), note(6), note(7)],
+        [note(10, 2), note(7), note(5), note(3, 2), note(null, 2)],
+        [note(null), note(3), note(5), note(7), note(10), note(12), note(10), note(7)],
+        [note(5, 2), note(3), note(5), note(0, 2), note(null, 2)],
       ] },
     "two-sequence": { label: "繰り上げた問いをほどく", bars: 2,
-      explanation: "Callは3音の上昇を、次の小節で少し高く繰り返します。Responseは最後の♭7度を受けて下降し、♭3度の小さな折り返しからルートへ戻ります。",
+      explanation: "Callは♭3度→4度→5度を、短い息継ぎのあと4度→5度→♭7度へ繰り上げ、次の小節の高いルートへ導きます。Responseはその上昇を下降に変え、小節線を越えて低いルートへほどきます。",
       phrases: [
-        [note(3), note(5), note(7, 2), note(null, 4)],
-        [note(5), note(7), note(10, 2), note(null, 4)],
-        [note(null, 2), note(10), note(7), note(6), note(5), note(null, 2)],
+        [note(3), note(5), note(7, 2), note(null), note(5), note(7), note(10)],
+        [note(12, 2), note(10), note(7), note(10, 2), note(null, 2)],
+        [note(null), note(10), note(7), note(5), note(7, 2), note(6), note(5)],
         [note(3, 2), note(5), note(3), note(0, 2), note(null, 2)],
       ] },
     "two-neighbor": { label: "ブルーノートの向きを変える", bars: 2,
-      explanation: "Callは5度をブルーノートで揺らしてから高いルートへ。Responseは4度から同じブルーノートを上向きに使い、後半を短い下降で閉じます。",
+      explanation: "Callは5度をブルーノートで揺らし、その5度をタイで次の小節へ持ち越します。Responseは4度から同じブルーノートを上向きに使い、後半で下降。1小節ごとの終止ではなく、揺らぎから結びへ進めます。",
       phrases: [
-        [note(7), note(6), note(7, 2), note(10, 2), note(null, 2)],
-        [note(12), note(10), note(7, 2), note(5, 2), note(null, 2)],
-        [note(5, 2), note(6), note(7), note(3, 2), note(null, 2)],
-        [note(null, 1), note(7), note(5), note(3), note(0, 2), note(null, 2)],
+        [note(7), note(6), note(7, 2), note(null), note(10), hold(7, 2)],
+        [note(7, 2), note(6), note(5), note(7, 2), note(null, 2)],
+        [note(5, 2), note(null), note(6), note(7, 2), note(10), note(7)],
+        [note(6), note(5), note(3, 2), note(0, 2), note(null, 2)],
       ] },
     "two-dense-sparse": { label: "細かな問いに少ない音で答える", bars: 2,
-      explanation: "Callは2小節にわたって8分音符で動きます。ResponseはCallの高い音を受けて音数を減らし、♭3度とルートを伸ばして会話を落ち着かせます。",
+      explanation: "Callは裏拍から動き始め、高い音域を経て次の小節まで下降を続けます。Responseは♭7度と5度を長めに受け、♭3度を小節線の先までタイで伸ばします。少ない音でも、ルートへの結びを2小節目に置きます。",
       phrases: [
-        [note(null, 1), note(3), note(5), note(6), note(7), note(10), note(null, 2)],
-        [note(12), note(10), note(7), note(6), note(5), note(7), note(null, 2)],
-        [note(10, 2), note(7, 2), note(null, 4)],
-        [note(null, 1), note(3, 2), note(0, 3), note(null, 2)],
+        [note(null), note(3), note(5), note(6), note(7), note(10), note(12), note(10)],
+        [note(7), note(6), note(5), note(3), note(7, 2), note(null, 2)],
+        [note(10, 2), note(null), note(7, 3), hold(3, 2)],
+        [note(3, 2), note(0, 3), note(null, 3)],
       ] },
     "two-sparse-dense": { label: "余白の問いを8分音符で広げる", bars: 2,
-      explanation: "Callはルート・♭3度・4度を少しずつ置きます。Responseは4度からブルーノートを使って音域を広げ、8分音符の下降でルートまで答えます。",
+      explanation: "Callは少ない音と息継ぎで上がり、4度をタイで次の小節へ伸ばして♭7度まで展開します。Responseはその4度から8分音符へ広げ、高い音域を折り返して、次の小節で低いルートへ着地します。",
       phrases: [
-        [note(0, 2), note(null, 2), note(3, 2), note(null, 2)],
-        [note(null, 2), note(5, 2), note(null, 4)],
-        [note(null, 1), note(5), note(6), note(7), note(10), note(12), note(null, 2)],
-        [note(10), note(7), note(6), note(5), note(3), note(0), note(null, 2)],
+        [note(0, 2), note(null), note(3, 3), hold(5, 2)],
+        [note(5, 2), note(7, 2), note(10, 2), note(null, 2)],
+        [note(null), note(5), note(6), note(7), note(10, 2), note(12), note(10)],
+        [note(7), note(6), note(5), note(3), note(0, 2), note(null, 2)],
       ] },
     "two-repeat": { label: "繰り返す5度を歌に変える", bars: 2,
-      explanation: "Callは5度の反復に短い跳躍を添えます。Responseは同じ5度を裏拍で一度受け、4度・♭3度へ流れを作ってからルートに着地します。",
+      explanation: "Callは5度を反復し、1小節目末の反復を次の小節の4度へ運び、♭7度まで続けます。Responseは同じ5度を受けて下降し、途中の4度をタイで次の小節へ。反復を流れる旋律に変えてルートで締めます。",
       phrases: [
-        [note(7), note(7), note(null, 1), note(7), note(10, 2), note(null, 2)],
-        [note(null, 2), note(7), note(7), note(5, 2), note(null, 2)],
-        [note(null, 1), note(7), note(6), note(5), note(3, 2), note(null, 2)],
-        [note(5), note(7), note(3, 2), note(0, 2), note(null, 2)],
+        [note(7), note(7), note(null), note(7), note(10, 2), note(7), note(7)],
+        [note(5, 2), note(7), note(7), note(10, 2), note(null, 2)],
+        [note(null), note(7), note(6), note(5), note(3, 2), hold(5, 2)],
+        [note(5, 2), note(7), note(3), note(0, 2), note(null, 2)],
       ] },
     "two-displace": { label: "入りの位置をずらして返す", bars: 2,
-      explanation: "Callの4度→5度→♭7度は1拍目の裏から。Responseは同じ3音を2拍目から受け取り、次の小節で下降してルートへ。音型の共通点と入りの違いを感じます。",
+      explanation: "Callの4度→5度→♭7度は1拍目の裏から始まり、小節末で4度→5度を再提示して次の♭7度へつなぎます。Responseは同じ3音を2拍目から受け、2小節目で初めてルートへ。入りをずらしながら長いまとまりを保ちます。",
       phrases: [
-        [note(null, 1), note(5), note(7), note(10), note(7, 2), note(null, 2)],
-        [note(6), note(5), note(3, 2), note(5, 2), note(null, 2)],
-        [note(null, 2), note(5), note(7), note(10, 2), note(null, 2)],
-        [note(null, 1), note(10), note(7), note(5), note(3), note(0, 2), note(null, 1)],
+        [note(null), note(5), note(7), note(10), note(7, 2), note(5), note(7)],
+        [note(10, 2), note(7), note(6), note(5, 2), note(null, 2)],
+        [note(null, 2), note(5), note(7), note(10, 2), note(7), note(5)],
+        [note(3, 2), note(5), note(3), note(0, 2), note(null, 2)],
       ] },
     "two-high-ending": { label: "低い問いを高いルートで結ぶ", bars: 2,
-      explanation: "Callは低いルートの周りで動き、4度で止まります。Responseはその4度から上へ展開し、ブルーノートの上昇を経て高いルートで結びます。",
+      explanation: "Callは低いルートから4度へ進み、タイでつないで次の小節の♭7度まで上がります。Responseは4度→5度→♭7度を引き継ぎ、小節末のブルーノートを通過点にして、最後は高いルートで結びます。",
       phrases: [
-        [note(0, 2), note(3), note(5), note(3, 2), note(null, 2)],
-        [note(null, 1), note(0), note(3), note(5), note(5, 2), note(null, 2)],
-        [note(5), note(7), note(10, 2), note(7, 2), note(null, 2)],
-        [note(null, 1), note(5), note(6), note(7), note(10), note(12, 2), note(null, 1)],
+        [note(0, 2), note(3), note(5), note(null), note(3), hold(5, 2)],
+        [note(5, 2), note(6), note(7), note(10, 2), note(null, 2)],
+        [note(null), note(5), note(7), note(10), note(7, 2), note(6), note(7)],
+        [note(10, 2), note(7), note(10), note(12, 2), note(null, 2)],
       ] },
     "two-early-close": { label: "長い問いに早めの結び", bars: 2,
-      explanation: "Callは上昇と下降を交えて2小節話します。Responseは高いルートから短く下降し、最後の小節は3音だけ。ルートの後に2拍の余白を残します。",
+      explanation: "Callは高いルートまで上がってから下がり、小節線の先でブルーノートから再び持ち上げます。Responseは高いルートから下降し、4度をタイで次の小節へ。そこから低いルートで早めに結び、残り2拍を空けます。",
       phrases: [
-        [note(null, 1), note(7), note(10), note(12), note(10, 2), note(null, 2)],
-        [note(7), note(5), note(6), note(7), note(10, 2), note(null, 2)],
-        [note(12, 2), note(10), note(7), note(5, 2), note(null, 2)],
+        [note(null), note(7), note(10), note(12), note(10, 2), note(7), note(5)],
+        [note(6), note(7), note(10, 2), note(7, 2), note(null, 2)],
+        [note(12, 2), note(null), note(10), note(7, 2), hold(5, 2)],
         [note(5), note(3), note(0, 2), note(null, 4)],
       ] },
     "two-breath": { label: "息継ぎを挟んで折り返す", bars: 2,
-      explanation: "Callは4度からブルーノートへ上がり、次の小節で下降します。Responseは半拍の息継ぎを挟む短い音型で受け、最後は5度から低いルートへ跳びます。",
+      explanation: "Callは4度→ブルーノート→5度を、途中の息継ぎのあと小節線をまたいで再び展開します。Responseは4度→5度→♭7度で受け、半拍だけ息継ぎして下降。2小節目の折り返しからルートへ結びます。",
       phrases: [
-        [note(5), note(6), note(7, 2), note(10, 2), note(null, 2)],
-        [note(null, 2), note(10), note(7), note(5, 2), note(null, 2)],
-        [note(5), note(7), note(null, 1), note(10), note(7, 2), note(null, 2)],
-        [note(null, 1), note(3), note(5), note(7), note(0, 2), note(null, 2)],
+        [note(5), note(6), note(7, 2), note(null), note(10), note(7), note(5)],
+        [note(6), note(7), note(10), note(7), note(5, 2), note(null, 2)],
+        [note(null), note(5), note(7), note(10), note(null), note(7), note(6), note(5)],
+        [note(3, 2), note(5), note(7), note(0, 2), note(null, 2)],
       ] },
   });
   function swing(eighths) {
     return Math.floor(eighths / 2) + (eighths % 2 ? 2 / 3 : 0);
   }
   function events(pattern) {
-    return pattern.phrases.flatMap((bar, b) => {
-      let position = 0;
-      return bar.map(event => {
-        const result = { ...event, position: b * 8 + position };
-        position += event.duration;
-        return result;
-      });
+    const timeline = [];
+    let position = 0;
+    pattern.phrases.flat().forEach(event => {
+      const previous = timeline.at(-1);
+      if (previous?.tie) {
+        previous.duration += event.duration;
+        previous.sustained = true;
+        if (event.tie) previous.tie = true;
+        else delete previous.tie;
+      } else {
+        timeline.push({ ...event, position });
+      }
+      position += event.duration;
     });
+    return timeline;
   }
   const KEYS = {
     C: { root: 60, scale: "C · E♭ · F · G♭ · G · B♭", abc: {0:"C",3:"_E",5:"F",6:"_G",7:"=G",10:"_B",12:"c"} },
@@ -233,12 +246,21 @@
   };
   function score(key, part, patternId = "two") {
     const pattern = PATTERNS[patternId];
-    const bars = pattern.phrases.slice(part * pattern.bars, (part + 1) * pattern.bars).map(bar => {
+    const phrase = pattern.phrases.slice(part * pattern.bars, (part + 1) * pattern.bars);
+    const flat = phrase.flat();
+    const firstNote = flat.findIndex(event => event.pitch !== null);
+    const lastNote = flat.findLastIndex(event => event.pitch !== null);
+    let index = 0;
+    const bars = phrase.map(bar => {
       let position = 0;
       return bar.map(event => {
         const gap = position % 2 === 0 || event.duration !== 1 ? " " : "";
         position += event.duration;
-        return gap + (event.pitch === null ? "z" : KEYS[key].abc[event.pitch]) + (event.duration === 1 ? "" : event.duration);
+        const open = pattern.bars === 2 && index === firstNote ? "(" : "";
+        const close = pattern.bars === 2 && index === lastNote ? ")" : "";
+        index++;
+        return gap + open + (event.pitch === null ? "z" : KEYS[key].abc[event.pitch])
+          + (event.duration === 1 ? "" : event.duration) + (event.tie ? "-" : "") + close;
       }).join("").trim();
     });
     return `X:1\nT:${part ? "Response" : "Call"} · ${pattern.bars}小節\nM:4/4\nL:1/8\nK:C\n${bars.join(" | ")} |]`;
@@ -264,6 +286,7 @@
     const pattern = PATTERNS[currentPatternId()];
     const bars = pattern.bars;
     $("conversation").textContent = pattern.explanation;
+    $("phrasing").hidden = bars !== 2;
     $("example-count").textContent = `${$("example").selectedIndex + 1} / ${$("example").options.length} 譜例（全30種類）`;
     $("description").textContent = `${bars}小節の問いかけに、${bars}小節で答える`;
     ["call", "response"].forEach((id, part) => $(id).setAttribute("aria-label", `${part ? "Response" : "Call"}の${bars}小節の五線譜`));
@@ -313,7 +336,7 @@
       if (event.pitch === null || (practice && event.position >= pattern.bars * 8)) return;
       const onset = swing(event.position);
       const duration = swing(event.position + event.duration) - onset;
-      tone(440 * 2 ** ((root + event.pitch - 69) / 12), melodyStart + onset * beat, duration * beat * 0.85, event.position % 2 ? 0.19 : 0.14);
+      tone(440 * 2 ** ((root + event.pitch - 69) / 12), melodyStart + onset * beat, duration * beat * (event.sustained ? 0.97 : 0.85), event.position % 2 ? 0.19 : 0.14);
     });
     function animate() {
       if (!playing) return;
