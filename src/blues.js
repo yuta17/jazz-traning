@@ -302,10 +302,16 @@
     osc.type = click ? "sine" : "triangle";
     osc.frequency.value = freq;
     gain.gain.setValueAtTime(0, when);
-    gain.gain.linearRampToValueAtTime(volume, when + 0.005);
+    const attack = Math.min(0.005, duration / 4);
+    gain.gain.linearRampToValueAtTime(volume, when + attack);
+    if (!click) {
+      // Keep the long triplet subdivision audible until just before the next note.
+      const release = Math.min(0.012, duration / 8);
+      gain.gain.exponentialRampToValueAtTime(volume * 0.75, when + duration - release);
+    }
     gain.gain.exponentialRampToValueAtTime(0.001, when + duration);
     osc.connect(gain); gain.connect(context.destination);
-    osc.start(when); osc.stop(when + duration + 0.02);
+    osc.start(when); osc.stop(when + duration);
     nodes.push(osc);
     osc.onended = () => { osc.disconnect(); gain.disconnect(); nodes = nodes.filter(node => node !== osc); };
   }
@@ -329,14 +335,14 @@
     const phraseEvents = events(pattern);
     const totalBeats = pattern.bars * 8;
     const end = melodyStart + totalBeats * beat;
-    const practice = $("mode").value === "practice";
+    const practice = !$("response-audio").checked;
     const root = KEYS[$("key").value].root;
     for (let i = 0; i < (totalBeats + (countIn ? 4 : 0)); i++) tone(i % 4 === 0 ? 1400 : 1000, start + i * beat, 0.045, 0.055, true);
     phraseEvents.forEach(event => {
       if (event.pitch === null || (practice && event.position >= pattern.bars * 8)) return;
       const onset = swing(event.position);
       const duration = swing(event.position + event.duration) - onset;
-      tone(440 * 2 ** ((root + event.pitch - 69) / 12), melodyStart + onset * beat, duration * beat * (event.sustained ? 0.97 : 0.85), event.position % 2 ? 0.19 : 0.14);
+      tone(440 * 2 ** ((root + event.pitch - 69) / 12), melodyStart + onset * beat, duration * beat, event.position % 2 ? 0.19 : 0.14);
     });
     function animate() {
       if (!playing) return;
@@ -356,7 +362,7 @@
     timer = setTimeout(() => {
       cancelAnimationFrame(frame);
       if ($("loop").checked && playing) cycle(Math.max(end, context.currentTime + 0.03), beat, false);
-      else stop(`${pattern.bars * 2}小節が終わりました。responseを弾いてみましょう。`);
+      else stop(`${pattern.bars * 2}小節が終わりました。もう一度聴いたり、一緒に弾いたりしてみましょう。`);
     }, Math.max(0, (end - context.currentTime) * 1000));
   }
   $("play").addEventListener("click", async () => {
@@ -373,7 +379,7 @@
     } catch { stop("音声を開始できませんでした。ブラウザの音声設定を確認して再生をお試しください。"); }
   });
   $("stop").addEventListener("click", () => stop());
-  ["key", "tempo", "mode", "pattern", "example"].forEach(id => $(id).addEventListener("change", () => {
+  ["key", "tempo", "response-audio", "pattern", "example"].forEach(id => $(id).addEventListener("change", () => {
     stop("設定を変更しました。再生すると最初から始まります。");
     if (id === "pattern") populateExamples();
     if (id === "example") selectedExamples[$("pattern").value] = currentPatternId();
