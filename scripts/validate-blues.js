@@ -12,10 +12,10 @@ function readWrittenEvents(tune, root) {
     if (event.pitches) {
       const written = event.pitches[0];
       if (written.accidental) accidentals[written.pitch] = { flat: -1, natural: 0, sharp: 1 }[written.accidental];
-      pitch = 60 + Math.floor(written.pitch / 7) * 12 + NATURAL_PITCHES[written.pitch % 7]
+      pitch = 60 + Math.floor(written.pitch / 7) * 12 + NATURAL_PITCHES[((written.pitch % 7) + 7) % 7]
         + (accidentals[written.pitch] || 0) - root;
     }
-    return [{ pitch, duration: event.duration * 8, ...(event.pitches?.[0].startTie ? { tie: true } : {}) }];
+    return [{ pitch, duration: event.duration * 8, ...(event.pitches?.[0].startTie ? { tie: true } : {}), ...(event.decoration?.includes("accent") ? { accent: true } : {}), ...(event.decoration?.includes("staccato") ? { staccato: true } : {}) }];
   });
 }
 
@@ -27,7 +27,7 @@ for (const [id, pattern] of Object.entries(PATTERNS)) {
     for (const event of bar) {
       assert.ok(event.duration > 0);
       if (event.pitch !== null) {
-        assert.ok([0, 3, 5, 6, 7, 10].includes(event.pitch % 12));
+        assert.ok([0, 3, 5, 6, 7, 10].includes(((event.pitch % 12) + 12) % 12));
         for (const key of Object.values(KEYS)) assert.ok(key.abc[event.pitch]);
       }
     }
@@ -53,8 +53,10 @@ for (const [id, pattern] of Object.entries(PATTERNS)) {
   const response = pattern.phrases.slice(pattern.bars).flat();
   assert.notDeepEqual(call.filter(e => e.pitch !== null).map(e => e.pitch), response.filter(e => e.pitch !== null).map(e => e.pitch));
   assert.notDeepEqual(call.map(e => [e.pitch === null, e.duration]), response.map(e => [e.pitch === null, e.duration]));
-  assert.equal(response.filter(e => e.pitch !== null).at(-1).pitch % 12, 0);
+  assert.ok([0, 3, 5, 7, 10].includes(response.filter(e => e.pitch !== null).at(-1).pitch % 12), `${id}: land on a stable blues tone`);
   if (pattern.bars === 2) assert.notEqual(call.filter(e => e.pitch !== null).at(-1).pitch % 12, 0, `${id}: reserve tonic closure for the answer`);
+  assert.ok(pattern.phrases.flat().some(event => event.accent), `${id}: show the riff accents`);
+  assert.ok(pattern.phrases.flat().every(event => !event.tie || !event.staccato), `${id}: tied notes cannot be clipped`);
   const timeline = events(pattern);
   for (let index = 1; index < timeline.length; index++) {
     assert.equal(timeline[index].position, timeline[index - 1].position + timeline[index - 1].duration);

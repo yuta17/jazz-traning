@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Blues | ジャズトレーニング</title>
   <link rel="stylesheet" href="../styles.css" />
-  <link rel="stylesheet" href="./style.css?v=20261119-blues-triplet" />
+  <link rel="stylesheet" href="./style.css?v=20261119-blues-riffs" />
 </head>
 <body>
 <main class="app-shell blues-shell">
@@ -22,6 +22,7 @@
       <label><input id="blues-response-audio" type="checkbox" checked /> Responseも再生</label>
       <label><input id="blues-loop" type="checkbox" /> 繰り返す</label>
     </div>
+    <p class="blues-tip">短いリフの反復と変形で会話する、ブルース6音のオリジナル練習譜。アクセント（&gt;）は少し強く、点（·）の付いた音は短く。それ以外の8分音符は「ツータ」とつなげます。</p>
     <p id="blues-example-count" class="blues-example-count"></p>
     <p id="blues-scale" class="blues-scale"></p>
     <p>4/4 · Swing 8ths（三連符の1つ目と3つ目・2:1） · 1小節カウント後に開始</p>
@@ -35,11 +36,15 @@
     <p id="blues-status" role="status">CallとResponseを続けて再生します。「Responseも再生」を外すと、自分で答える練習ができます。</p>
     <p id="blues-phrasing" class="blues-tip" hidden>弧線は2小節のまとまりです。1小節目は通過点として、2小節目の結びまで歌います。タイでつないだ同じ高さの音は弾き直さず、小節線を越えて伸ばします。</p>
     <p id="blues-conversation" class="blues-tip"></p>
-    <p class="blues-tip">休符は息継ぎの間。Callの終わりに余白を作り、responseでリズムや音型を引き継ぐと、会話らしく聞こえます。お手本は最後にルートへ戻ります。裏拍に軽くアクセントを置いて弾きます。「Responseも再生」を外すとresponseのメロディーが休みになり、クリックだけが続きます。</p>
+    <p class="blues-tip">休符は息継ぎの間。Callの終わりに余白を作り、responseでリズムや音型を引き継ぐと、会話らしく聞こえます。結びはルートだけでなく、♭3度・4度・5度・♭7度も使います。譜面のアクセントを手掛かりに歌ってから弾いてみましょう。「Responseも再生」を外すとresponseのメロディーが休みになり、クリックだけが続きます。</p>
+    <details class="blues-tip"><summary>フレーズ作りの参考</summary>
+      <p>短いアイデアを反復・変形する考え方と、リズムを軸にしたブルースの表現を参考に作曲しています。</p>
+      <p><a href="https://www.jazzadvice.com/lessons/how-to-play-the-blues-like-a-pro-a-lesson-with-wynton-kelly/">Wynton Kellyの演奏分析（Jazzadvice）</a> · <a href="https://www.bluenote.com/spotlight/horace-silver-blowin-the-blues-away/">Horace Silverの音楽（Blue Note）</a></p>
+    </details>
   </section>
 </main>
 <script src="../assets/vendor/abcjs-basic-min.js"></script>
-<script src="../src/daily-progress.js?v=20261119-blues-triplet"></script>
-<script src="../src/blues.js?v=20261119-blues-triplet"></script>
+<script src="../src/daily-progress.js?v=20261119-blues-riffs"></script>
+<script src="../src/blues.js?v=20261119-blues-riffs"></script>
 </body>
 </html>
