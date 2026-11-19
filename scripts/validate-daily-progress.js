@@ -6,6 +6,7 @@ const {
 } = require("../src/daily-progress.js");
 
 assert.deepEqual(TRAINING_IDS, [
+  "blues",
   "hanon",
   "oscar-peterson",
   "lick-1",

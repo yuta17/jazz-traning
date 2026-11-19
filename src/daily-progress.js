@@ -4,6 +4,7 @@
   const STORAGE_KEY = "jazz-training-daily-progress-v1";
   const RESET_HOUR = 6;
   const TRAINING_IDS = [
+    "blues",
     "hanon",
     "oscar-peterson",
     "lick-1",

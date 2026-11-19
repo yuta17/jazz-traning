@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blues | ジャズトレーニング</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="./style.css?v=20261119-blues" />
+</head>
+<body>
+<main class="app-shell blues-shell">
+  <header class="hero">
+    <nav class="hero-links" aria-label="ページ"><a href="../">ホーム</a></nav>
+    <h1>Blues</h1><p id="blues-description">2小節の問いかけに、2小節で答える</p>
+  </header>
+  <section class="practice blues-practice" aria-label="Call & response 練習">
+    <div class="blues-controls">
+      <label>長さ <select id="blues-pattern"><option value="two">2小節 call + 2小節 response</option><option value="one">1小節 call + 1小節 response</option></select></label>
+      <label>譜例 <select id="blues-example" aria-label="会話の譜例"></select></label>
+      <label>キー <select id="blues-key"><option value="C">C</option><option value="F">F</option></select></label>
+      <label>テンポ <input id="blues-tempo" type="number" min="40" max="240" value="120" step="5" /> BPM</label>
+      <label>再生 <select id="blues-mode"><option value="demo">お手本：call + response</option><option value="practice">練習：call + 自分でresponse</option></select></label>
+      <label><input id="blues-loop" type="checkbox" /> 繰り返す</label>
+    </div>
+    <p id="blues-example-count" class="blues-example-count"></p>
+    <p id="blues-scale" class="blues-scale"></p>
+    <p>4/4 · Swing 8ths（約2:1） · 1小節カウント後に開始</p>
+    <div class="blues-score-wrap"><div id="blues-call" class="blues-score" aria-label="Callの2小節の五線譜"></div></div>
+    <div class="blues-score-wrap"><div id="blues-response" class="blues-score" aria-label="Responseの2小節の五線譜"></div></div>
+    <div class="practice-actions">
+      <button id="blues-play" class="button primary" type="button">再生</button>
+      <button id="blues-stop" class="button" type="button" disabled>停止</button>
+      <button id="blues-done" class="button success" type="button">練習した</button>
+    </div>
+    <p id="blues-status" role="status">お手本を聴いてから、練習モードで答えてみましょう。</p>
+    <p id="blues-conversation" class="blues-tip"></p>
+    <p class="blues-tip">休符は息継ぎの間。Callの終わりに余白を作り、responseでリズムや音型を引き継ぐと、会話らしく聞こえます。お手本は最後にルートへ戻ります。裏拍に軽くアクセントを置いて弾きます。練習モードではresponseのメロディーが休みになり、クリックだけが続きます。</p>
+  </section>
+</main>
+<script src="../assets/vendor/abcjs-basic-min.js"></script>
+<script src="../src/daily-progress.js?v=20261119-blues"></script>
+<script src="../src/blues.js?v=20261119-blues"></script>
+</body>
+</html>

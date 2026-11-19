@@ -4,6 +4,8 @@
 
 ## 仕様
 
+- `blues/` でC（初期値）/ Fのマイナーブルーススケールを使った1小節／2小節ずつのcall + responseを各15種類（合計30種類）の譜例から選んで五線譜で表示。休符・4分音符・8分音符で間を作り、スウィング再生し、テンポ変更・カウント・繰り返し・responseを自分で弾くモードに対応。譜面描画には同梱のabcjs 6.5.2（MIT）を利用。
+
 - `altered-scale/` で解決先のm7コードだけを表示。12キーを重複なしでランダム出題し、「弾けた」で完了件数が進み、12問で終了
 
 - `settings/` でコード瞬間判定・調号判定・2-5キー判定・2-5-1の1周の出題数を1〜100問に設定。localStorageで同じブラウザに保存し、次の開始から反映（下記の問数は初期値）
@@ -38,6 +40,7 @@ python3 -m http.server 4173
 ## 検証
 
 ```bash
+node scripts/validate-blues.js
 node scripts/validate-training-settings.js
 node scripts/validate-theory.js
 node scripts/validate-251-ui.js
